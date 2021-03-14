@@ -94,7 +94,7 @@ async def on_message(message):
       funnymode = False
       await message.channel.send('Funnymode is now off')
     else:
-      await message.channel.send('Correct syntax is \'.funnymode on\' or \'.funnymode off\', you moronic niggerboy.')
+      await message.channel.send('Correct syntax is \'.funnymode on\' or \'.funnymode off\', you moronic idiot.')
   if message.content == '.chris':
     await message.channel.send('https://pbs.twimg.com/profile_images/508735114134581248/JIBaXzgh.png')
   if message.content == 'printall':
@@ -125,29 +125,29 @@ async def on_message(message):
         embedColor = 0xFF9900
       elif currentClass == 'Idræt':
         embedColor = 0x00FFFF
-      if 1 == 1:
-        embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-        if "Birte Holst Andersen" in currentTeacher:
-          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hitler_portrait_crop.jpg/220px-Hitler_portrait_crop.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Birte Holst Andersen', 'Adolf Hitler')
-        elif "Anne-Mette Hessel" in currentTeacher:
-          embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Anne-Mette Hessel', 'Sindssyg Trumpet Heks')
-        elif "Camilla Willemoes Holst" in currentTeacher:
-          embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Camilla Willemoes Holst', 'Skizofrænisk Kælling')
-        elif "Jens Pedersen" in currentTeacher:
-          embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Jens Pedersen', 'Hulemand')
-        elif "Stig Andersen" in currentTeacher:
-          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Stig Andersen', 'Gud')
-        elif "Jacob Albrechtsen" in currentTeacher:
-          embedThumbnail = "https://babyinstituttet.dk/wp-content/uploads/2018/09/sund-og-rask-baby.jpg"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Jacob Albrechtsen', 'Lille Baby')
-        elif "Anne Isaksen Østergaard" in currentTeacher:
-          embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
-          lektiescanner.author[i] = lektiescanner.author[i].replace('Anne Isaksen Østergaard', 'Anne i SAKSEN xDDDDD')
+      #if 1 == 1:
+      #  embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+      #  if "Birte Holst Andersen" in currentTeacher:
+      #    embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hitler_portrait_crop.jpg/220px-Hitler_portrait_crop.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Birte Holst Andersen', 'Adolf Hitler')
+      #  elif "Anne-Mette Hessel" in currentTeacher:
+      #    embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Anne-Mette Hessel', 'Sindssyg Trumpet Heks')
+      #  elif "Camilla Willemoes Holst" in currentTeacher:
+      #    embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Camilla Willemoes Holst', 'Skizofrænisk Kælling')
+      #  elif "Jens Pedersen" in currentTeacher:
+      #    embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Jens Pedersen', 'Hulemand')
+      #  elif "Stig Andersen" in currentTeacher:
+      #    embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Stig Andersen', 'Gud')
+      #  elif "Jacob Albrechtsen" in currentTeacher:
+      #    embedThumbnail = "https://babyinstituttet.dk/wp-content/uploads/2018/09/sund-og-rask-baby.jpg"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Jacob Albrechtsen', 'Lille Baby')
+      #  elif "Anne Isaksen Østergaard" in currentTeacher:
+      #    embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
+      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Anne Isaksen Østergaard', 'Anne i SAKSEN xDDDDD')
       forLoopFiles = []
       for j in range(0, len(lektiescanner.files[i].split(','))):
         forLoopFiles.append(lektiescanner.files[i].split(',')[j])
@@ -172,7 +172,7 @@ async def on_message(message):
     await message.channel.send(embed=embed)
     await message.channel.send(lektiescanner.fileNames[0])
   if message.content == 'tak, fessor':
-    await message.channel.send('Intet problem my nigga')
+    await message.channel.send('Intet problem')
   if message.content == '.noah':
     await message.channel.send('https://tenor.com/view/stpattysday-st-patricks-day-irish-gif-5216374')
   if message.content == '.mads':
@@ -182,7 +182,7 @@ async def on_message(message):
   if message.content.startswith('-next'):
     today = datetime.datetime.today().weekday()
     today = str(today)
-    usedSchedule = "Stupid ass nigga"
+    usedSchedule = "Stupid ass idiot"
     if today == "0":
       usedSchedule = schedule.monday
     elif today == "1":
@@ -213,7 +213,7 @@ async def on_message(message):
     await message.channel.send(nextClass)
 
 @bot.command()
-async def kick(ctx, member: discord.Member, *, reason='Fuck you nigga'):
+async def kick(ctx, member: discord.Member, *, reason='Fuck you retard'):
     await member.kick(reason=reason)
     await ctx.send(f'User {member} has kicked.')
 
