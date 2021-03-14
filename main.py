@@ -9,8 +9,8 @@ from discord.ext import commands
 from discord.utils import get
 from keep_alive import keep_alive
 import asyncio
-import subprocess
 import file
+import lektiescanner
 
 def scan():
   import lektiescanner
@@ -98,15 +98,17 @@ async def on_message(message):
   if message.content == '.chris':
     await message.channel.send('https://pbs.twimg.com/profile_images/508735114134581248/JIBaXzgh.png')
   if message.content == 'printall':
-    lektiescanner.begivenhed.clear()
-    lektiescanner.author.clear()
-    lektiescanner.tidspunkt.clear()
-    lektiescanner.files.clear()
-    lektiescanner.fileNames.clear()
-    lektiescanner.beskrivelse.clear()
-    print(str(lektiescanner.begivenhed) + str(lektiescanner.author) + str(lektiescanner.tidspunkt) + str(lektiescanner.files) + str(lektiescanner.fileNames) + str(lektiescanner.beskrivelse))
-    subprocess.call("lektiescanner.py")
-    print(str(lektiescanner.begivenhed) + str(lektiescanner.author) + str(lektiescanner.tidspunkt) + str(lektiescanner.files) + str(lektiescanner.fileNames) + str(lektiescanner.beskrivelse))
+    #lektiescanner.begivenhed.clear()
+    #lektiescanner.author.clear()
+    #lektiescanner.tidspunkt.clear()
+    #lektiescanner.files.clear()
+    #lektiescanner.fileNames.clear()
+    #lektiescanner.beskrivelse.clear()
+    #print(str(lektiescanner.begivenhed) + str(lektiescanner.author) + str(lektiescanner.tidspunkt) + str(lektiescanner.files) + str(lektiescanner.fileNames) + str(lektiescanner.beskrivelse))
+    #print(str(lektiescanner.begivenhed) + str(lektiescanner.author) + str(lektiescanner.tidspunkt) + str(lektiescanner.files) + str(lektiescanner.fileNames) + str(lektiescanner.beskrivelse))
+    print('pre-scan: ' + str(lektiescanner.begivenhed))
+    scan()
+    print('post-scan: ' + str(lektiescanner.begivenhed))
     for i in range(0, len(lektiescanner.begivenhed)):
       currentClass = lektiescanner.begivenhed[i]
       currentTeacher = lektiescanner.author[i]
@@ -125,29 +127,22 @@ async def on_message(message):
         embedColor = 0xFF9900
       elif currentClass == 'Idræt':
         embedColor = 0x00FFFF
-      #if 1 == 1:
-      #  embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-      #  if "Birte Holst Andersen" in currentTeacher:
-      #    embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hitler_portrait_crop.jpg/220px-Hitler_portrait_crop.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Birte Holst Andersen', 'Adolf Hitler')
-      #  elif "Anne-Mette Hessel" in currentTeacher:
-      #    embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Anne-Mette Hessel', 'Sindssyg Trumpet Heks')
-      #  elif "Camilla Willemoes Holst" in currentTeacher:
-      #    embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Camilla Willemoes Holst', 'Skizofrænisk Kælling')
-      #  elif "Jens Pedersen" in currentTeacher:
-      #    embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Jens Pedersen', 'Hulemand')
-      #  elif "Stig Andersen" in currentTeacher:
-      #    embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Stig Andersen', 'Gud')
-      #  elif "Jacob Albrechtsen" in currentTeacher:
-      #    embedThumbnail = "https://babyinstituttet.dk/wp-content/uploads/2018/09/sund-og-rask-baby.jpg"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Jacob Albrechtsen', 'Lille Baby')
-      #  elif "Anne Isaksen Østergaard" in currentTeacher:
-      #    embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
-      #    lektiescanner.author[i] = lektiescanner.author[i].replace('Anne Isaksen Østergaard', 'Anne i SAKSEN xDDDDD')
+      if 1 == 1:
+        embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+        if "Birte Holst Andersen" in currentTeacher:
+          embedThumbnail = "https://www.meaningfulwomen.com/wp-content/uploads/grumpy-old-woman.jpg"
+        elif "Anne-Mette Hessel" in currentTeacher:
+          embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
+        elif "Camilla Willemoes Holst" in currentTeacher:
+          embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
+        elif "Jens Pedersen" in currentTeacher:
+          embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
+        elif "Stig Andersen" in currentTeacher:
+          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
+        elif "Jacob Albrechtsen" in currentTeacher:
+          embedThumbnail = "https://babyinstituttet.dk/wp-content/uploads/2018/09/sund-og-rask-baby.jpg"
+        elif "Anne Isaksen Østergaard" in currentTeacher:
+          embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
       forLoopFiles = []
       for j in range(0, len(lektiescanner.files[i].split(','))):
         forLoopFiles.append(lektiescanner.files[i].split(',')[j])

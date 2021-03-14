@@ -25,6 +25,7 @@ with Session() as s:
     author = []
     files = []
     fileNames = []
+    print('post-clear: ' + str(begivenhed))
     for i in range(0, len(links)):
         home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
         home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø')
