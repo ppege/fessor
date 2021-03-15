@@ -9,5 +9,3 @@ fessor er den bedste discord bot på jorden!!!
 #### Fordi Noah glemte at holde shift nede da han lavede applikationen
 - Jeg hader fessor!!!
 #### Fuck dig
-- Mening on invandrer?
-#### De skal ikke integreres, de skal hjem!!
