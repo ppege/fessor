@@ -66,7 +66,5 @@ def lektiescan():
         else:
           fileNameCollection = "Ingen"
         fileNames.append(fileNameCollection)
-    #for i in range(0, len(begivenhed)):
-    #    print("\nBegivenhed: " + begivenhed[i])
-    #    print("Tidspunkt: " + tidspunkt[i])
-    #    print("Beskrivelse: " + beskrivelse[i])
+  
+  return begivenhed, tidspunkt, beskrivelse, author, files, fileNames
