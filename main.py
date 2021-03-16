@@ -69,18 +69,11 @@ async def on_message(message):
         f.close()
         embed=discord.Embed(title="Unlocked", description="#unrekt", color=0xFF0000)
         await message.channel.send(embed=embed)
-  if message.content.startswith('typewriter'):
-    input = message.content.replace('typewriter ', '')
-    input = split(input)
-    await message.channel.send(str(input))
-    output = ''
-    botMessage = await message.channel.send(input[0])
-    for i in range(0, len(input)):
-      for j in range(0, i):
-        output = output + input[j + 1]
-      await asyncio.sleep(1)
-      await botMessage.edit(content=output)
-      output = ''
+  if message.content == '.poggers' or if message.content == '.poggies':
+    f = open("poggers.txt", "r")
+    output = f.read()
+    f.close()
+    await message.channel.send(output)
   if message.content == '.badass':
     await message.channel.send('https://imgur.com/a/QqFEkrm')
   if message.content == '.jakob':
