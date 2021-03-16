@@ -73,7 +73,9 @@ async def on_message(message):
     f = open("poggers.txt", "r")
     output = f.read()
     f.close()
-    await message.channel.send(output)
+    input = output.split('\n')
+    for i in range(0, len(input)):
+      await message.channel.send(input[i])
   if message.content == '.badass':
     await message.channel.send('https://imgur.com/a/QqFEkrm')
   if message.content == '.jakob':
