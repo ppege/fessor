@@ -7,11 +7,13 @@ import file
 UserName = os.getenv('USERNAME')
 Password = os.getenv('PASSWORD')
 fingerprint = os.getenv('FINGERPRINT')
-print('lektiescanning...')
+
+def lektiescan():
+  print('lektiescanning...')
 
 
 
-with Session() as s:
+  with Session() as s:
     site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
     bs_content = bs(site.content, "html.parser")
     login_data = {"UserName": UserName, "Password": Password, "fingerprint": fingerprint}

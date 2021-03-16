@@ -9,3 +9,10 @@ from discord.utils import get
 from keep_alive import keep_alive
 import asyncio
 import file
+from school import schedule
+print('importing lektiescanner')
+from school.lektiescanner import lektiescan
+print('finished importing lektiescanner')
+
+lektiescan()
+print(lektiescanner.beskrivelse[0])
