@@ -10,9 +10,6 @@ fingerprint = os.getenv('FINGERPRINT')
 
 def lektiescan():
   print('lektiescanning...')
-
-
-
   with Session() as s:
     site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
     bs_content = bs(site.content, "html.parser")

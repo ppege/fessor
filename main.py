@@ -23,6 +23,7 @@ bot = commands.Bot(command_prefix='.')
 async def on_ready():
   print('We have logged in as {0.user}'.format(client))
   await client.change_presence(activity=discord.Game(name="gaming"))
+  
 @client.event
 async def on_message(message):
   if message.author == client.user:
@@ -36,7 +37,7 @@ async def on_message(message):
 
 
 beskrivelse, begivenhed, tidspunkt, files, fileNames, author = lektiescan()
-print(beskrivelse[0])
+#print(beskrivelse[0])
 
 
 
