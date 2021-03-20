@@ -2,7 +2,6 @@ from requests import Session
 from bs4 import BeautifulSoup as bs
 import re
 import os
-import file
 
 UserName = os.getenv('USERNAME')
 Password = os.getenv('PASSWORD')
