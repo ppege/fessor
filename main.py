@@ -69,7 +69,7 @@ async def on_message(message):
         embed=discord.Embed(title="Unlocked", description="#unrekt", color=0xFF0000)
         await message.channel.send(embed=embed)
   if message.content == '.bury':
-    for i in range(0, 5):
+    for i in range(0, 6):
       await message.channel.send('https://i.imgur.com/SL9KqwC.png')
   if message.content == '.poggers' or message.content == '.poggies':
     f = open("poggers.txt", "r")
