@@ -9,7 +9,6 @@ from discord.ext import commands
 from discord.utils import get
 from keep_alive import keep_alive
 import asyncio
-import file
 import lektiescanner
 
 def scan():
