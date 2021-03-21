@@ -1,8 +1,13 @@
+import discord
 
-def post():
-  for i in range(0, len(lektiescanner.begivenhed)):
-    currentClass = lektiescanner.begivenhed[i]
-    currentTeacher = lektiescanner.author[i]
+client = discord.Client()
+
+
+
+def post(begivenhed, beskrivelse, author, files, tidspunkt, fileNames):
+  for i in range(0, len(begivenhed)):
+    currentClass = begivenhed[i]
+    currentTeacher = author[i]
     embedColor = 0xFF5733
     if currentClass == 'Tysk' or currentClass == 'Kristendom':
       embedColor = 0x9900FF
@@ -35,17 +40,22 @@ def post():
           elif "Anne Isaksen Østergaard" in currentTeacher:
             embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
         forLoopFiles = []
-        for j in range(0, len(lektiescanner.files[i].split(','))):
-          forLoopFiles.append(lektiescanner.files[i].split(',')[j])
+        for j in range(0, len(files[i].split(','))):
+          forLoopFiles.append(files[i].split(',')[j])
         forLoopFileNames = []
-        for j in range(0, len(lektiescanner.fileNames[i].split(','))):
-          forLoopFileNames.append(lektiescanner.fileNames[i].split(',')[j])
+        for j in range(0, len(fileNames[i].split(','))):
+          forLoopFileNames.append(fileNames[i].split(',')[j])
         fileOutput = ""
         for k in range(0, len(forLoopFiles)):
           fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
-        embed=discord.Embed(title=lektiescanner.begivenhed[i], description=lektiescanner.tidspunkt[i], color=embedColor)
-        embed.add_field(name="Beskrivelse", value=lektiescanner.beskrivelse[i], inline=True)
-        embed.set_footer(text=lektiescanner.author[i])
+        embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor)
+        embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
+        embed.set_footer(text=author[i])
         embed.add_field(name="Filer", value=fileOutput, inline=True)
         embed.set_thumbnail(url=embedThumbnail)
-        await message.channel.send(embed=embed)
+        channel = bot.get_channel(816693284147691530)
+        await channel.send(embed=embed)
+
+
+
+client.run(os.getenv('fessortoken'))

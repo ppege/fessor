@@ -1,6 +1,7 @@
 import schedule
 import time
 from lektiescanner import lektiescan
+from lektieposter import post
 
 def scan():
     beskrivelse, begivenhed, tidspunkt, files, fileNames, author = lektiescan()
@@ -13,7 +14,7 @@ def scan():
     	f = open("scanResults.txt", "w")
     	f.write(str(begivenhed))
     	f.close
-    	
+    	post(begivenhed, beskrivelse, author, files, tidspunkt, fileNames)
 
 schedule.every(20).minutes.do(scan)
 
