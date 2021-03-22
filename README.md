@@ -2,7 +2,7 @@
 fessor er den bedste discord bot på jorden!!!
 ### Hvorfor?
 - Den er sej
-- Programmeret af en polak og en skotte
+- Programmeret af en polak
 - Kan alt
 ### FAQ
 - Hvorfor hedder den "fessor" og ikke "Fessor"?
