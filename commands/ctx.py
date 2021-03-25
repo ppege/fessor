@@ -9,6 +9,7 @@ current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfra
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 from fun.slander import slander
+#from school.scanschedule import scan
 
 bot = commands.Bot(command_prefix='.')
 
@@ -26,5 +27,8 @@ async def s(ctx, victim):
   except:
     embed=discord.Embed(title="Slander fejl", description="Dette slander findes ikke\nListe af slander:\n`william`\n`noah`\n`jeppe`\n`mads`\n`jakob`\n`peter`\n`asger`\n`frederik`\n`emil`\n`simon`", color=0xFF0000)
     await ctx.send(embed=embed)
+#@bot.command()
+#async def scan(ctx):
+#  scan()
 
 bot.run(os.getenv('fessortoken'))

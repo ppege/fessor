@@ -3,7 +3,10 @@ import time
 from lektiescanner import lektiescan
 from lektieposter import post
 
+print('scan schedule started')
+
 def scan():
+    print('scan() called')
     beskrivelse, begivenhed, tidspunkt, files, fileNames, author = lektiescan()
     f = open("scanResults.txt", "r")
     previousResults = f.read()
@@ -16,7 +19,7 @@ def scan():
     	f.close
     	post(begivenhed, beskrivelse, author, files, tidspunkt, fileNames)
 
-schedule.every(20).minutes.do(scan)
+schedule.every(20).seconds.do(scan)
 
 while True:
     schedule.run_pending()
