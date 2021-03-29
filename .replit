@@ -1,2 +1,2 @@
 language = "python3"
-run = "python3 main.py & python3 commands/ctx.py & python3 school/scanschedule.py"
+run = "python3 main.py & python3 ctx.py"

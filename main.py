@@ -11,8 +11,8 @@ from discord.utils import get
 import asyncio
 print('importing modules...')
 from keep_alive import keep_alive
-from commands.school import schedule
-from commands.school.lektiescanner import lektiescan
+from functions.school import schedule
+from functions.school.lektiescanner import lektiescan
 
 print('logging in...')
 client = discord.Client()
