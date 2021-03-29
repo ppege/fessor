@@ -1,3 +1,4 @@
+print('importing libraries...')
 import discord
 import os
 import datetime
@@ -7,20 +8,19 @@ import pytz
 import discord.ext.commands
 from discord.ext import commands
 from discord.utils import get
-from keep_alive import keep_alive
 import asyncio
-from school import schedule
-print('importing lektiescanner')
-from school.lektiescanner import lektiescan
-print('finished importing lektiescanner')
+print('importing modules...')
+from keep_alive import keep_alive
+from commands.school import schedule
+from commands.school.lektiescanner import lektiescan
 
-
+print('logging in...')
 client = discord.Client()
 
 @client.event
 async def on_ready():
-  print('We have logged in as {0.user}'.format(client))
-  await client.change_presence(activity=discord.Game(name="gaming"))
+  print('logged in as {0.user}'.format(client))
+  await client.change_presence(activity=discord.Game(name=".help"))
   
 @client.event
 async def on_message(message):
