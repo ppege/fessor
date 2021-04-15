@@ -3,12 +3,11 @@ from bs4 import BeautifulSoup as bs
 import re
 import os
 
-UserName = os.getenv('USERNAME')
-Password = os.getenv('PASSWORD')
-fingerprint = os.getenv('FINGERPRINT')
-
-def lektiescan():
+def lektiescan(ctx):
   print('lektiescanning...')
+  UserName = os.getenv('USERNAME')
+  Password = os.getenv('PASSWORD')
+  fingerprint = os.getenv('FINGERPRINT')
   with Session() as s:
     site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
     bs_content = bs(site.content, "html.parser")
@@ -62,4 +61,4 @@ def lektiescan():
           fileNameCollection = "Ingen"
         fileNames.append(fileNameCollection)
   
-  return begivenhed, tidspunkt, beskrivelse, author, files, fileNames
+  return begivenhed, beskrivelse, author, files, tidspunkt, fileNames

@@ -1,11 +1,14 @@
 import discord
 import os
+import discord.ext.commands
+from discord.ext import commands
 
-client = discord.Client()
 
+bot = commands.Bot(command_prefix='.')
 
+print('que2?!?')
 
-def post(begivenhed, beskrivelse, author, files, tidspunkt, fileNames):
+async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames):
   print('post() called')
   for i in range(0, len(begivenhed)):
     currentClass = begivenhed[i]
@@ -55,11 +58,8 @@ def post(begivenhed, beskrivelse, author, files, tidspunkt, fileNames):
         embed.set_footer(text=author[i])
         embed.add_field(name="Filer", value=fileOutput, inline=True)
         embed.set_thumbnail(url=embedThumbnail)
-        channel = bot.get_channel(816693284147691530)
-        async def postNew():
-          await channel.send(embed=embed)
-        postNew()
+        await ctx.send(embed=embed)
+        return
 
 
-
-client.run(os.getenv('fessortoken'))
+bot.run(os.getenv('fessortoken'))
