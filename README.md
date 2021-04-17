@@ -6,10 +6,10 @@ bot designed for the matematikfessor.dk discord server.
 - simple prompt/response commands
 - permission system
 - slander gaming
+- moderation features
+- schedule manager
 
 ## coming soon
-- moderation features
 - music player
 - gif scanner
-- schedule manager
 - help command
