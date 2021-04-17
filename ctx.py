@@ -75,10 +75,9 @@ async def s(ctx, victim):
 
 @bot.command()
 async def suggest(ctx, suggestion):
-  f = open("suggestions.md", "r+")
-  oldContent = f.read()
-  newContent = oldContent + "\n## Suggestion from %s\n- %s" % (ctx.author, suggestion)
-  f.write(newContent)
+  f = open("suggestions.md", "a")
+  content = "\n## Suggestion from %s\n- %s" % (ctx.author, suggestion)
+  f.write(content)
   f.close
 
 
