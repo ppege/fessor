@@ -74,6 +74,16 @@ async def s(ctx, victim):
     await ctx.send(embed=embed)
 
 @bot.command()
+async def suggest(ctx, suggestion):
+  f = open("suggestions.md", "a")
+  content = "\n## Suggestion from %s\n- %s" % (ctx.author, suggestion)
+  f.write(content)
+  f.close
+  user = bot.get_user(273845229130481665)
+  await user.send(embed=discord.Embed(title='Suggestion from %s' % ctx.author, description=suggestion, color=0xFF0000))
+
+
+@bot.command()
 async def scan(ctx, *args):
   if len(args) == 0:
     try:
