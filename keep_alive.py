@@ -11,7 +11,7 @@ log.setLevel(logging.ERROR)
 
 @app.route('/')
 def home():
-    return "Hello. I am alive!\nTech support time!"
+    return "fessor is live. poggers."
 
 def run():
   cli = sys.modules['flask.cli']
