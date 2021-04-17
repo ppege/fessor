@@ -14,7 +14,7 @@ from keep_alive import keep_alive
 from functions.school import schedule
 from functions.school.lektiescanner import lektiescan
 
-print('logging in...')
+
 client = discord.Client()
 
 @client.event
@@ -28,19 +28,12 @@ async def on_message(message):
     return
   config = configparser.ConfigParser()
   config.read('configs/config.ini')
-  if message.content.lower() in config['blacklist']['list'].split(', '):
+  if any(word in message.content.lower() for word in config['blacklist']['list'].split(', ')):
     await message.delete()
 
 
 
 
-
-
-beskrivelse, begivenhed, tidspunkt, files, fileNames, author = lektiescan()
-#print(beskrivelse[0])
-
-
-
-
-#keep_alive()
+keep_alive()
+print('logging in...')
 client.run(os.getenv('fessortoken'))

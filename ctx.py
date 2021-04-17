@@ -76,8 +76,22 @@ async def s(ctx, victim):
 @bot.command()
 async def scan(ctx, *args):
   if len(args) == 0:
-    begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
-    await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames)
+    try:
+      status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description="", color=0xFF0000))
+      begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
+      await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames)
+    except:
+      status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
+  elif len(args) == 1:
+    if args[0] == "today":
+      today = datetime.date.today()
+      num = today.day
+      numList = []
+      for i in range(0, len(tidspunkt)):
+        if num in tidspunkt[i]:
+          numList.append(i)
+        else:
+          continue
 
 @bot.command()
 async def settings(ctx, setting, value):
