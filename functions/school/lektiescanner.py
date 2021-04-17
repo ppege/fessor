@@ -3,14 +3,12 @@ from bs4 import BeautifulSoup as bs
 import re
 import os
 
-UserName = os.getenv('USERNAME')
-Password = os.getenv('PASSWORD')
-fingerprint = os.getenv('FINGERPRINT')
-print('lektiescanning...')
-
-
-
-with Session() as s:
+def lektiescan(ctx):
+  print('lektiescanning...')
+  UserName = os.getenv('USERNAME')
+  Password = os.getenv('PASSWORD')
+  fingerprint = os.getenv('FINGERPRINT')
+  with Session() as s:
     site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
     bs_content = bs(site.content, "html.parser")
     login_data = {"UserName": UserName, "Password": Password, "fingerprint": fingerprint}
@@ -24,7 +22,6 @@ with Session() as s:
     author = []
     files = []
     fileNames = []
-    print('post-clear: ' + str(begivenhed))
     for i in range(0, len(links)):
         home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
         home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø')
@@ -63,7 +60,5 @@ with Session() as s:
         else:
           fileNameCollection = "Ingen"
         fileNames.append(fileNameCollection)
-    #for i in range(0, len(begivenhed)):
-    #    print("\nBegivenhed: " + begivenhed[i])
-    #    print("Tidspunkt: " + tidspunkt[i])
-    #    print("Beskrivelse: " + beskrivelse[i])
+  
+  return begivenhed, beskrivelse, author, files, tidspunkt, fileNames
