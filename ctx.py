@@ -74,6 +74,15 @@ async def s(ctx, victim):
     await ctx.send(embed=embed)
 
 @bot.command()
+async def suggest(ctx, suggestion):
+  f = open("suggestions.md", "r+")
+  oldContent = f.read()
+  newContent = oldContent + "\n##Suggestion from %s\n- %s" % (ctx.author, suggestion)
+  f.write(newContent)
+  f.close
+
+
+@bot.command()
 async def scan(ctx, *args):
   if len(args) == 0:
     try:
