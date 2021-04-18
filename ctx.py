@@ -115,10 +115,27 @@ async def scan(ctx, *args):
       await status.edit(embed=embed)
       userInput = await bot.wait_for("message")
       userInput = userInput.content
+      isInt = 0
       try:
-        await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, int(userInput) - 1)
+        int(userInput)
+        userInput = int(userInput)
+        isInt = 1
+      except:
+        isInt = 0
+      if isInt == 1:
+        userInput = [userInput - 1]
+      else:
+        numList = []
+        for i in range(0, len(begivenhed)):
+          if str(userInput) in begivenhed[i]:
+            numList.append(i)
+        userInput = numList
+        print(str(userInput))
+      try:
+        await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
       except:
         await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
+        raise
     except:
       raise
       await status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
@@ -314,7 +331,7 @@ async def unmute(ctx, member: discord.Member):
 
 async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection):
   print('post() called')
-  if selection == -1:
+  if selection[0] == -1:
     for i in range(0, len(begivenhed)):
       #print('creating post %d' % i)
       currentClass = begivenhed[i]
@@ -373,9 +390,10 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           await ctx.send(embed=embed)
           #print('embed sent, reiterating for loop or returning')
   else:
+    for i in range(0, len(selection)):
       #print('creating post %d' % i)
-      currentClass = begivenhed[selection]
-      currentTeacher = author[selection]
+      currentClass = begivenhed[selection[i]]
+      currentTeacher = author[selection[i]]
       embedColor = 0xFF5733
       #print('registering colors')
       if currentClass == 'Tysk' or currentClass == 'Kristendom':
@@ -412,21 +430,21 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
             embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
           #print('thumbnails registered, handling files')
           forLoopFiles = []
-          for j in range(0, len(files[selection].split(','))):
-            forLoopFiles.append(files[selection].split(',')[j])
+          for j in range(0, len(files[selection[i]].split(','))):
+            forLoopFiles.append(files[selection[i]].split(',')[j])
           forLoopFileNames = []
-          for j in range(0, len(fileNames[selection].split(','))):
-            forLoopFileNames.append(fileNames[selection].split(',')[j])
+          for j in range(0, len(fileNames[selection[i]].split(','))):
+            forLoopFileNames.append(fileNames[selection[i]].split(',')[j])
           fileOutput = ""
           for k in range(0, len(forLoopFiles)):
             fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
           #print('files handled, creating embed')
-          embed=discord.Embed(title=begivenhed[selection], description=tidspunkt[selection], color=embedColor)
-          embed.add_field(name="Beskrivelse", value=beskrivelse[selection], inline=True)
-          embed.set_footer(text=author[selection])
+          embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor)
+          embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
+          embed.set_footer(text=author[selection[i]])
           embed.add_field(name="Filer", value=fileOutput, inline=True)
           embed.set_thumbnail(url=embedThumbnail)
-          print('embed %d created, sending embed' % selection)
+          print('embed %d created, sending embed' % selection[i])
           await ctx.send(embed=embed)
           #print('embed sent, reiterating for loop or returning')
   return
