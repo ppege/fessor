@@ -82,26 +82,63 @@ async def suggest(ctx, suggestion):
   user = bot.get_user(273845229130481665)
   await user.send(embed=discord.Embed(title='Suggestion from %s' % ctx.author, description=suggestion, color=0xFF0000))
 
+@bot.command()
+async def skema(ctx, *args):
+  if len(args) == 0:
+    today = datetime.datetime.today().weekday()
+    if today >= 5:
+      await ctx.send('Det er ikke en ugedag, antager mandag.')
+      today = 0
+    today = str(today)
+    output = options.schedules[today]
+    await ctx.send(output)
+  else:
+    try:
+      await ctx.send(options.skemaer[args[0]])
+    except:
+      await ctx.send('Invalid dag, mongol')
+
 
 @bot.command()
 async def scan(ctx, *args):
   if len(args) == 0:
     try:
-      status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description="", color=0xFF0000))
+      status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
       begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
-      await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames)
+      lektieList = []
+      for i in range(0, len(begivenhed)):
+        lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
+      description = "\n\n".join(lektieList)
+      futureField2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv navnet på faget, du vil se.\nMulighed 3. Skriv datoen på den lektie, du vil se."
+      embed=discord.Embed(title="Fandt %d lektier" % len(begivenhed), description=description, color=0xFF0000)
+      embed.add_field(name="Hvad nu?", value="Skriv tallet, der tilhænger den lektie, du vil se.")
+      await status.edit(embed=embed)
+      userInput = await bot.wait_for("message")
+      userInput = userInput.content
+      isInt = 0
+      try:
+        int(userInput)
+        userInput = int(userInput)
+        isInt = 1
+      except:
+        isInt = 0
+      if isInt == 1:
+        userInput = [userInput - 1]
+      else:
+        numList = []
+        for i in range(0, len(begivenhed)):
+          if str(userInput) in begivenhed[i]:
+            numList.append(i)
+        userInput = numList
+        print(str(userInput))
+      try:
+        await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
+      except:
+        await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
+        raise
     except:
-      status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
-  elif len(args) == 1:
-    if args[0] == "today":
-      today = datetime.date.today()
-      num = today.day
-      numList = []
-      for i in range(0, len(tidspunkt)):
-        if num in tidspunkt[i]:
-          numList.append(i)
-        else:
-          continue
+      raise
+      await status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
 
 @bot.command()
 async def settings(ctx, setting, value):
@@ -239,65 +276,177 @@ async def next(ctx):
       nextClass = "Der er ingen timer din klovn"
     await ctx.send(nextClass)
 
-async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames):
+@bot.command()
+async def halp(ctx, *args):
+  print('1')
+  commandList = list(options.commands.keys())
+  newCommandList = "\n".join(commandList)
+  if len(args) == 0:
+    embed = discord.Embed(title='Kommandoliste', description=newCommandList)
+    embed.add_field(name='Brug `.halp [kommando]` for mere info', value='lel')
+    await ctx.send(embed=embed)
+  else:
+    title = args[0]
+    description = options.commands[args[0]]
+    embed = discord.Embed(title=title, description=description)
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def kick(ctx, member: discord.Member):
+  await ctx.guild.kick(member)
+  await ctx.send('`%s` kicked - ez' % member)
+
+@bot.command()
+async def ban(ctx, member: discord.Member):
+  await ctx.guild.ban(member)
+  await ctx.send('`%s` banned - ez' % member)
+
+@bot.command()
+async def unban(ctx, id):
+  user = await bot.fetch_user(id)
+  await ctx.guild.unban(user)
+  await ctx.send('`%s` unbanned' % user)
+
+@bot.command()
+async def mute(ctx, member: discord.Member, *, reason=None):
+    guild = ctx.guild
+    mutedRole = discord.utils.get(guild.roles, name="Muted")
+    if not mutedRole:
+        mutedRole = await guild.create_role(name="Muted")
+        for channel in guild.channels:
+            await channel.set_permissions(mutedRole, speak=False, send_messages=False, read_message_history=True, read_messages=False)
+    embed = discord.Embed(title="Muted", description=f"{member.mention} was muted ", colour=discord.Colour.light_gray())
+    embed.add_field(name="Reason:", value=reason, inline=False)
+    await ctx.send(embed=embed)
+    await member.add_roles(mutedRole, reason=reason)
+    await member.send(f" You have been muted. Reason: {reason}")
+
+@bot.command()
+async def unmute(ctx, member: discord.Member):
+   mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
+   await member.remove_roles(mutedRole)
+   await member.send(f"Du er unmuted nu NOOB")
+   embed = discord.Embed(title="Unmuted", description=f"{member.mention} has been unmuted",colour=discord.Colour.light_gray())
+   await ctx.send(embed=embed)
+
+async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection):
   print('post() called')
-  for i in range(0, len(begivenhed)):
-    #print('creating post %d' % i)
-    currentClass = begivenhed[i]
-    currentTeacher = author[i]
-    embedColor = 0xFF5733
-    #print('registering colors')
-    if currentClass == 'Tysk' or currentClass == 'Kristendom':
-      embedColor = 0x9900FF
-    elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
-      embedColor = 0xFF0000
-    elif currentClass == 'Engelsk' or currentClass == 'Matematik':
-      embedColor = 0x0000FF
-    elif currentClass == 'Billedkunst':
-      embedColor = 0xFFFF00
-    elif currentClass == 'Geografi' or currentClass == 'Biologi':
-      embedColor = 0x00FF00
-    elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
-      embedColor = 0xFF9900
-    elif currentClass == 'Idræt':
-      embedColor = 0x00FFFF
-    #print('colors registered')
-    if 1 == 1:
-        #print('registering thumbnails')
-        embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-        if "Birte Holst Andersen" in currentTeacher:
-          embedThumbnail = "https://www.meaningfulwomen.com/wp-content/uploads/grumpy-old-woman.jpg"
-        elif "Anne-Mette Hessel" in currentTeacher:
-          embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
-        elif "Camilla Willemoes Holst" in currentTeacher:
-          embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
-        elif "Jens Pedersen" in currentTeacher:
-          embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
-        elif "Stig Andersen" in currentTeacher:
-          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
-        elif "Jacob Albrechtsen" in currentTeacher:
-          embedThumbnail = "https://www.holdsport.dk/media/W1siZiIsIjIwMjAvMDIvMDkvM29uYzkzbXhwN19jOTI4MWE0YV9lZmU5XzQxNDNfOWI0M19lYTI3MzE2Yzk1NWQuanBnIl0sWyJwIiwidGh1bWIiLCIyMDB4MjAwIyJdLFsicCIsImVuY29kZSIsImpwZyJdXQ/file.jpg?sha=a58020a577e8e132"
-        elif "Anne Isaksen Østergaard" in currentTeacher:
-          embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
-        #print('thumbnails registered, handling files')
-        forLoopFiles = []
-        for j in range(0, len(files[i].split(','))):
-          forLoopFiles.append(files[i].split(',')[j])
-        forLoopFileNames = []
-        for j in range(0, len(fileNames[i].split(','))):
-          forLoopFileNames.append(fileNames[i].split(',')[j])
-        fileOutput = ""
-        for k in range(0, len(forLoopFiles)):
-          fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
-        #print('files handled, creating embed')
-        embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor)
-        embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
-        embed.set_footer(text=author[i])
-        embed.add_field(name="Filer", value=fileOutput, inline=True)
-        embed.set_thumbnail(url=embedThumbnail)
-        print('embed %d created, sending embed' % i)
-        await ctx.send(embed=embed)
-        #print('embed sent, reiterating for loop or returning')
+  if selection[0] == -1:
+    for i in range(0, len(begivenhed)):
+      #print('creating post %d' % i)
+      currentClass = begivenhed[i]
+      currentTeacher = author[i]
+      embedColor = 0xFF5733
+      #print('registering colors')
+      if currentClass == 'Tysk' or currentClass == 'Kristendom':
+        embedColor = 0x9900FF
+      elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
+        embedColor = 0xFF0000
+      elif currentClass == 'Engelsk' or currentClass == 'Matematik':
+        embedColor = 0x0000FF
+      elif currentClass == 'Billedkunst':
+        embedColor = 0xFFFF00
+      elif currentClass == 'Geografi' or currentClass == 'Biologi':
+        embedColor = 0x00FF00
+      elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
+        embedColor = 0xFF9900
+      elif currentClass == 'Idræt':
+        embedColor = 0x00FFFF
+      #print('colors registered')
+      if 1 == 1:
+          #print('registering thumbnails')
+          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+          if "Birte Holst Andersen" in currentTeacher:
+            embedThumbnail = "https://www.meaningfulwomen.com/wp-content/uploads/grumpy-old-woman.jpg"
+          elif "Anne-Mette Hessel" in currentTeacher:
+            embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
+          elif "Camilla Willemoes Holst" in currentTeacher:
+            embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
+          elif "Jens Pedersen" in currentTeacher:
+            embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
+          elif "Stig Andersen" in currentTeacher:
+            embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
+          elif "Jacob Albrechtsen" in currentTeacher:
+            embedThumbnail = "https://www.holdsport.dk/media/W1siZiIsIjIwMjAvMDIvMDkvM29uYzkzbXhwN19jOTI4MWE0YV9lZmU5XzQxNDNfOWI0M19lYTI3MzE2Yzk1NWQuanBnIl0sWyJwIiwidGh1bWIiLCIyMDB4MjAwIyJdLFsicCIsImVuY29kZSIsImpwZyJdXQ/file.jpg?sha=a58020a577e8e132"
+          elif "Anne Isaksen Østergaard" in currentTeacher:
+            embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
+          #print('thumbnails registered, handling files')
+          forLoopFiles = []
+          for j in range(0, len(files[i].split(','))):
+            forLoopFiles.append(files[i].split(',')[j])
+          forLoopFileNames = []
+          for j in range(0, len(fileNames[i].split(','))):
+            forLoopFileNames.append(fileNames[i].split(',')[j])
+          fileOutput = ""
+          for k in range(0, len(forLoopFiles)):
+            fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
+          #print('files handled, creating embed')
+          embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor)
+          embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
+          embed.set_footer(text=author[i])
+          embed.add_field(name="Filer", value=fileOutput, inline=True)
+          embed.set_thumbnail(url=embedThumbnail)
+          print('embed %d created, sending embed' % i)
+          await ctx.send(embed=embed)
+          #print('embed sent, reiterating for loop or returning')
+  else:
+    for i in range(0, len(selection)):
+      #print('creating post %d' % i)
+      currentClass = begivenhed[selection[i]]
+      currentTeacher = author[selection[i]]
+      embedColor = 0xFF5733
+      #print('registering colors')
+      if currentClass == 'Tysk' or currentClass == 'Kristendom':
+        embedColor = 0x9900FF
+      elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
+        embedColor = 0xFF0000
+      elif currentClass == 'Engelsk' or currentClass == 'Matematik':
+        embedColor = 0x0000FF
+      elif currentClass == 'Billedkunst':
+        embedColor = 0xFFFF00
+      elif currentClass == 'Geografi' or currentClass == 'Biologi':
+        embedColor = 0x00FF00
+      elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
+        embedColor = 0xFF9900
+      elif currentClass == 'Idræt':
+        embedColor = 0x00FFFF
+      #print('colors registered')
+      if 1 == 1:
+          #print('registering thumbnails')
+          embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+          if "Birte Holst Andersen" in currentTeacher:
+            embedThumbnail = "https://www.meaningfulwomen.com/wp-content/uploads/grumpy-old-woman.jpg"
+          elif "Anne-Mette Hessel" in currentTeacher:
+            embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
+          elif "Camilla Willemoes Holst" in currentTeacher:
+            embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
+          elif "Jens Pedersen" in currentTeacher:
+            embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
+          elif "Stig Andersen" in currentTeacher:
+            embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
+          elif "Jacob Albrechtsen" in currentTeacher:
+            embedThumbnail = "https://www.holdsport.dk/media/W1siZiIsIjIwMjAvMDIvMDkvM29uYzkzbXhwN19jOTI4MWE0YV9lZmU5XzQxNDNfOWI0M19lYTI3MzE2Yzk1NWQuanBnIl0sWyJwIiwidGh1bWIiLCIyMDB4MjAwIyJdLFsicCIsImVuY29kZSIsImpwZyJdXQ/file.jpg?sha=a58020a577e8e132"
+          elif "Anne Isaksen Østergaard" in currentTeacher:
+            embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
+          #print('thumbnails registered, handling files')
+          forLoopFiles = []
+          for j in range(0, len(files[selection[i]].split(','))):
+            forLoopFiles.append(files[selection[i]].split(',')[j])
+          forLoopFileNames = []
+          for j in range(0, len(fileNames[selection[i]].split(','))):
+            forLoopFileNames.append(fileNames[selection[i]].split(',')[j])
+          fileOutput = ""
+          for k in range(0, len(forLoopFiles)):
+            fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
+          #print('files handled, creating embed')
+          embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor)
+          embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
+          embed.set_footer(text=author[selection[i]])
+          embed.add_field(name="Filer", value=fileOutput, inline=True)
+          embed.set_thumbnail(url=embedThumbnail)
+          print('embed %d created, sending embed' % selection[i])
+          await ctx.send(embed=embed)
+          #print('embed sent, reiterating for loop or returning')
   return
 
 bot.run(os.getenv('fessortoken'))
