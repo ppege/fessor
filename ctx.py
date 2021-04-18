@@ -109,9 +109,9 @@ async def scan(ctx, *args):
       for i in range(0, len(begivenhed)):
         lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
       description = "\n\n".join(lektieList)
-      futureField2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv navnet på faget, du vil se.\nMulighed 3. Skriv datoen på den lektie, du vil se."
+      futureField2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv `søg [fag]`.\nMulighed 3. Skriv `dato [dato]`."
       embed=discord.Embed(title="Fandt %d lektier" % len(begivenhed), description=description, color=0xFF0000)
-      embed.add_field(name="Hvad nu?", value="Skriv tallet, der tilhænger den lektie, du vil se.")
+      embed.add_field(name="Hvad nu?", value=futureField2)
       await status.edit(embed=embed)
       userInput = await bot.wait_for("message")
       userInput = userInput.content
@@ -125,16 +125,26 @@ async def scan(ctx, *args):
       if isInt == 1:
         userInput = [userInput - 1]
       else:
-        numList = []
-        for i in range(0, len(begivenhed)):
-          if str(userInput) in begivenhed[i]:
-            numList.append(i)
-        userInput = numList
-        print(str(userInput))
+        splitInput = userInput.split(' ')
+        if splitInput[0] == "søg":
+          userInput = userInput.replace('søg ', '')
+          numList = []
+          for i in range(0, len(begivenhed)):
+            if str(userInput) in begivenhed[i]:
+              numList.append(i)
+          userInput = numList
+        elif splitInput[0] == "dato":
+          userInput = userInput.replace('dato ', '')
+          numList = []
+          for i in range(0, len(begivenhed)):
+            if str(userInput) in tidspunkt[i]:
+              numList.append(i)
+          userInput = numList
+      print(str(userInput))
       try:
         await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
       except:
-        await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
+        await status.edit(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
         raise
     except:
       raise
