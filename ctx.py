@@ -170,17 +170,22 @@ async def bury(ctx):
     await ctx.send('https://i.imgur.com/SL9KqwC.png')
 
 @bot.command()
-async def blacklist(ctx, action, item):
+async def blacklist(ctx, *args):
   config = configparser.ConfigParser()
   config.read('configs/config.ini')
   oldCfg = config['blacklist']['list'].split(', ')
   output = "Error"
-  if action == "add":
-    oldCfg.append(item)
-    output = "Successfully added %s to the blacklist!" % (item)
-  if action == "remove":
-    oldCfg.remove(item)
-    output = "Successfully removed %s from the blacklist!" % (item)
+  if len(args) == 0:
+    output = config['blacklist']['list']
+    await ctx.send(embed=discord.Embed(title="Blacklist", description=output))
+    return
+  else:
+    if args[0] == "add":
+      oldCfg.append(args[1])
+      output = "Successfully added %s to the blacklist!" % (args[1])
+    if args[0] == "remove":
+      oldCfg.remove(args[1])
+      output = "Successfully removed %s from the blacklist!" % (args[1])
   newCfg = ', '.join(oldCfg)
   config['blacklist']['list'] = newCfg
   with open('configs/config.ini', 'w') as configfile:

@@ -29,10 +29,12 @@ async def on_message(message):
   config = configparser.ConfigParser()
   config.read('configs/config.ini')
   if any(word in message.content.lower() for word in config['blacklist']['list'].split(', ')):
-    await message.delete()
+    try:
+      await message.delete()
+    except:
+      await message.add_reaction('🇱')
   if message.author.id == 159985870458322944:
     await message.channel.send('Luk røven MEE6')
-
 
 
 
