@@ -13,7 +13,6 @@ import configparser
 from functions.school.lektiescanner import lektiescan
 from threading import Timer
 import pytz
-from googletrans import Translator
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='.', intents=intents)
@@ -82,14 +81,6 @@ async def suggest(ctx, suggestion):
   f.close
   user = bot.get_user(273845229130481665)
   await user.send(embed=discord.Embed(title='Suggestion from %s' % ctx.author, description=suggestion, color=0xFF0000))
-
-@bot.command()
-async def translate(ctx):
-  translator = Translator()
-  translations = translator.translate(['The quick brown fox', 'jumps over', 'the lazy dog'], dest='ko')
-  for translation in translations:
-    print(translation.origin, ' -> ', translation.text)
-
 
 @bot.command()
 async def skema(ctx, *args):
