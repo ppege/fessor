@@ -261,7 +261,7 @@ async def perms(ctx, *args):
 async def next(ctx):
     today = datetime.datetime.today().weekday()
     today = str(today)
-    usedSchedule = "Stupid ass idiot"
+    usedSchedule = "L"
     if today == "0":
       usedSchedule = schedule.monday
     elif today == "1":
@@ -273,10 +273,11 @@ async def next(ctx):
     elif today == "4":
       usedSchedule = schedule.friday
     now = datetime.datetime.now()
-    hours = 1
+    hours = 2
     hours_added = datetime.timedelta(hours = hours)
     newtime = now + hours_added
     currentTime = newtime.strftime("%H:%M")
+    print(currentTime)
     currentTime = int(str(currentTime).replace(':', ''))
     nextClass = "There is no next class today."
     classNum = 0
