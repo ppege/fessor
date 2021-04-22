@@ -14,8 +14,13 @@ from functions.school.lektiescanner import lektiescan
 from threading import Timer
 import pytz
 
+if os.getenv('mode') == "updates":
+  prefix = ','
+else:
+  prefix = '.'
+
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix='.', intents=intents)
+bot = commands.Bot(command_prefix=prefix, intents=intents)
 
 async def notify(id, cause):
   if cause == 'banned':
