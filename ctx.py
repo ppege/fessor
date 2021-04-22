@@ -221,6 +221,13 @@ async def settings(ctx, setting, value):
     await ctx.send(embed=embed)
 
 @bot.command()
+async def shutdown(ctx):
+  allowed = await check(ctx.author.id, 'admin')
+  if allowed != "yes": return
+  await ctx.send(embed=discord.Embed(title='Shutting down...', description='', color=0x0000FF))
+  sys.exit(0)
+
+@bot.command()
 async def bury(ctx):
   allowed = await check(ctx.author.id, 'bury')
   if allowed != "yes": return
