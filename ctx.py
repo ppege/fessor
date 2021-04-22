@@ -81,6 +81,7 @@ async def suggest(ctx, suggestion):
   f.close
   user = bot.get_user(273845229130481665)
   await user.send(embed=discord.Embed(title='Suggestion from %s' % ctx.author, description=suggestion, color=0xFF0000))
+  await ctx.send(embed=discord.Embed(title='Suggestion sendt', description=suggestion, color=0xFF0000))
 
 @bot.command()
 async def skema(ctx, *args):
@@ -98,6 +99,53 @@ async def skema(ctx, *args):
     except:
       await ctx.send('Invalid dag, mongol')
 
+#@bot.command()
+async def overview(ctx, *args):
+  if len(args) == 0:
+    await ctx.send('I dag, i morgen eller en dato?')
+    userInput = await bot.wait_for("message")
+    if userInput.content.lower() == "i dag":
+      now = datetime.datetime.now()
+      hours = 2
+      hours_added = datetime.timedelta(hours = hours)
+      newtime = now + hours_added
+      fulltime = newtime.strftime('%d. %b %H:%M').replace('Oct', 'Okt').lower()
+      currentDate =  newtime.strftime('%d. %b').replace('Oct', 'Okt').lower()
+      dato=currentDate
+    elif userInput.content.lower() == "i morgen":
+      now = datetime.datetime.now()
+      hours = 2
+      hours_added = datetime.timedelta(hours = hours)
+      newtime = now + hours_added
+      days = 1
+      days_added = datetime.timedelta(days = days)
+      newnewtime = newtime + days_added
+      fulltime = newnewtime.strftime('%d. %b %H:%M').replace('Oct', 'Okt').lower()
+      currentDate =  newnewtime.strftime('%d. %b').replace('Oct', 'Okt').lower()
+      await ctx.send(currentDate)
+      dato=currentDate
+    else:
+      dato=userInput
+  else:
+    dato=' '.join(args)
+    print(dato)
+
+  status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
+  begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
+  numList = []
+  for i in range(0, len(tidspunkt)):
+    if dato in tidspunkt[i]:
+      numList.append(i)
+  userInput = numList
+  print(str(userInput))
+  async def lektier():
+    response = await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
+    await status.delete()
+    if response == "fail":
+      await status.edit(embed=discord.Embed(title="Ingen lektier fundet", description="", color=0xFF0000))
+  def skema():
+    print('nothign')
+    
 
 @bot.command()
 async def scan(ctx, *args):
@@ -135,7 +183,6 @@ async def scan(ctx, *args):
         await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
       except:
         await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
-        raise
     except:
       raise
       await status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
@@ -331,6 +378,11 @@ async def unmute(ctx, member: discord.Member):
 
 async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection):
   print('post() called')
+  try:
+    print(selection[0])
+  except:
+    print('poop')
+    return "fail"
   if selection[0] == -1:
     for i in range(0, len(begivenhed)):
       #print('creating post %d' % i)
@@ -447,6 +499,6 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           print('embed %d created, sending embed' % selection[i])
           await ctx.send(embed=embed)
           #print('embed sent, reiterating for loop or returning')
-  return
+  return "success"
 
 bot.run(os.getenv('fessortoken'))

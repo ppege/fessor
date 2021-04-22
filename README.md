@@ -8,8 +8,8 @@ bot designed for the matematikfessor.dk discord server.
 - slander gaming
 - moderation features
 - schedule manager
+- help command
 
 ## coming soon
 - music player
 - gif scanner
-- help command

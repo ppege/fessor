@@ -24,7 +24,7 @@ def lektiescan(ctx):
     fileNames = []
     for i in range(0, len(links)):
         home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
-        home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø')
+        home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø').replace('&nbsp;', '')
         newBegivenhed = re.findall("(?<=class=\"ajaxModal\">).*?(?=</a>)", home_page)
         begivenhed.append(newBegivenhed[0].replace('&#xE6;', 'æ'))
         newTidspunkt = re.findall("(?<=<dd>).*?(?= <)", home_page)
@@ -41,7 +41,6 @@ def lektiescan(ctx):
           shitToReplaceInForLoop = hexToRemove[i]
           preHexRemoval = preHexRemoval.replace(shitToReplaceInForLoop, '')
         finishedBeskrivelse = preHexRemoval.replace('|', '')
-        beskrivelse.append(finishedBeskrivelse)
         newAuthor = re.findall("(?<=<p><small class=\"muted\">).*?(?=</small></p>)", home_page)
         author.append(newAuthor[0])
         newFil = re.findall("(?<=<a class=\"ajaxModal\" href=\").*?(?=\")", home_page)
@@ -60,5 +59,13 @@ def lektiescan(ctx):
         else:
           fileNameCollection = "Ingen"
         fileNames.append(fileNameCollection)
+        if linkInPost != '':
+          target = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", newBeskrivelse[0])
+          href = re.findall("(?<=<a href=\").*?(?=\")", newBeskrivelse[0])
+          for i in range(0, len(href)):
+            if target[i] != href[i]:
+              finishedBeskrivelse = finishedBeskrivelse.replace(target[i], '')
+              finishedBeskrivelse = finishedBeskrivelse.replace(href[i], f"[{target[i]}]({href[i]})")
+        beskrivelse.append(finishedBeskrivelse)
   
   return begivenhed, beskrivelse, author, files, tidspunkt, fileNames
