@@ -1,4 +1,5 @@
-print('importing libraries...')
+#print('importing libraries...')
+import sys
 import discord
 import os
 import datetime
@@ -9,7 +10,7 @@ import discord.ext.commands
 from discord.ext import commands
 from discord.utils import get
 import asyncio
-print('importing modules...')
+#print('importing modules...')
 from keep_alive import keep_alive
 from functions.school import schedule
 from functions.school.lektiescanner import lektiescan
@@ -19,7 +20,7 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-  print('main logged in as {0.user}'.format(client))
+  print('MAIN READY')
   await client.change_presence(activity=discord.Game(name=".help"))
   
 @client.event
@@ -29,13 +30,17 @@ async def on_message(message):
   config = configparser.ConfigParser()
   config.read('configs/config.ini')
   if any(word in message.content.lower() for word in config['blacklist']['list'].split(', ')):
-    await message.delete()
+    try:
+      await message.delete()
+    except:
+      await message.add_reaction('🇱')
   if message.author.id == 159985870458322944:
     await message.channel.send('Luk røven MEE6')
-
+  if message.content == ".shutdown" and config[str(message.author.id)]['admin'] == "true":
+    sys.exit()
 
 
 
 keep_alive()
-print('logging in...')
+#print('logging in...')
 client.run(os.getenv('fessortoken'))
