@@ -192,12 +192,8 @@ async def scan(ctx, *args):
       try:
         await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
       except:
-<<<<<<< HEAD
-        await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
-=======
         await status.edit(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
         raise
->>>>>>> main
     except:
       raise
       await status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
