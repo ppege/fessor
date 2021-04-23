@@ -13,6 +13,11 @@ import configparser
 from functions.school.lektiescanner import lektiescan
 from threading import Timer
 import pytz
+import time
+startTime = time.time()
+def getUptime():
+    uptime = time.time() - startTime
+    return str(datetime.timedelta(seconds=uptime))
 
 if os.getenv('mode') == "updates":
   prefix = ','
@@ -66,6 +71,16 @@ async def on_ready():
   print('CTX READY.')
   print('{0.user}'.format(bot))
 
+
+@bot.command()
+async def status(ctx):
+  config = configparser.ConfigParser()
+  config.read('configs/config.ini')
+  uptime = getUptime()
+  description = f"Uptime: `{uptime}`\nMode: `{os.getenv('mode')}`\nVersion: `{config['config']['version']}`"
+  embed=discord.Embed(title='Status', description=description, color=0x000143)
+  embed.set_footer(text='Created and maintained by Nangu')
+  await ctx.send(embed=embed)
 
 @bot.command()
 async def s(ctx, victim):
@@ -154,20 +169,28 @@ async def overview(ctx, *args):
 
 @bot.command()
 async def scan(ctx, *args):
-  if len(args) == 0:
     try:
+      if len(args) == 0:
+        argsPresent = False
+      else:
+        argsPresent = True
+        userInput = ' '.join(args)
+
       status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
-      begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
-      lektieList = []
-      for i in range(0, len(begivenhed)):
-        lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
-      description = "\n\n".join(lektieList)
-      futureField2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv `søg [fag]`.\nMulighed 3. Skriv `dato [dato]`."
-      embed=discord.Embed(title="Fandt %d lektier" % len(begivenhed), description=description, color=0xFF0000)
-      embed.add_field(name="Hvad nu?", value=futureField2)
-      await status.edit(embed=embed)
-      userInput = await bot.wait_for("message")
-      userInput = userInput.content
+      begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(ctx)
+      if argsPresent == False:
+        lektieList = []
+        for i in range(0, len(begivenhed)):
+          lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
+        description = "\n\n".join(lektieList)
+        Field2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv `søg [fag]`.\nMulighed 3. Skriv `dato [dato]`."
+        embed=discord.Embed(title="Fandt %d lektier" % len(begivenhed), description=description, color=0xFF0000)
+        embed.add_field(name="Hvad nu?", value=Field2)
+        await status.edit(embed=embed)
+        userInput = await bot.wait_for("message")
+        userInput = userInput.content
+      else:
+        await status.delete()
       isInt = 0
       try:
         int(userInput)
@@ -195,7 +218,7 @@ async def scan(ctx, *args):
           userInput = numList
       print(str(userInput))
       try:
-        await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
+        await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput, url)
       except:
         await status.edit(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
         raise
@@ -405,7 +428,7 @@ async def unmute(ctx, member: discord.Member):
    embed = discord.Embed(title="Unmuted", description=f"{member.mention} has been unmuted",colour=discord.Colour.light_gray())
    await ctx.send(embed=embed)
 
-async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection):
+async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
   print('post() called')
   try:
     print(selection[0])
@@ -462,9 +485,9 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           for k in range(0, len(forLoopFiles)):
             fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
           #print('files handled, creating embed')
-          embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor)
+          embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor, url=url[i])
           embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
-          embed.set_footer(text=author[i])
+          embed.set_footer(text=f"{author[i]}")
           embed.add_field(name="Filer", value=fileOutput, inline=True)
           embed.set_thumbnail(url=embedThumbnail)
           print('embed %d created, sending embed' % i)
@@ -520,9 +543,9 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           for k in range(0, len(forLoopFiles)):
             fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
           #print('files handled, creating embed')
-          embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor)
+          embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
           embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
-          embed.set_footer(text=author[selection[i]])
+          embed.set_footer(text=f"{author[selection[i]]}")
           embed.add_field(name="Filer", value=fileOutput, inline=True)
           embed.set_thumbnail(url=embedThumbnail)
           print('embed %d created, sending embed' % selection[i])
