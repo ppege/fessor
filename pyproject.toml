@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "fessor"
-version = "0.1.0"
-description = ""
-authors = ["Replit user <replituser@example.com>"]
+version = "86"
+description = "Discord bot designed for matematikfessor.dk server"
+authors = ["Replit user <nanguthenangu@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

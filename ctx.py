@@ -165,7 +165,19 @@ async def overview(ctx, *args):
       await status.edit(embed=discord.Embed(title="Ingen lektier fundet", description="", color=0xFF0000))
   def skema():
     print('nothign')
-    
+
+@bot.command()
+async def modify(ctx, category, key, value):
+  allowed = await check(ctx.author.id, 'admin')
+  if allowed != "yes": return
+  config = configparser.ConfigParser()
+  config.read('configs/assets.ini')
+  config[category][key] = value
+  with open('configs/assets.ini', 'w') as configfile:
+    config.write(configfile)
+  output = "Successfully replaced"
+  embed=discord.Embed(title=output, description="", color=0xFF0000)
+  await ctx.send(embed=embed)
 
 @bot.command()
 async def scan(ctx, *args):
@@ -220,11 +232,11 @@ async def scan(ctx, *args):
       try:
         await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput, url)
       except:
-        await status.edit(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
+        await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
         raise
     except:
       raise
-      await status.edit(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
+      await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
 
 @bot.command()
 async def settings(ctx, setting, value):
@@ -471,7 +483,7 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           elif "Stig Andersen" in currentTeacher:
             embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
           elif "Jacob Albrechtsen" in currentTeacher:
-            embedThumbnail = "https://www.holdsport.dk/media/W1siZiIsIjIwMjAvMDIvMDkvM29uYzkzbXhwN19jOTI4MWE0YV9lZmU5XzQxNDNfOWI0M19lYTI3MzE2Yzk1NWQuanBnIl0sWyJwIiwidGh1bWIiLCIyMDB4MjAwIyJdLFsicCIsImVuY29kZSIsImpwZyJdXQ/file.jpg?sha=a58020a577e8e132"
+            embedThumbnail = "assets/viggo/teachers/jacob.jpg"
           elif "Anne Isaksen Østergaard" in currentTeacher:
             embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
           #print('thumbnails registered, handling files')
@@ -517,21 +529,25 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
       #print('colors registered')
       if 1 == 1:
           #print('registering thumbnails')
+          assets = configparser.ConfigParser()
+          assets.read('configs/assets.ini')
           embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
           if "Birte Holst Andersen" in currentTeacher:
-            embedThumbnail = "https://www.meaningfulwomen.com/wp-content/uploads/grumpy-old-woman.jpg"
+            embedThumbnail = "birte"
           elif "Anne-Mette Hessel" in currentTeacher:
-            embedThumbnail = "https://www.hjv.dk/oe/HDNJY/nyheder/PublishingImages/Anne-Mette%20Hessel%20p%C3%A5%20trombone.jpg"
+            embedThumbnail = "annemette"
           elif "Camilla Willemoes Holst" in currentTeacher:
-            embedThumbnail = "https://legacy.tyt.com/wp-content/uploads/Crazy-Lady-Casually-Stabs-Innocent-People-on-The-Street-Disturbing-Video.jpg"
+            embedThumbnail = "camilla"
           elif "Jens Pedersen" in currentTeacher:
-            embedThumbnail = "https://images.halloweencostumes.com/products/9073/1-1/wild-caveman-costume.jpg"
+            embedThumbnail = "jens"
           elif "Stig Andersen" in currentTeacher:
-            embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg"
+            embedThumbnail = "stig"
           elif "Jacob Albrechtsen" in currentTeacher:
-            embedThumbnail = "https://www.holdsport.dk/media/W1siZiIsIjIwMjAvMDIvMDkvM29uYzkzbXhwN19jOTI4MWE0YV9lZmU5XzQxNDNfOWI0M19lYTI3MzE2Yzk1NWQuanBnIl0sWyJwIiwidGh1bWIiLCIyMDB4MjAwIyJdLFsicCIsImVuY29kZSIsImpwZyJdXQ/file.jpg?sha=a58020a577e8e132"
+            embedThumbnail = "jacob"
           elif "Anne Isaksen Østergaard" in currentTeacher:
-            embedThumbnail = "https://cdn.store-factory.com/www.couteaux-services.com/content/product_9732713b.jpg?v=1518691523"
+            embedThumbnail = "anne"
+          if "https" not in embedThumbnail:
+            embedThumbnail = assets['teachers'][embedThumbnail]
           #print('thumbnails registered, handling files')
           forLoopFiles = []
           for j in range(0, len(files[selection[i]].split(','))):
