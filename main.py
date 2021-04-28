@@ -21,7 +21,7 @@ client = discord.Client()
 @client.event
 async def on_ready():
   print('MAIN READY')
-  await client.change_presence(activity=discord.Game(name=".help"))
+  await client.change_presence(activity=discord.Game(name="test!!!"))
   
 @client.event
 async def on_message(message):
@@ -38,6 +38,9 @@ async def on_message(message):
     await message.channel.send('Luk røven MEE6')
   if message.content == ".shutdown" and config[str(message.author.id)]['admin'] == "true":
     sys.exit()
+  if message.content == "pingmain":
+    print('main pinged')
+    await message.channel.send('pongmain')
 
 
 

@@ -84,6 +84,7 @@ async def status(ctx):
 
 @bot.command()
 async def ping(ctx):
+  print('ctx pinged')
   await ctx.send('pong!')
 
 @bot.command()
