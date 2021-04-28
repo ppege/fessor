@@ -19,4 +19,8 @@ async def update(ctx):
   if ctx.author.id == 273845229130481665:
     os.system('git pull')
 
+@bot.command()
+async def ping(ctx):
+  ctx.send('pong!')
+
 bot.run(os.getenv('fessortoken'))
