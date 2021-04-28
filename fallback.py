@@ -14,4 +14,9 @@ async def start(ctx):
   if ctx.author.id == 273845229130481665:
     os.system('python3 ctx.py & python3 main.py')
 
+@bot.command()
+async def update(ctx):
+  if ctx.author.id == 273845229130481665:
+    os.system('git pull')
+
 bot.run(os.getenv('fessortoken'))
