@@ -83,9 +83,12 @@ async def status(ctx):
   await ctx.send(embed=embed)
 
 @bot.command()
-async def ping(ctx):
+async def ping(ctx, *args):
   print('ctx pinged')
-  await ctx.send('pong!')
+  if len(args) == 0:
+    await ctx.send('pong!')
+  else:
+    await ctx.send(" ".join(args))
 
 @bot.command()
 async def s(ctx, victim):

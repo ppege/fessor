@@ -12,7 +12,7 @@ async def on_ready():
 @bot.command()
 async def start(ctx):
   if ctx.author.id == 273845229130481665:
-    await ctx.send(embed=discord.Embed(title='Starting bot...', description='', color=0xFFFFFF)
+    await ctx.send(embed=discord.Embed(title='Starting bot...', description='', color=0xFFFFFF))
     os.system('python3 ctx.py & python3 main.py')
 
 @bot.command()
