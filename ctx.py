@@ -83,6 +83,11 @@ async def status(ctx):
   await ctx.send(embed=embed)
 
 @bot.command()
+async def ping(ctx):
+  print('ctx pinged')
+  await ctx.send('pong!')
+
+@bot.command()
 async def s(ctx, victim):
   allowed = await check(ctx.author.id, 'slander')
   if allowed != "yes": return
