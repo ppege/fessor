@@ -96,11 +96,13 @@ async def on_message(message):
 '''
 @bot.command()
 async def status(ctx):
+  config = configparser.ConfigParser()
+  config.read('cred.ini')
   uptime = getUptime()
   my_system = platform.uname()
   repo = git.Repo()
   count = repo.git.rev_list('--count', 'HEAD')
-  description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nMode: `{os.getenv('mode')}`\nVersion: `{count}`"
+  description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
   embed=discord.Embed(title='Status', description=description, color=0x000143)
   embed.set_footer(text='Created and maintained by Nangu')
   await ctx.send(embed=embed)
