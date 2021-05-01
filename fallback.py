@@ -1,6 +1,7 @@
 import discord
 import os
 from discord.ext import commands
+import sys
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='$', intents=intents)
@@ -13,7 +14,8 @@ async def on_ready():
 async def start(ctx):
   if ctx.author.id == 273845229130481665:
     await ctx.send(embed=discord.Embed(title='Starting bot...', description='', color=0xFFFFFF))
-    os.system('python3 ctx.py & python3 main.py')
+    os.system('python3 ctx.py &')
+    sys.exit(0)
 
 @bot.command()
 async def update(ctx):
