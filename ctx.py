@@ -598,5 +598,9 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           #print('embed sent, reiterating for loop or returning')
   return "success"
 
-keep_alive()
-bot.run(os.getenv('fessortoken'))
+config = configparser.ConfigParser()
+config.read('cred.ini')
+# cred stands for credidentials
+# i changed from env to ini so i can host the bot on raspberry pi
+
+bot.run(config['config']['fessortoken'])
