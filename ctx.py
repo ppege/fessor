@@ -15,6 +15,8 @@ from threading import Timer
 import pytz
 import time
 from keep_alive import keep_alive
+import platform
+import git
 startTime = time.time()
 def getUptime():
     uptime = time.time() - startTime
@@ -72,7 +74,7 @@ async def on_ready():
   print('CTX READY.')
   print('{0.user}'.format(bot))
   await bot.change_presence(activity=discord.Game(name="matematikfessor.dk"))
-
+'''
 @bot.event
 async def on_message(message):
   if message.author == bot.user:
@@ -91,13 +93,14 @@ async def on_message(message):
   if message.content == "pingmain":
     print('main pinged')
     await message.channel.send('pongmain')
-
+'''
 @bot.command()
 async def status(ctx):
-  config = configparser.ConfigParser()
-  config.read('configs/config.ini')
   uptime = getUptime()
-  description = f"Uptime: `{uptime}`\nMode: `{os.getenv('mode')}`\nVersion: `{config['config']['version']}`"
+  my_system = platform.uname()
+  repo = git.Repo()
+  count = repo.git.rev_list('--count', 'HEAD')
+  description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nMode: `{os.getenv('mode')}`\nVersion: `{count}`"
   embed=discord.Embed(title='Status', description=description, color=0x000143)
   embed.set_footer(text='Created and maintained by Nangu')
   await ctx.send(embed=embed)
