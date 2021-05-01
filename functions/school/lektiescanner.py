@@ -2,6 +2,7 @@ from requests import Session
 from bs4 import BeautifulSoup as bs
 import re
 import os
+import configparser
 
 def lektiescan(ctx):
   config = configparser.ConfigParser()

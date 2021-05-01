@@ -2,6 +2,7 @@ import discord
 import os
 from discord.ext import commands
 import sys
+import configparser
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='$', intents=intents)
