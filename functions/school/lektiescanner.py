@@ -4,10 +4,12 @@ import re
 import os
 
 def lektiescan(ctx):
+  config = configparser.ConfigParser()
+  config.read('cred.ini')
   print('lektiescanning...')
-  UserName = os.getenv('USERNAME')
-  Password = os.getenv('PASSWORD')
-  fingerprint = os.getenv('FINGERPRINT')
+  UserName = config['config']['USERNAME']
+  Password = config['config']['PASSWORD']
+  fingerprint = config['config']['FINGERPRINT']
   with Session() as s:
     site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
     bs_content = bs(site.content, "html.parser")

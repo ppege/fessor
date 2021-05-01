@@ -28,4 +28,6 @@ async def ping(ctx):
   print('fallback pinged')
   await ctx.send('pong!')
 
-bot.run(os.getenv('fessortoken'))
+config = configparser.ConfigParser()
+config.read('cred.ini')
+bot.run(config['config']['fessortoken'])
