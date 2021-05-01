@@ -14,6 +14,7 @@ from functions.school.lektiescanner import lektiescan
 from threading import Timer
 import pytz
 import time
+from keep_alive import keep_alive
 startTime = time.time()
 def getUptime():
     uptime = time.time() - startTime
@@ -70,7 +71,26 @@ def idHandler(id):
 async def on_ready():
   print('CTX READY.')
   print('{0.user}'.format(bot))
+  await bot.change_presence(activity=discord.Game(name="matematikfessor.dk"))
 
+@bot.event
+async def on_message(message):
+  if message.author == bot.user:
+    return
+  config = configparser.ConfigParser()
+  config.read('configs/config.ini')
+  if any(word in message.content.lower() for word in config['blacklist']['list'].split(', ')):
+    try:
+      await message.delete()
+    except:
+      await message.add_reaction('🇱')
+  if message.author.id == 159985870458322944:
+    await message.channel.send('Luk røven MEE6')
+  if message.content == ".shutdown" and config[str(message.author.id)]['admin'] == "true":
+    sys.exit()
+  if message.content == "pingmain":
+    print('main pinged')
+    await message.channel.send('pongmain')
 
 @bot.command()
 async def status(ctx):
@@ -273,6 +293,7 @@ async def shutdown(ctx):
   allowed = await check(ctx.author.id, 'admin')
   if allowed != "yes": return
   await ctx.send(embed=discord.Embed(title='Shutting down...', description='', color=0x0000FF))
+  os.system('python3 fallback.py &')
   sys.exit(0)
 
 @bot.command()
@@ -577,4 +598,5 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           #print('embed sent, reiterating for loop or returning')
   return "success"
 
+keep_alive()
 bot.run(os.getenv('fessortoken'))
