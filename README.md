@@ -11,5 +11,4 @@ bot designed for the matematikfessor.dk discord server.
 - help command
 
 ## coming soon
-- music player
 - gif scanner
