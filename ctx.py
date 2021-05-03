@@ -3,6 +3,7 @@ from discord.utils import get
 import os
 import discord
 import discord.ext.commands
+from discord.ext.commands import CommandNotFound
 import asyncio
 from functions.school import schedule
 import datetime
@@ -74,6 +75,13 @@ async def on_ready():
   print('CTX READY.')
   print('{0.user}'.format(bot))
   await bot.change_presence(activity=discord.Game(name="matematikfessor.dk"))
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        return
+    raise error
+
 '''
 @bot.event
 async def on_message(message):
