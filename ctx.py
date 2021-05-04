@@ -160,7 +160,8 @@ async def skema(ctx, *args):
     except:
       await ctx.send('Invalid dag, mongol')
 
-#@bot.command()
+'''
+@bot.command()
 async def overview(ctx, *args):
   if len(args) == 0:
     await ctx.send('I dag, i morgen eller en dato?')
@@ -191,6 +192,7 @@ async def overview(ctx, *args):
     dato=' '.join(args)
     print(dato)
 
+
   status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
   begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
   numList = []
@@ -206,6 +208,7 @@ async def overview(ctx, *args):
       await status.edit(embed=discord.Embed(title="Ingen lektier fundet", description="", color=0xFF0000))
   def skema():
     print('nothign')
+'''
 
 @bot.command()
 async def modify(ctx, category, key, value):
@@ -228,7 +231,6 @@ async def scan(ctx, *args):
       else:
         argsPresent = True
         userInput = ' '.join(args)
-
       status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
       begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(ctx)
       if argsPresent == False:
@@ -264,12 +266,43 @@ async def scan(ctx, *args):
           userInput = numList
         elif splitInput[0] == "dato":
           userInput = userInput.replace('dato ', '')
+          if userInput == "tomorrow":
+            tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+            tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+            userInput = tomorrow
+            numList = []
+            for i in range(0, len(tidspunkt)):
+              if str(userInput) in tidspunkt[i]:
+                numList.append(i)
+            userInput = numList
+          elif userInput in ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']:
+            weekday = datetime.datetime.today().weekday()
+            diff = weekday - int(options.conversions[userInput])
+            targetDate = datetime.date.today() - datetime.timedelta(days=diff)
+            targetDate = targetDate.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+            userInput = targetDate
+            numList = []
+            for i in range(0, len(tidspunkt)):
+              if str(userInput) in tidspunkt[i]:
+                numList.append(i)
+            userInput = numList
+          else:
+            numList = []
+            for i in range(0, len(begivenhed)):
+              if str(userInput) in tidspunkt[i]:
+                numList.append(i)
+            userInput = numList
+        elif splitInput[0] == "lærer":
+          userInput = userInput.replace('lærer ', '')
           numList = []
-          for i in range(0, len(begivenhed)):
-            if str(userInput) in tidspunkt[i]:
+          for i in range(0, len(author)):
+            if str(userInput) in author[i]:
               numList.append(i)
           userInput = numList
       print(str(userInput))
+      if str(userInput) == "[]":
+        await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
+        return
       try:
         await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput, url)
       except:

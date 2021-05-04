@@ -14,6 +14,23 @@ schedules = {
   "3": "https://i.imgur.com/kEhraci.png",
   "4": "https://i.imgur.com/C3p0iY6.png"
 }
+
+translations = {
+  "mandag": "monday",
+  "tirsdag": "tuesday",
+  "onsdag": "wednesday",
+  "torsdag": "thursday",
+  "fredag": "friday"
+}
+
+conversions = {
+  "mandag": "0",
+  "tirsdag": "1",
+  "onsdag": "2",
+  "torsdag": "3",
+  "fredag": "4"
+}
+
 commands = {
   "slander": "Slander en member af serveren. Skriv `.s help` for mere info",
   "suggest": "Forslag en ny feature. Dette bliver logget i bottens filer og DM'et til polska.",
