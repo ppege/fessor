@@ -23,7 +23,10 @@ def getUptime():
     uptime = time.time() - startTime
     return str(datetime.timedelta(seconds=uptime))
 
-if os.getenv('mode') == "updates":
+config = configparser.ConfigParser()
+config.read('cred.ini')
+
+if config['config']['mode'] == "updates":
   prefix = ','
 else:
   prefix = '.'
@@ -156,9 +159,22 @@ async def skema(ctx, *args):
     await ctx.send(output)
   else:
     try:
-      await ctx.send(options.skemaer[args[0]])
+      if args[0] in options.dayList:
+        await ctx.send(options.skemaer[args[0]])
+      elif args[0] == "tomorrow":
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        tomorrow = tomorrow.weekday()
+        await ctx.send(options.skemaer[options.dayList[tomorrow]])
+      else:
+        await ctx.send(embed=discord.Embed(title='Invalid input', description='Du skal enten angive en ugedag eller `tomorrow`.'))
     except:
-      await ctx.send('Invalid dag, mongol')
+      description = 'Det her burde VIRKELIG ikke være her.'
+      if args[0] == "tomorrow":
+        description = 'Er det mon en lørdag eller en søndag i morgen?'
+      else:
+        description = 'Sig lige til William, at han skal checke terminalen. Jeg har printet fejlen ud der.'
+        raise
+      await ctx.send(embed=discord.Embed(title='Invalid dag', description=description))
 
 '''
 @bot.command()

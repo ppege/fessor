@@ -31,6 +31,8 @@ conversions = {
   "fredag": "4"
 }
 
+dayList = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
+
 commands = {
   "slander": "Slander en member af serveren. Skriv `.s help` for mere info",
   "suggest": "Forslag en ny feature. Dette bliver logget i bottens filer og DM'et til polska.",
