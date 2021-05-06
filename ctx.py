@@ -115,8 +115,10 @@ async def status(ctx):
   count = repo.git.rev_list('--count', 'HEAD')
   description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
   embed=discord.Embed(title='Status', description=description, color=0x000143)
+  embed.add_field(name='Latest changes', value=repo.head.commit.message)
   embed.set_footer(text='Created and maintained by Nangu')
   await ctx.send(embed=embed)
+
 
 @bot.command()
 async def ping(ctx, *args):
@@ -176,55 +178,10 @@ async def skema(ctx, *args):
         raise
       await ctx.send(embed=discord.Embed(title='Invalid dag', description=description))
 
-'''
 @bot.command()
 async def overview(ctx, *args):
   if len(args) == 0:
-    await ctx.send('I dag, i morgen eller en dato?')
-    userInput = await bot.wait_for("message")
-    if userInput.content.lower() == "i dag":
-      now = datetime.datetime.now()
-      hours = 2
-      hours_added = datetime.timedelta(hours = hours)
-      newtime = now + hours_added
-      fulltime = newtime.strftime('%d. %b %H:%M').replace('Oct', 'Okt').lower()
-      currentDate =  newtime.strftime('%d. %b').replace('Oct', 'Okt').lower()
-      dato=currentDate
-    elif userInput.content.lower() == "i morgen":
-      now = datetime.datetime.now()
-      hours = 2
-      hours_added = datetime.timedelta(hours = hours)
-      newtime = now + hours_added
-      days = 1
-      days_added = datetime.timedelta(days = days)
-      newnewtime = newtime + days_added
-      fulltime = newnewtime.strftime('%d. %b %H:%M').replace('Oct', 'Okt').lower()
-      currentDate =  newnewtime.strftime('%d. %b').replace('Oct', 'Okt').lower()
-      await ctx.send(currentDate)
-      dato=currentDate
-    else:
-      dato=userInput
-  else:
-    dato=' '.join(args)
-    print(dato)
-
-
-  status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
-  begivenhed, beskrivelse, author, files, tidspunkt, fileNames = lektiescan(ctx)
-  numList = []
-  for i in range(0, len(tidspunkt)):
-    if dato in tidspunkt[i]:
-      numList.append(i)
-  userInput = numList
-  print(str(userInput))
-  async def lektier():
-    response = await post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput)
-    await status.delete()
-    if response == "fail":
-      await status.edit(embed=discord.Embed(title="Ingen lektier fundet", description="", color=0xFF0000))
-  def skema():
-    print('nothign')
-'''
+    await ctx.send(embed=discord.Embed(title='Ingen input', description=''))
 
 @bot.command()
 async def modify(ctx, category, key, value):
