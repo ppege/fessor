@@ -315,6 +315,12 @@ async def scan(ctx, *args):
       await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
 
 @bot.command()
+async def pl(ctx, arg):
+  config = configparser.ConfigParser()
+  config.read('configs/config.ini')
+  await ctx.send(config['playlists'][arg])
+
+@bot.command()
 async def settings(ctx, setting, value):
   allowed = await check(ctx.author.id, 'settings')
   if allowed != "yes": return
