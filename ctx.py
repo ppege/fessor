@@ -18,6 +18,7 @@ import time
 from keep_alive import keep_alive
 import platform
 import git
+from dateutil.relativedelta import relativedelta
 startTime = time.time()
 def getUptime():
     uptime = time.time() - startTime
@@ -180,8 +181,36 @@ async def skema(ctx, *args):
 
 @bot.command()
 async def overview(ctx, *args):
-  if len(args) == 0:
-    await ctx.send(embed=discord.Embed(title='Ingen input', description=''))
+  try:
+    if len(args) == 0:
+      await ctx.send(embed=discord.Embed(title='Ingen input', description=''))
+    elif len(args) > 1 and (args[0] == "tomorrow" or args[0] == "today"):
+      await ctx.send(embed=discord.Embed(title='For mange args', description='Denne kommando tager kun 1 argument.\nValide argumenter: `tomorrow`, `today`, `[dato]`'))
+    else:
+      userInput = " ".join(args)
+      if userInput == "tomorrow":
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+        tomorrowF = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+        weekday = options.dayList[tomorrow.weekday()]
+        output = [tomorrow, tomorrowF, weekday]
+      elif userInput == "today":
+        today = datetime.date.today()
+        todayF = today.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+        weekday = options.dayList[today.weekday()]
+        output = [today, todayF, weekday]
+      else:
+        userInput = userInput.lower()
+        userInputConv = userInput.replace('maj', 'may').replace('okt', 'oct')
+        date_time_obj = datetime.datetime.strptime(userInputConv, '%d. %b')
+        date_time_obj = date_time_obj + relativedelta(years=121)
+        weekday = options.dayList[date_time_obj.weekday()]
+        output = [date_time_obj, userInput, weekday]
+      await skema(ctx, output[2])
+      await scan(ctx, "dato", output[1])
+  except:
+    await ctx.send(embed=discord.Embed(title='Ukendt fejl', description='Jeg er ikke helt sikker på, hvad der gik galt.\nValide argumenter: `tomorrow`, `today`, `[dato]`'))
+    raise
+      
 
 @bot.command()
 async def modify(ctx, category, key, value):
@@ -351,7 +380,7 @@ async def blacklist(ctx, *args):
 async def poggies(ctx):
   allowed = await check(ctx.author.id, 'poggies')
   if allowed != "yes": return
-  f = open("poggers.txt", "r")
+  f = open("configs/poggers.txt", "r")
   fileContent = f.read()
   output = fileContent.split('\n')
   for i in range(0, len(output)):
