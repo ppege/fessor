@@ -301,6 +301,8 @@ async def scan(ctx, *args):
             if str(userInput) in author[i]:
               numList.append(i)
           userInput = numList
+        elif splitInput[0] == "all":
+          userInput = [-1]
       print(str(userInput))
       if str(userInput) == "[]":
         await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
