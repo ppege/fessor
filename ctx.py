@@ -77,6 +77,20 @@ def idHandler(id):
     id = id
   return id
 
+@bot.event
+async def on_command(ctx):
+  with open("data/log.txt", "a") as file:
+    file.write(f"[{datetime.datetime.now()}] {ctx.author}: \"{ctx.message.content}\" | Message ID: {ctx.message.id} | Author ID: {ctx.author.id}\n")
+  with open("data/data.json", "r") as file:
+    data = json.load(file)
+  try:
+    data['useCount'] = data['useCount'] + 1
+  except:
+    data['useCount'] = 1
+  data['lastUse'] = str(datetime.datetime.now())
+  data['lastCommandUsed'] = ctx.message.content
+  with open("data/data.json", "w") as file:
+    json.dump(data, file)
 
 @bot.event
 async def on_ready():
@@ -110,16 +124,18 @@ async def on_message(message):
     print('main pinged')
     await message.channel.send('pongmain')
 '''
-@bot.command()
-async def status(ctx):
+@bot.command(aliases=['stats', 'status'])
+async def info(ctx):
   config = configparser.ConfigParser()
   config.read('cred.ini')
+  with open("data/data.json", "r") as file:
+    data = json.load(file)
   uptime = getUptime()
   my_system = platform.uname()
   repo = git.Repo()
   count = repo.git.rev_list('--count', 'HEAD')
-  description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
-  embed=discord.Embed(title='Status', description=description, color=0x000143)
+  description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
+  embed=discord.Embed(title='Information and statistics', description=description, color=0x000143)
   embed.add_field(name='Latest changes', value=repo.head.commit.message)
   embed.set_footer(text='Created and maintained by Nangu')
   await ctx.send(embed=embed)
@@ -769,9 +785,12 @@ async def post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames
           await ctx.send(embed=embed)
           #print('embed sent, reiterating for loop or returning')
   return "success"
-
-config = configparser.ConfigParser()
-config.read('cred.ini')
+try:
+  config = configparser.ConfigParser()
+  config.read('cred.ini')
+except:
+  print('cred.ini does not exist.')
+  sys.exit()
 # cred stands for credidentials
 # i changed from env to ini so i can host the bot on raspberry pi
 
