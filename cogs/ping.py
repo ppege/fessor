@@ -11,7 +11,7 @@ class Ping(commands.Cog):
     async def ping(self, ctx):
         ping = self.bot.latency * 1000
         ping = '{0:.5g}'.format(ping)
-        await ctx.send(embed=discord.Embed(title="Pong!", description=f"Latency: {ping} ms", color=0xFF0000))
+        await ctx.send(embed=discord.Embed(title="Pong!", description=f"Latency: {ping} milliseconds", color=0xFF0000))
 
 def setup(bot):
     bot.add_cog(Ping(bot))
