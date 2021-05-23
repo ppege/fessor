@@ -19,7 +19,9 @@ class Devtools(commands.Cog):
     async def update(self, ctx):
         repo = git.Repo()
         remote = repo.remotes.origin
+        message = await ctx.send(embed=discord.Embed(title='Updating bot...', description=''))
         remote.pull()
+        await message.edit(embed=discord.Embed(title='Bot updated.', description='', color=0xFF0000))
 
 def setup(bot):
     bot.add_cog(Devtools(bot))
