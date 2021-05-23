@@ -1,15 +1,38 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import functions.utils
 import datetime
 from configs import options
 from functions.school.lektiescanner import lektiescan
 import configparser
 from dateutil.relativedelta import relativedelta
+import json
 
 class Skole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+
+    #@tasks.loop(minutes=5.0)
+    @commands.command()
+    async def scanLoop(self, ctx):
+      begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(ctx)
+      with open("data/scans.json", "r") as file:
+        data = json.load(file)
+      for i in range(len(beskrivelse)):
+        if beskrivelse[i] in data['beskrivelse']:
+          continue
+        data['begivenhed'].append(begivenhed[i])
+        data['beskrivelse'].append(beskrivelse[i])
+        data['author'].append(author[i])
+        data['files'].append(files[i])
+        data['tidspunkt'].append(tidspunkt[i])
+        data['fileNames'].append(fileNames[i])
+        data['url'].append(url[i])
+
+      with open("data/scans.json", "w") as file:
+        json.dump(data, file, indent=4)
+
 
     async def post(self, ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
           print('post() called')
