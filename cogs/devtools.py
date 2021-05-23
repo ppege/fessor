@@ -11,7 +11,7 @@ class Devtools(commands.Cog):
     @functions.utils.admin()
     @commands.command()
     async def exec(self, ctx, *, command):
-        output = subprocess.run(command, stdout=subprocess.PIPE).stdout.decode('utf-8')
+        output = subprocess.run(command, stdout=subprocess.PIPE, shell=True).stdout.decode('utf-8')
         await ctx.send(f'```\n{output}\n```')
 
     @functions.utils.admin()
