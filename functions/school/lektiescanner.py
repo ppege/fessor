@@ -4,7 +4,7 @@ import re
 import os
 import configparser
 
-def lektiescan(ctx):
+def lektiescan():
   config = configparser.ConfigParser()
   config.read('cred.ini')
   print('lektiescanning...')
@@ -72,5 +72,5 @@ def lektiescan(ctx):
               finishedBeskrivelse = finishedBeskrivelse.replace(target[i], '')
               finishedBeskrivelse = finishedBeskrivelse.replace(href[i], f"[{target[i]}]({href[i]})")
         beskrivelse.append(finishedBeskrivelse)
-  
+
   return begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url

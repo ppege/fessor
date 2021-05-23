@@ -11,28 +11,122 @@ import json
 class Skole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.scanLoop.start()
+
+    def cog_unload(self):
+        self.scanLoop.cancel()
 
 
-    #@tasks.loop(minutes=5.0)
-    @commands.command()
-    async def scanLoop(self, ctx):
-      begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(ctx)
-      with open("data/scans.json", "r") as file:
-        data = json.load(file)
-      for i in range(len(beskrivelse)):
-        if beskrivelse[i] in data['beskrivelse']:
-          continue
-        data['begivenhed'].append(begivenhed[i])
-        data['beskrivelse'].append(beskrivelse[i])
-        data['author'].append(author[i])
-        data['files'].append(files[i])
-        data['tidspunkt'].append(tidspunkt[i])
-        data['fileNames'].append(fileNames[i])
-        data['url'].append(url[i])
+    @tasks.loop(minutes=5.0)
+    async def scanLoop(self):
+        begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan()
+        selection = []
+        with open("data/scans.json", "r") as file:
+            data = json.load(file)
+        try:
+            for i in range(len(beskrivelse)):
+                if beskrivelse[i] in data['scans']['beskrivelse']:
+                    continue
+                data['scans']['begivenhed'].append(begivenhed[i])
+                data['scans']['beskrivelse'].append(beskrivelse[i])
+                data['scans']['author'].append(author[i])
+                data['scans']['files'].append(files[i])
+                data['scans']['tidspunkt'].append(tidspunkt[i])
+                data['scans']['fileNames'].append(fileNames[i])
+                data['scans']['url'].append(url[i])
+                selection.append(i)
+        except:
+            data['scans']['begivenhed'] = []
+            data['scans']['beskrivelse'] = []
+            data['scans']['author'] = []
+            data['scans']['files'] = []
+            data['scans']['tidspunkt'] = []
+            data['scans']['fileNames'] = []
+            data['scans']['url'] = []
+            for i in range(len(beskrivelse)):
+                if beskrivelse[i] in data['scans']['beskrivelse']:
+                    continue
+                data['scans']['begivenhed'].append(begivenhed[i])
+                data['scans']['beskrivelse'].append(beskrivelse[i])
+                data['scans']['author'].append(author[i])
+                data['scans']['files'].append(files[i])
+                data['scans']['tidspunkt'].append(tidspunkt[i])
+                data['scans']['fileNames'].append(fileNames[i])
+                data['scans']['url'].append(url[i])
+                selection.append(i)
 
-      with open("data/scans.json", "w") as file:
-        json.dump(data, file, indent=4)
 
+        with open("data/scans.json", "w") as file:
+            json.dump(data, file, indent=4)
+
+        if selection == []:
+            return
+        else:
+            channel = self.bot.get_channel(816693284147691530)
+            await self.post(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
+
+    async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
+        for i in range(0, len(selection)):
+            #print('creating post %d' % i)
+            currentClass = begivenhed[selection[i]]
+            currentTeacher = author[selection[i]]
+            embedColor = 0xFF5733
+            #print('registering colors')
+            if currentClass == 'Tysk' or currentClass == 'Kristendom':
+              embedColor = 0x9900FF
+            elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
+              embedColor = 0xFF0000
+            elif currentClass == 'Engelsk' or currentClass == 'Matematik':
+              embedColor = 0x0000FF
+            elif currentClass == 'Billedkunst':
+              embedColor = 0xFFFF00
+            elif currentClass == 'Geografi' or currentClass == 'Biologi':
+              embedColor = 0x00FF00
+            elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
+              embedColor = 0xFF9900
+            elif currentClass == 'Idræt':
+              embedColor = 0x00FFFF
+            #print('colors registered')
+            if 1 == 1:
+                #print('registering thumbnails')
+                assets = configparser.ConfigParser()
+                assets.read('configs/assets.ini')
+                embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+                if "Birte Holst Andersen" in currentTeacher:
+                  embedThumbnail = "birte"
+                elif "Anne-Mette Hessel" in currentTeacher:
+                  embedThumbnail = "annemette"
+                elif "Camilla Willemoes Holst" in currentTeacher:
+                  embedThumbnail = "camilla"
+                elif "Jens Pedersen" in currentTeacher:
+                  embedThumbnail = "jens"
+                elif "Stig Andersen" in currentTeacher:
+                  embedThumbnail = "stig"
+                elif "Jacob Albrechtsen" in currentTeacher:
+                  embedThumbnail = "jacob"
+                elif "Anne Isaksen Østergaard" in currentTeacher:
+                  embedThumbnail = "anne"
+                if "https" not in embedThumbnail:
+                  embedThumbnail = assets['teachers'][embedThumbnail]
+                #print('thumbnails registered, handling files')
+                forLoopFiles = []
+                for j in range(0, len(files[selection[i]].split(','))):
+                  forLoopFiles.append(files[selection[i]].split(',')[j])
+                forLoopFileNames = []
+                for j in range(0, len(fileNames[selection[i]].split(','))):
+                  forLoopFileNames.append(fileNames[selection[i]].split(',')[j])
+                fileOutput = ""
+                for k in range(0, len(forLoopFiles)):
+                  fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
+                #print('files handled, creating embed')
+                embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
+                embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
+                embed.set_footer(text=f"{author[selection[i]]}")
+                embed.add_field(name="Filer", value=fileOutput, inline=True)
+                embed.set_thumbnail(url=embedThumbnail)
+                print('embed %d created, sending embed' % selection[i])
+                await channel.send('@everyone ny lektie!')
+                await channel.send(embed=embed)
 
     async def post(self, ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
           print('post() called')
@@ -236,7 +330,7 @@ class Skole(commands.Cog):
             argsPresent = True
             userInput = ' '.join(args)
           status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
-          begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(ctx)
+          begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan()
           if argsPresent == False:
             lektieList = []
             for i in range(0, len(begivenhed)):
