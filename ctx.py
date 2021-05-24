@@ -101,8 +101,8 @@ async def cogs(ctx, action, cog):
                 fileAmount = len(os.listdir('./cogs'))
                 i = 0
                 for filename in os.listdir('./cogs'):
-                    i = i + 1
                     if filename.endswith('.py'):
+                        i = i + 1
                         bot.reload_extension(f"cogs.{filename[:-3]}")
                     if i % 5 == 0:
                         await message.edit(embed=discord.Embed(title=f'{i} cogs reloaded.'))
