@@ -4,10 +4,11 @@ import re
 import os
 import configparser
 
-def lektiescan():
+def lektiescan(output):
   config = configparser.ConfigParser()
   config.read('cred.ini')
-  print('lektiescanning...')
+  if output == True:
+      print('lektiescanning...')
   UserName = config['config']['USERNAME']
   Password = config['config']['PASSWORD']
   fingerprint = config['config']['FINGERPRINT']

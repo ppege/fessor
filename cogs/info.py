@@ -23,6 +23,7 @@ class Info(commands.Cog):
     @commands.command(aliases=['stats', 'status'])
     async def info(self, ctx):
         serverCount = len(self.bot.guilds)
+        ping = self.bot.latency * 1000
         config = configparser.ConfigParser()
         config.read('cred.ini')
         with open("data/data.json", "r") as file:
@@ -31,7 +32,7 @@ class Info(commands.Cog):
         my_system = platform.uname()
         repo = git.Repo()
         count = repo.git.rev_list('--count', 'HEAD')
-        description = f"Servers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
+        description = f"Servers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nExact ping: `{ping}`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
         embed=discord.Embed(title='Information and statistics', description=description, color=0x000143)
         embed.add_field(name='Latest changes', value=repo.head.commit.message)
         embed.set_footer(text='Created and maintained by Nangu')

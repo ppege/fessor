@@ -19,7 +19,7 @@ class Skole(commands.Cog):
 
     @tasks.loop(minutes=5.0)
     async def scanLoop(self):
-        begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan()
+        begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(False)
         selection = []
         with open("data/scans.json", "r") as file:
             data = json.load(file)
@@ -330,7 +330,7 @@ class Skole(commands.Cog):
             argsPresent = True
             userInput = ' '.join(args)
           status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
-          begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan()
+          begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(True)
           if argsPresent == False:
             lektieList = []
             for i in range(0, len(begivenhed)):
