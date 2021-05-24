@@ -124,7 +124,7 @@ async def coglist(ctx):
         if filename.endswith('.py'):
             i += 1
             cogList = cogList + f"{filename[:-3]}, "
-    await ctx.send(embed=discord.Embed(title=f'{i} cogs', description=cogList, color=0xFF0000))
+    await ctx.send(embed=discord.Embed(title=f'{i} cogs', description=cogList[:-2], color=0xFF0000))
 
 @functions.utils.admin()
 @bot.command()
