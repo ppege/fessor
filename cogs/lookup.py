@@ -123,9 +123,11 @@ class Lookup(commands.Cog):
         client = wolframalpha.Client(appID)
         message = await ctx.send(embed=discord.Embed(title=f'Searching for "{query}"...', description='This might take a while.'))
         response = client.query(query)
-        output = next(response.results).text
-        await message.edit(embed=discord.Embed(title=f'Answer for query: {query}', description=output, color=0xFF0000))
-
+        try:
+            output = next(response.results).text
+            await message.edit(embed=discord.Embed(title=f'Answer for query: {query}', description=output, color=0xFF0000))
+        except:
+            await message.edit(embed=discord.Embed(title=f'No results found for "{query}"', description='', color=0xFF0000))
 
 def setup(bot):
     bot.add_cog(Lookup(bot))
