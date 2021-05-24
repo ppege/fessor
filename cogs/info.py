@@ -6,12 +6,13 @@ import json
 import time
 import platform
 import functions.utils
+import datetime
 
 class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def getUptime():
+    def getUptime(self):
         print('getUptime called')
         with open("data/data.json", "r") as file:
             data = json.load(file)
@@ -21,15 +22,16 @@ class Info(commands.Cog):
     @functions.utils.banned()
     @commands.command(aliases=['stats', 'status'])
     async def info(self, ctx):
+        serverCount = len(self.bot.guilds)
         config = configparser.ConfigParser()
         config.read('cred.ini')
         with open("data/data.json", "r") as file:
           data = json.load(file)
-        uptime = time.time() - data['startTime']
+        uptime = self.getUptime()
         my_system = platform.uname()
         repo = git.Repo()
         count = repo.git.rev_list('--count', 'HEAD')
-        description = f"System: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
+        description = f"Servers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
         embed=discord.Embed(title='Information and statistics', description=description, color=0x000143)
         embed.add_field(name='Latest changes', value=repo.head.commit.message)
         embed.set_footer(text='Created and maintained by Nangu')
