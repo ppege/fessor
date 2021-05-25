@@ -82,13 +82,15 @@ class Lookup(commands.Cog):
         dest = dest.partition('-')
         origin = dest[0]
         destination = dest[2]
+        message = await ctx.send(embed=discord.Embed(title=f'Translating...', description='This might take a while.'))
         translator = Translator(from_lang=origin, to_lang=destination)
         output = translator.translate(words)
-        await ctx.send(embed=discord.Embed(title=f'Translation', description=output, color=0xFF0000))
+        await message.edit(embed=discord.Embed(title=f'Translation', description=output, color=0xFF0000))
 
     @functions.utils.banned()
     @commands.command()
     async def wiki(self, ctx, *, query):
+        message = await ctx.send(embed=discord.Embed(title=f'Searching for "{query}"...', description='This might take a while.'))
         if query.split(' ')[0] == "--dansk":
             query = query.replace('--dansk ', '')
             wikipedia.set_lang('da')
@@ -99,6 +101,7 @@ class Lookup(commands.Cog):
         url = wikipedia.page(query).url
         thumbnail = wikipedia.page(query).images[0]
         if len(output) > 2048:
+            await message.delete()
             n = 2048
             chunks = [output[i:i+n] for i in range(0, len(output), n)]
             for i in range(len(chunks)):
@@ -110,9 +113,9 @@ class Lookup(commands.Cog):
                 embed.set_thumbnail(url=thumbnail)
                 await ctx.send(embed=embed)
         else:
-            embed = discord.Embed(title=title, description=output, color=0xFF0000, url=url)
+            embed = discord.Embed(title=pagetitle, description=output, color=0xFF0000, url=url)
             embed.set_thumbnail(url=thumbnail)
-            await ctx.send(embed=embed)
+            await message.edit(embed=embed)
 
     @functions.utils.banned()
     @commands.command()
