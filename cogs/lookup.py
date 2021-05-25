@@ -6,6 +6,7 @@ from translate import Translator
 import wikipedia
 import wolframalpha
 import configparser
+from googlesearch import search
 
 class Lookup(commands.Cog):
     def __init__(self, bot):
@@ -117,6 +118,8 @@ class Lookup(commands.Cog):
             embed.set_thumbnail(url=thumbnail)
             await message.edit(embed=embed)
 
+
+
     @functions.utils.banned()
     @commands.command()
     async def wolfram(self, ctx, *, query):
@@ -131,6 +134,35 @@ class Lookup(commands.Cog):
             await message.edit(embed=discord.Embed(title=f'Answer for query: {query}', description=output, color=0xFF0000))
         except:
             await message.edit(embed=discord.Embed(title=f'No results found for "{query}"', description='', color=0xFF0000))
+
+    @functions.utils.banned()
+    @commands.command()
+    async def google(self, ctx, *, query):
+        def check(reaction, user):
+            return user == ctx.author
+        i = 0
+        results = []
+        reaction = None
+        for j in search(query, tld="co.in", num=10, stop=10, pause=2):
+            results.append(j)
+        message = await ctx.send(results[0])
+        await message.add_reaction('⬅️')
+        await message.add_reaction('➡️')
+
+
+        while True:
+            if str(reaction) == '➡️':
+                i = i + 1
+                await message.edit(content=str(results[i]))
+            elif str(reaction) == '⬅️':
+                i = i - 1
+                await message.edit(content=str(results[i]))
+
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', timeout = 60.0, check = check)
+            except:
+                break
+
 
 def setup(bot):
     bot.add_cog(Lookup(bot))
