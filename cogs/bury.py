@@ -9,7 +9,7 @@ class Bury(commands.Cog):
     @functions.utils.bury()
     @commands.command()
     async def bury(self, ctx):
-      await ctx.send('‌\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n‌')
+      await ctx.send('‌\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n‌')
 
 def setup(bot):
     bot.add_cog(Bury(bot))
