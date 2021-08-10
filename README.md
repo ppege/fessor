@@ -1,7 +1,7 @@
 # fessor
 bot designed for the matematikfessor.dk discord server.
 
-# features
+## features
 - viggo scanner
 - simple prompt/response commands
 - permission system
