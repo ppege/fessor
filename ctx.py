@@ -2,6 +2,7 @@ from base64 import decodebytes
 from discord.ext import commands
 from discord.ext.commands.errors import MissingPermissions
 from discord.utils import get
+from discord import Embed
 import os
 import discord
 import discord.ext.commands
@@ -24,6 +25,10 @@ import random
 import string
 import json
 import functions.utils
+from discord_components import DiscordComponents, Button, Select, SelectOption
+import discord_slash
+from discord import Client, Intents, Embed
+
 startTime = time.time()
 with open("data/data.json", "r") as file:
     data = json.load(file)
@@ -44,6 +49,7 @@ else:
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
+slash = discord_slash.SlashCommand(bot, sync_commands=True)
 
 @bot.event
 async def on_command(ctx):
@@ -62,11 +68,10 @@ async def on_command(ctx):
 
 @bot.event
 async def on_ready():
+  DiscordComponents(bot)
   print('fessor is online.')
   await bot.change_presence(activity=discord.Game(name="matematikfessor.dk"))
-  for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-      bot.load_extension(f"cogs.{filename[:-3]}")
+
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -78,6 +83,35 @@ async def on_command_error(ctx, error):
         await ctx.message.add_reaction('🚫')
         return
     raise error
+
+
+@slash.slash(name="allah", description="placeholder", guild_ids=[811552770074738688])
+async def _allah(ctx: discord_slash.SlashContext):
+    await ctx.reply(content="ok")
+
+@bot.command()
+async def button(ctx):
+    await ctx.send(
+        "Hello, World!",
+        components = [
+            Button(label = "WOW button!")
+        ]
+    )
+
+    interaction = await bot.wait_for("button_click", check = lambda i: i.component.label.startswith("WOW"))
+    await interaction.respond(content = "Button clicked!")
+
+@bot.command()
+async def select(ctx):
+    await ctx.send(
+        "Hello, World!",
+        components = [
+            Select(placeholder="select something!", options=[SelectOption(label="a", value="A"), SelectOption(label="b", value="B")])
+        ]
+    )
+
+    interaction = await bot.wait_for("select_option", check = lambda i: i.component[0].value == "A")
+    await interaction.respond(content = f"{interaction.component[0].label} selected!")
 
 @functions.utils.admin()
 @bot.command()
@@ -141,5 +175,7 @@ except:
   sys.exit()
 # cred stands for credidentials
 # i changed from env to ini so i can host the bot on raspberry pi
-
+for filename in os.listdir('./cogs'):
+  if filename.endswith('.py'):
+    bot.load_extension(f"cogs.{filename[:-3]}")
 bot.run(config['config']['fessortoken'])

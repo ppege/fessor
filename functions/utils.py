@@ -3,6 +3,11 @@ from discord.ext import commands
 import json
 import configparser
 
+servers = [
+    799253855677579285,
+    811552770074738688
+]
+
 def idHandler(id):
   if "<@!" in id:
     id = id.replace('<@!', '').replace('>', '')
@@ -84,3 +89,13 @@ def bury():
             return True
         return False
     return commands.check(wrapper)
+
+def eCheck(**kwargs):
+    try:
+        print(kwargs["private"])
+    except:
+        return False
+    if kwargs["private"] == True:
+        return True
+    else:
+        return False

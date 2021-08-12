@@ -3,7 +3,7 @@ from discord.ext import commands
 import functions.utils
 import datetime
 
-class Devtools(commands.Cog):
+class Snipe(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -27,4 +27,4 @@ class Devtools(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Devtools(bot))
+    bot.add_cog(Snipe(bot))

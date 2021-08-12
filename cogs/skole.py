@@ -4,7 +4,6 @@ import functions.utils
 import datetime
 from configs import options
 from functions.school.lektiescanner import lektiescan
-import configparser
 from dateutil.relativedelta import relativedelta
 import json
 
@@ -89,8 +88,6 @@ class Skole(commands.Cog):
             #print('colors registered')
             if 1 == 1:
                 #print('registering thumbnails')
-                assets = configparser.ConfigParser()
-                assets.read('configs/assets.ini')
                 embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
                 if "Birte Holst Andersen" in currentTeacher:
                   embedThumbnail = "birte"
@@ -107,7 +104,7 @@ class Skole(commands.Cog):
                 elif "Anne Isaksen Østergaard" in currentTeacher:
                   embedThumbnail = "anne"
                 if "https" not in embedThumbnail:
-                  embedThumbnail = assets['teachers'][embedThumbnail]
+                  embedThumbnail = data["teachers"][embedThumbnail]
                 #print('thumbnails registered, handling files')
                 forLoopFiles = []
                 for j in range(0, len(files[selection[i]].split(','))):
@@ -129,6 +126,8 @@ class Skole(commands.Cog):
                 await channel.send(embed=embed)
 
     async def post(self, ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
+          with open("configs/assets.json", "r") as file:
+            data = json.load(file)
           print('post() called')
           try:
             print(selection[0])
@@ -217,8 +216,6 @@ class Skole(commands.Cog):
               #print('colors registered')
               if 1 == 1:
                   #print('registering thumbnails')
-                  assets = configparser.ConfigParser()
-                  assets.read('configs/assets.ini')
                   embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
                   if "Birte Holst Andersen" in currentTeacher:
                     embedThumbnail = "birte"
@@ -235,7 +232,7 @@ class Skole(commands.Cog):
                   elif "Anne Isaksen Østergaard" in currentTeacher:
                     embedThumbnail = "anne"
                   if "https" not in embedThumbnail:
-                    embedThumbnail = assets['teachers'][embedThumbnail]
+                    embedThumbnail = data["teachers"][embedThumbnail]
                   #print('thumbnails registered, handling files')
                   forLoopFiles = []
                   for j in range(0, len(files[selection[i]].split(','))):
