@@ -196,7 +196,7 @@ class Lookup(commands.Cog):
         else:
             embed = discord.Embed(title=pagetitle, description=output, color=0xFF0000, url=url)
             embed.set_thumbnail(url=thumbnail)
-            await message.edit(embed=embed, hidden=ephemeral)
+            await ctx.send(embed=embed, hidden=ephemeral)
 
 
 

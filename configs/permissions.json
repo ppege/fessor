@@ -1,1 +1,314 @@
-{}
+{
+    "799253855677579285": {
+        "admin": [],
+        "poggies": [],
+        "lektiescan": [],
+        "banned": [],
+        "bury": [],
+        "469819605322432512": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "418465765931483146": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "273845229130481665": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "155149108183695360": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "235088799074484224": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "244210694323437568": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "254803160525307904": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "264065173193490442": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "264100886589079554": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "283704787126452224": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "306033643564957696": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "380330583932403713": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "402885626023641089": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "432173858850603008": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "474934847589056512": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "576797168103587840": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "761313890549628930": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "764573295856451595": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "805407846216761357": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "814962136823365633": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "818837870021443614": {
+            "admin": "true",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        }
+    },
+    "799253855677579285": {
+        "admin": [],
+        "poggies": [],
+        "lektiescan": [
+            818837870021443614
+        ],
+        "banned": [],
+        "bury": [
+            818837870021443614
+        ],
+        "155149108183695360": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "235088799074484224": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "244210694323437568": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "254803160525307904": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "264065173193490442": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "264100886589079554": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "273845229130481665": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "283704787126452224": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "306033643564957696": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "380330583932403713": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "402885626023641089": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "418465765931483146": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "432173858850603008": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "469819605322432512": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "474934847589056512": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "576797168103587840": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "761313890549628930": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "764573295856451595": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "805407846216761357": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "814962136823365633": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        },
+        "818837870021443614": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "true"
+        }
+    }
+}

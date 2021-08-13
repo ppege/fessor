@@ -1,6 +1,6 @@
 {
     "teachers": {
-        "birte": "awlk",
+        "birte": "https://s3-us-west-1.amazonaws.com/co-directory-images/birte-holst-andersen-279a8831.jpg",
         "annemette": "https://cdn.viggo.dk/nraadalfriskole/users/385/small/822ff7b9-4156-46c2-81d6-0d7d4f608e5e.jpg",
         "camilla": "https://cdn.viggo.dk/nraadalfriskole/users/417/small/8629b912-5bd7-4f02-b96a-646d6688326e.jpg",
         "jens": "https://cdn.viggo.dk/nraadalfriskole/users/290/small/e4fea206-c7e3-4bc1-ba1c-2f992d364cf8.jpg",

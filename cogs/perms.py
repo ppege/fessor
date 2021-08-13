@@ -13,19 +13,25 @@ class Perms(commands.Cog):
     @functions.utils.admin()
     @cog_ext.cog_slash(name="perms",
                         description="Setup permissions",
-                        guild_ids=[811552770074738688],
+                        guild_ids=functions.utils.servers,
                         options=[
                             create_option(
-                                name="action",
-                                description="what to do?",
+                                name="user",
+                                description="which users permissions to change",
+                                option_type=6,
+                                required=True
+                            ),
+                            create_option(
+                                name="permission",
+                                description="which permission to change",
                                 option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(
-                                        name="setup",
-                                        value=""
-                                    )
-                                ]
+                                required=True
+                            ),
+                            create_option(
+                                name="value",
+                                description="what to change the permission to",
+                                option_type=3,
+                                required=True
                             ),
                             create_option(
                                 name="private",
@@ -37,8 +43,69 @@ class Perms(commands.Cog):
                     )
     async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
+        await ctx.defer(hidden=ephemeral)
+        with open("configs/permissions.json", "r") as file:
+            data = json.load(file)
+        guildID = str(ctx.guild.id)
+        print(guildID)
+        permission = kwargs["permission"]
+        user = kwargs["user"]
+        value = kwargs["value"]
+        userID = str(user.id)
+        if kwargs["value"] == "true":
+            if not userID in data[guildID][kwargs[permission]]:
+                data[guildID][permission].append(userID)
+        else:
+            if userID in data[guildID][permission]:
+                data[guildID][permission].pop(userID)
+        data[guildID][userID][permission] = value
 
+        with open("configs/permissions.json", "w") as file:
+            json.dump(data, file, indent=4)
+        await ctx.send(embed=discord.Embed(title="Permission changed."))
+
+    @functions.utils.admin()
+    @cog_ext.cog_slash(name="setupperms",
+                        description="Setup permissions",
+                        guild_ids=functions.utils.servers,
+                        options=[
+                            create_option(
+                                name="private",
+                                description="send the message privately?",
+                                option_type=5,
+                                required=False
+                            )
+                        ]
+                    )
+    async def setupPerms(self, ctx: discord_slash.SlashContext, **kwargs):
+        ephemeral = functions.utils.eCheck(**kwargs)
+        await ctx.defer(hidden=ephemeral)
+        with open("configs/permissions.json", "r") as file:
+            data = json.load(file)
+        guildID = ctx.guild.id
+        guild = self.bot.get_guild(guildID)
+        data[guildID] = {}
+        ids = [member.id for member in guild.members]
+        for id in ids:
+            data[guildID]["admin"] = []
+            data[guildID]["poggies"] = []
+            data[guildID]["lektiescan"] = []
+            data[guildID]["banned"] = []
+            data[guildID]["bury"] = []
+
+            data[guildID][id] = {
+                "admin": "false",
+                "poggies": "false",
+                "lektiescan": "true",
+                "banned": "false",
+                "bury": "true"
+            }
+
+            data[guildID]["lektiescan"].append(id)
+            data[guildID]["bury"].append(id)
+        with open("configs/permissions.json", "w") as file:
+            json.dump(data, file, indent=4)
+        await ctx.send(embed=discord.Embed(title="Permissions have been set up."))
 
 def setup(bot):
-#    bot.add_cog(Perms(bot))
-    print("hi")
+    bot.add_cog(Perms(bot))
