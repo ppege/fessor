@@ -9,14 +9,15 @@ import functions.utils
 import datetime
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
+
 
 class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     def getUptime(self):
-        print('getUptime called')
         with open("data/data.json", "r") as file:
             data = json.load(file)
         uptime = time.time() - data['startTime']
@@ -26,6 +27,7 @@ class Info(commands.Cog):
     @cog_ext.cog_slash(name="info",
                         description="Bot statistics",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="private",

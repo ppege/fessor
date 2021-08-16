@@ -51,6 +51,7 @@ intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 slash = discord_slash.SlashCommand(bot, sync_commands=True)
 
+#logging commands
 @bot.event
 async def on_command(ctx):
   with open("data/log.txt", "a") as file:
@@ -70,7 +71,7 @@ async def on_command(ctx):
 async def on_ready():
   DiscordComponents(bot)
   print('fessor is online.')
-  await bot.change_presence(activity=discord.Game(name="matematikfessor.dk"))
+  await bot.change_presence(activity=discord.Game(name="2169 lines of code"))
 
 
 @bot.event
@@ -88,30 +89,6 @@ async def on_command_error(ctx, error):
 @slash.slash(name="allah", description="placeholder", guild_ids=[811552770074738688])
 async def _allah(ctx: discord_slash.SlashContext):
     await ctx.reply(content="ok")
-
-@bot.command()
-async def button(ctx):
-    await ctx.send(
-        "Hello, World!",
-        components = [
-            Button(label = "WOW button!")
-        ]
-    )
-
-    interaction = await bot.wait_for("button_click", check = lambda i: i.component.label.startswith("WOW"))
-    await interaction.respond(content = "Button clicked!")
-
-@bot.command()
-async def select(ctx):
-    await ctx.send(
-        "Hello, World!",
-        components = [
-            Select(placeholder="select something!", options=[SelectOption(label="a", value="A"), SelectOption(label="b", value="B")])
-        ]
-    )
-
-    interaction = await bot.wait_for("select_option", check = lambda i: i.component[0].value == "A")
-    await interaction.respond(content = f"{interaction.component[0].label} selected!")
 
 @functions.utils.admin()
 @bot.command()

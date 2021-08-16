@@ -4,7 +4,8 @@ import functions.utils
 import configparser
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
 
 class Blacklist(commands.Cog):
     def __init__(self, bot):
@@ -14,6 +15,7 @@ class Blacklist(commands.Cog):
     @cog_ext.cog_slash(name="blacklist",
                         description="Add terms to a list, and certain things will happen when said term is spoken.",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="action",

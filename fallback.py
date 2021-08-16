@@ -18,6 +18,7 @@ async def start(ctx):
     os.system('python3 ctx.py &')
     sys.exit(0)
 
+#this command is deprecated, use /update instead
 @bot.command()
 async def update(ctx):
   if ctx.author.id == 273845229130481665:

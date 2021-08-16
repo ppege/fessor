@@ -4,14 +4,15 @@ import random
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
-from discord_slash.model import ButtonStyle
+from discord_slash.model import ButtonStyle, SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 import functions.utils
 
 class Coinflip(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="coinflip", description="Flips a coin.", guild_ids=functions.utils.servers)
+    @cog_ext.cog_slash(name="coinflip", description="Flips a coin.", guild_ids=functions.utils.servers, permissions=functions.utils.slPerms("banned"))
     async def coinflip(self, ctx: discord_slash.SlashContext):
         def getResult():
             result = random.uniform(0, 1)
@@ -26,7 +27,7 @@ class Coinflip(commands.Cog):
         message = await ctx.send(embed=discord.Embed(title=output, description=f"Float: {str(result)}", color=0xFF0000), components=[action_row])
 
         while(True):
-            button_ctx: ComponentContext = await wait_for_component(self.bot, components=action_row)
+            button_ctx: discord_slash.ComponentContext = await wait_for_component(self.bot, components=action_row)
             output, result = getResult()
             await button_ctx.edit_origin(embed=discord.Embed(title=output, description=f"Float: {str(result)}", color=0xFF0000))
 

@@ -9,9 +9,9 @@ import configparser
 from googlesearch import search
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 from discord_slash.utils.manage_components import wait_for_component, create_button, create_actionrow
-from discord_slash.model import ButtonStyle
+from discord_slash.model import ButtonStyle, SlashCommandPermissionType
 
 
 class Lookup(commands.Cog):
@@ -22,6 +22,7 @@ class Lookup(commands.Cog):
     @cog_ext.cog_slash(name="define",
                         description="Define a word",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="word",
@@ -106,6 +107,7 @@ class Lookup(commands.Cog):
     @cog_ext.cog_slash(name="translate",
                         description="Define a word",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="from",
@@ -147,6 +149,7 @@ class Lookup(commands.Cog):
     @cog_ext.cog_slash(name="wiki",
                         description="Look something up on Wikipedia",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="query",
@@ -204,6 +207,7 @@ class Lookup(commands.Cog):
     @cog_ext.cog_slash(name="wolfram",
                         description="Look something up on Wolfram Alpha",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="query",
@@ -238,6 +242,7 @@ class Lookup(commands.Cog):
     @cog_ext.cog_slash(name="google",
                         description="Look something up on Google",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="query",
@@ -271,7 +276,7 @@ class Lookup(commands.Cog):
         await ctx.send(results[0], hidden=ephemeral, components=[action_row])
 
         while True:
-            button_ctx: ComponentContext = await wait_for_component(self.bot, components=action_row)
+            button_ctx: discord_slash.ComponentContext = await wait_for_component(self.bot, components=action_row)
             if button_ctx.custom_id == "previousButton":
                 i = i - 1
                 await button_ctx.edit_origin(content=str(results[i]))

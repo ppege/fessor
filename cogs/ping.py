@@ -3,7 +3,8 @@ from discord.ext import commands
 import functions.utils
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
 
 class Ping(commands.Cog):
     def __init__(self, bot):
@@ -13,6 +14,7 @@ class Ping(commands.Cog):
     @cog_ext.cog_slash(name="ping",
                         description="Ping the bot",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
                                 name="private",

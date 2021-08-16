@@ -3,7 +3,8 @@ from discord.ext import commands
 import functions.utils
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -13,6 +14,7 @@ class Moderation(commands.Cog):
     @cog_ext.cog_slash(name="kick",
                         description="Kick a user",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="user",
@@ -36,6 +38,7 @@ class Moderation(commands.Cog):
     @cog_ext.cog_slash(name="ban",
                         description="Ban a user",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="user",
@@ -60,6 +63,7 @@ class Moderation(commands.Cog):
     @cog_ext.cog_slash(name="unban",
                         description="Unban a user",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="user",
@@ -84,6 +88,7 @@ class Moderation(commands.Cog):
     @cog_ext.cog_slash(name="mute",
                         description="Mute a user",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="user",
@@ -122,6 +127,7 @@ class Moderation(commands.Cog):
     @cog_ext.cog_slash(name="unmute",
                         description="Unmute a user",
                         guild_ids=functions.utils.servers,
+                        permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
                                 name="user",

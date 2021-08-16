@@ -6,6 +6,10 @@ from configs import options
 from functions.school.lektiescanner import lektiescan
 from dateutil.relativedelta import relativedelta
 import json
+import discord_slash
+from discord_slash import cog_ext
+from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
 
 class Skole(commands.Cog):
     def __init__(self, bot):
@@ -65,6 +69,8 @@ class Skole(commands.Cog):
             await self.post(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
 
     async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
+        with open("data/scans.json", "r") as file:
+            data = json.load(file)
         for i in range(0, len(selection)):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
@@ -316,52 +322,67 @@ class Skole(commands.Cog):
       except:
         await ctx.send(embed=discord.Embed(title='Ukendt fejl', description='Jeg er ikke helt sikker på, hvad der gik galt.\nValide argumenter: `tomorrow`, `today`, `[dato]`'))
         raise
+    
+    scanOptionDict={
+      "All posts": "all",
+      "Date": "date",
+      "Subject": "subject",
+      "Teacher": "teacher"
+    }
 
     @functions.utils.lektiescan()
-    @commands.command()
-    async def scan(self, ctx, *args):
+    @cog_ext.cog_slash(name="scan",
+                          description="Scan for homework on Viggo (nr-aadal only)",
+                          guild_ids=functions.utils.servers,
+                          permissions=functions.utils.slPerms("lektiescan"),
+                          options=[
+                            create_option(
+                                name="mode",
+                                description="What type of search to make",
+                                option_type=3,
+                                required=True,
+                                choices=[
+                                  create_choice(name=key, value=value) for key, value in scanOptionDict.items()
+                                ]
+                            ),
+                            create_option(
+                                name="parameters",
+                                description="Search parameters for date, subject or teacher",
+                                option_type=3,
+                                required=False
+                            ),
+                            create_option(
+                                name="private",
+                                description="send the message privately?",
+                                option_type=5,
+                                required=False
+                            )
+                          ]
+                    )
+    async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
+        ephemeral = functions.utils.eCheck(**kwargs)
         try:
-          if len(args) == 0:
-            argsPresent = False
-          else:
-            argsPresent = True
-            userInput = ' '.join(args)
-          status = await ctx.send(embed=discord.Embed(title="Scanner viggo...", description=""))
+          await ctx.defer(hidden=ephemeral)
           begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(True)
-          if argsPresent == False:
+          if kwargs["mode"] == "all":
             lektieList = []
             for i in range(0, len(begivenhed)):
               lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
             description = "\n\n".join(lektieList)
-            Field2 = "Mulighed 1. Skriv tallet, der tilhænger den lektie, du vil se.\nMulighed 2. Skriv `fag [fag]`.\nMulighed 3. Skriv `dato [dato]`."
-            embed=discord.Embed(title="Fandt %d lektier" % len(begivenhed), description=description, color=0xFF0000)
-            embed.add_field(name="Hvad nu?", value=Field2)
-            await status.edit(embed=embed)
-            userInput = await self.bot.wait_for("message")
-            userInput = userInput.content
+            Field2 = "Use the command again with a different mode to see full assignments"
+            embed=discord.Embed(title="Found %d assignments" % len(begivenhed), description=description, color=0xFF0000)
+            embed.add_field(name="What now?", value=Field2)
+            await ctx.send(embed=embed)
+            return
           else:
-            await status.delete()
-          isInt = 0
-          try:
-            int(userInput)
-            userInput = int(userInput)
-            isInt = 1
-          except:
-            isInt = 0
-          if isInt == 1:
-            userInput = [userInput - 1]
-          else:
-            splitInput = userInput.split(' ')
-            if splitInput[0] == "fag":
-              userInput = userInput.replace('fag ', '')
+            if kwargs["mode"] == "subject":
               numList = []
               for i in range(0, len(begivenhed)):
-                if str(userInput) in begivenhed[i]:
+                if kwargs["parameters"] in begivenhed[i]:
                   numList.append(i)
               userInput = numList
-            elif splitInput[0] == "dato":
-              userInput = userInput.replace('dato ', '')
-              if userInput == "tomorrow":
+            elif kwargs["mode"] == "date":
+              if kwargs["parameters"] == "tomorrow":
                 tomorrow = datetime.date.today() + datetime.timedelta(days=1)
                 tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
                 userInput = tomorrow
@@ -370,9 +391,9 @@ class Skole(commands.Cog):
                   if str(userInput) in tidspunkt[i]:
                     numList.append(i)
                 userInput = numList
-              elif userInput in ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']:
+              elif kwargs["parameters"] in ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']:
                 weekday = datetime.datetime.today().weekday()
-                diff = weekday - int(options.conversions[userInput])
+                diff = weekday - int(options.conversions[kwargs["parameters"]])
                 targetDate = datetime.date.today() - datetime.timedelta(days=diff)
                 targetDate = targetDate.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
                 userInput = targetDate
@@ -384,19 +405,15 @@ class Skole(commands.Cog):
               else:
                 numList = []
                 for i in range(0, len(begivenhed)):
-                  if str(userInput) in tidspunkt[i]:
+                  if str(kwargs["parameters"]) in tidspunkt[i]:
                     numList.append(i)
                 userInput = numList
-            elif splitInput[0] == "lærer":
-              userInput = userInput.replace('lærer ', '')
+            elif kwargs["mode"] == "teacher":
               numList = []
               for i in range(0, len(author)):
-                if str(userInput) in author[i]:
+                if str(kwargs["parameters"]) in author[i]:
                   numList.append(i)
               userInput = numList
-            elif splitInput[0] == "all":
-              userInput = [-1]
-          print(str(userInput))
           if str(userInput) == "[]":
             await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
             return

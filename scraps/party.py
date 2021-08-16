@@ -3,6 +3,7 @@ from discord.ext import commands
 import functions.utils
 import json
 import string
+import random
 
 class Party(commands.Cog):
     def __init__(self, bot):
