@@ -391,8 +391,10 @@ class Skole(commands.Cog):
                   if str(userInput) in tidspunkt[i]:
                     numList.append(i)
                 userInput = numList
-              elif kwargs["parameters"] in ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']:
+              elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
                 weekday = datetime.datetime.today().weekday()
+                if kwargs["parameters"] in options.translations.keys():
+                  kwargs["parameters"] = options.translations[kwargs["parameters"]]
                 diff = weekday - int(options.conversions[kwargs["parameters"]])
                 targetDate = datetime.date.today() - datetime.timedelta(days=diff)
                 targetDate = targetDate.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
