@@ -394,6 +394,7 @@ class Skole(commands.Cog):
               elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
                 weekday = datetime.datetime.today().weekday()
                 if kwargs["parameters"] in options.translations.keys():
+                  print("bla")
                   kwargs["parameters"] = options.translations[kwargs["parameters"]]
                 diff = weekday - int(options.conversions[kwargs["parameters"]])
                 targetDate = datetime.date.today() - datetime.timedelta(days=diff)

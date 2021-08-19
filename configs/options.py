@@ -16,11 +16,11 @@ schedules = {
 }
 
 translations = {
-  "mandag": "monday",
-  "tirsdag": "tuesday",
-  "onsdag": "wednesday",
-  "torsdag": "thursday",
-  "fredag": "friday"
+  "monday": "mandag",
+  "tuesday": "tirsdag",
+  "wednesday": "onsdag",
+  "thursday": "torsdag",
+  "friday": "fredag"
 }
 
 conversions = {
