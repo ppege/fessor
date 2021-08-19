@@ -25,7 +25,6 @@ import random
 import string
 import json
 import functions.utils
-from discord_components import DiscordComponents, Button, Select, SelectOption
 import discord_slash
 from discord import Client, Intents, Embed
 
@@ -69,7 +68,6 @@ async def on_command(ctx):
 
 @bot.event
 async def on_ready():
-  DiscordComponents(bot)
   print('fessor is online.')
   await bot.change_presence(activity=discord.Game(name="2169 lines of code"))
 
