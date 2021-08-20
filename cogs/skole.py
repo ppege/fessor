@@ -66,7 +66,7 @@ class Skole(commands.Cog):
             return
         else:
             channel = self.bot.get_channel(816693284147691530)
-            await self.post(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
+            await self.autopost(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
 
     async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
         with open("data/scans.json", "r") as file:
@@ -322,14 +322,14 @@ class Skole(commands.Cog):
       except:
         await ctx.send(embed=discord.Embed(title='Ukendt fejl', description='Jeg er ikke helt sikker på, hvad der gik galt.\nValide argumenter: `tomorrow`, `today`, `[dato]`'))
         raise
-    
+
     scanOptionDict={
       "All posts": "all",
       "Date": "date",
       "Subject": "subject",
       "Teacher": "teacher"
     }
-
+'''
     @functions.utils.lektiescan()
     @cog_ext.cog_slash(name="scan",
                           description="Scan for homework on Viggo (nr-aadal only)",
@@ -359,6 +359,8 @@ class Skole(commands.Cog):
                             )
                           ]
                     )
+'''
+
     async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
         try:
@@ -428,7 +430,11 @@ class Skole(commands.Cog):
         except:
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise
-
+    
+    @cog_ext.cog_subcommand(base="bla", name="test", guild_ids=functions.utils.servers)
+    async def scan_test(ctx: discord_slash.SlashContext, string):
+      await ctx.send(string)
+    
 
 
 def setup(bot):

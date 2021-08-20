@@ -6,7 +6,7 @@ from discord_slash.utils.manage_commands import create_permission
 from discord_slash.model import SlashCommandPermissionType
 
 servers = [
-    #799253855677579285,
+    799253855677579285,
     811552770074738688
 ]
 
