@@ -1,3 +1,4 @@
+from inspect import Parameter
 import discord
 from discord.ext import commands, tasks
 import functions.utils
@@ -329,7 +330,7 @@ class Skole(commands.Cog):
       "Subject": "subject",
       "Teacher": "teacher"
     }
-'''
+    '''
     @functions.utils.lektiescan()
     @cog_ext.cog_slash(name="scan",
                           description="Scan for homework on Viggo (nr-aadal only)",
@@ -359,8 +360,7 @@ class Skole(commands.Cog):
                             )
                           ]
                     )
-'''
-
+    '''
     async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
         try:
@@ -431,11 +431,22 @@ class Skole(commands.Cog):
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise
     
-    @cog_ext.cog_subcommand(base="bla", name="test", guild_ids=functions.utils.servers)
-    async def scan_test(ctx: discord_slash.SlashContext, string):
-      await ctx.send(string)
+    @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on nr-aadal Viggo.", guild_ids=functions.utils.servers)
+    async def _scan_all(self, ctx: discord_slash.SlashContext):
+      await self.scan(ctx, mode="all")
+
+    @cog_ext.cog_subcommand(base="scan", name="subject", description="Scan for assignments from a specific subject on nr-aadal Viggo.", guild_ids=functions.utils.servers)
+    async def _scan_subject(self, ctx: discord_slash.SlashContext, *, string):
+      await self.scan(ctx, mode="subject", parameters=string)
     
+    @cog_ext.cog_subcommand(base="scan", name="date", description="Scan for assignments from a specific date on nr-aadal Viggo.", guild_ids=functions.utils.servers)
+    async def _scan_date(self, ctx: discord_slash.SlashContext, *, string):
+      await self.scan(ctx, mode="date", parameters=string)
+    
+    @cog_ext.cog_subcommand(base="scan", name="teacher", description="Scan for assignments from a specific teacher on nr-aadal Viggo.", guild_ids=functions.utils.servers)
+    async def _scan_teacher(self, ctx: discord_slash.SlashContext, *, string):
+      await self.scan(ctx, mode="teacher", parameters=string)
 
 
 def setup(bot):
-    bot.add_cog(Skole(bot))
+  bot.add_cog(Skole(bot))
