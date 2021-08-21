@@ -37,6 +37,7 @@ class Info(commands.Cog):
                             )
                         ])
     async def info(self, ctx: discord_slash.SlashContext, **kwargs):
+        ephemeral = functions.utils.eCheck(**kwargs)
         serverCount = len(self.bot.guilds)
         ping = self.bot.latency * 1000
         config = configparser.ConfigParser()
@@ -47,16 +48,12 @@ class Info(commands.Cog):
         my_system = platform.uname()
         repo = git.Repo()
         count = repo.git.rev_list('--count', 'HEAD')
-        description = f"Servers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nExact ping: `{ping}`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nMode: `{config['config']['mode']}`\nVersion: `{count}`"
+        version = repo.git.describe()
+        commit = str(repo.head.commit)[:7]
+        description = f"Version: `{version}`\nExact ping: `{ping}`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nServers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nMode: `{config['config']['mode']}`"
         embed=discord.Embed(title='Information and statistics', description=description, color=0x000143)
-        embed.add_field(name='Latest changes', value=repo.head.commit.message)
+        embed.add_field(name='Latest changes', value=f"`{commit}`\n{repo.head.commit.message}")
         embed.set_footer(text='Created and maintained by Nangu')
-        if len(kwargs) == 0:
-            await ctx.send(embed=embed, hidden=True)
-        else:
-            if kwargs["private"] == False:
-                await ctx.send(embed=embed, hidden=False)
-            else:
-                await ctx.send(embed=embed, hidden=True)
+        await ctx.send(embed=embed, hidden=ephemeral)
 def setup(bot):
     bot.add_cog(Info(bot))
