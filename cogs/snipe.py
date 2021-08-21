@@ -53,8 +53,13 @@ class Snipe(commands.Cog):
     async def snipe(self, ctx: discord_slash.SlashContext, **kwargs):
         if kwargs["mode"] == "edit":
             self.snipeMessage = self.snipeMessageEdit
-        embed=discord.Embed(title=f"Sniped!", description=f"Sent at {self.snipeMessage.created_at + datetime.timedelta(hours=2)} by {self.snipeMessage.author.mention}", color=0x00FFFF)
-        embed.add_field(name=f"Message content", value=self.snipeMessage.content)
+        embed = discord.Embed(
+            title='Sniped!',
+            description=f"Sent at {self.snipeMessage.created_at + datetime.timedelta(hours=2)} by {self.snipeMessage.author.mention}",
+            color=0x00FFFF,
+        )
+
+        embed.add_field(name='Message content', value=self.snipeMessage.content)
         if kwargs["mode"] == "edit":
             await ctx.send("Sniped", hidden=True)
             await self.snipeMessage.reply(embed=embed)

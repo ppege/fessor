@@ -44,11 +44,7 @@ def getUptime():
 config = configparser.ConfigParser()
 config.read('cred.ini')
 
-if config['config']['mode'] == "updates":
-  prefix = ','
-else:
-  prefix = '.'
-
+prefix = ',' if config['config']['mode'] == "updates" else '.'
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 slash = discord_slash.SlashCommand(bot, sync_commands=True)
@@ -144,7 +140,7 @@ async def _cogs_list(ctx: discord_slash.SlashContext):
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             i += 1
-            cogList = cogList + f"{filename[:-3]}, "
+            cogList += f"{filename[:-3]}, "
     await ctx.send(embed=discord.Embed(title=f'{i} cogs', description=cogList[:-2], color=0xFF0000))
 
 @slash.slash(name="shutdown", description="Shuts down the bot.", default_permission=False, permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
