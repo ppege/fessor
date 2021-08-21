@@ -43,8 +43,6 @@ class Lookup(commands.Cog):
         await ctx.defer(hidden=ephemeral)
         dict = PyDictionary()
         meaning = dict.meaning(word)
-        synonym = dict.synonym(word)
-        antonym = dict.antonym(word)
         if meaning is None:
             await ctx.send(embed=discord.Embed(title=f"No definition found for {word}", color=0xFF0000))
             return
