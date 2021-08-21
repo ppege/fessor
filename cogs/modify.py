@@ -14,10 +14,10 @@ class Modify(commands.Cog):
     with open("configs/assets.json", "r") as file:
         data = json.load(file)
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="modify",
                         description="Modify the link registry",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("dev"),
                         options=[
                             create_option(

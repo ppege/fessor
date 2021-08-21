@@ -89,7 +89,7 @@ async def on_command_error(ctx, error):
     raise error
 
 
-@slash.subcommand(base="cogs", name="load", description="Load a cog", base_permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers)
+@slash.subcommand(base="cogs", name="load", description="Load a cog", base_default_permission=False, base_permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers)
 async def _cogs_load(ctx: discord_slash.SlashContext, cog):
   try:
     await ctx.defer()
@@ -147,7 +147,7 @@ async def _cogs_list(ctx: discord_slash.SlashContext):
             cogList = cogList + f"{filename[:-3]}, "
     await ctx.send(embed=discord.Embed(title=f'{i} cogs', description=cogList[:-2], color=0xFF0000))
 
-@slash.slash(name="shutdown", description="Shuts down the bot.", permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+@slash.slash(name="shutdown", description="Shuts down the bot.", default_permission=False, permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
 async def shutdown(ctx: discord_slash.SlashContext, **kwargs):
   ephemeral=functions.utils.eCheck(**kwargs)
   await ctx.defer(hidden=ephemeral)
@@ -156,7 +156,7 @@ async def shutdown(ctx: discord_slash.SlashContext, **kwargs):
   await ctx.send(embed=discord.Embed(title='Bot has shut down.', description=f'Fallback prefix: {fprefix}', color=0x0000FF))
   sys.exit(0)
 
-@slash.slash(name="restart", description="Restarts the bot.", permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+@slash.slash(name="restart", description="Restarts the bot.", default_permission=False, permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
 async def restart(ctx: discord_slash.SlashContext, **kwargs):
   ephemeral=functions.utils.eCheck(**kwargs)
   await ctx.defer(hidden=ephemeral)

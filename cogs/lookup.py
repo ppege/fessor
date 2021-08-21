@@ -18,10 +18,10 @@ class Lookup(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="define",
                         description="Define a word",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
@@ -44,6 +44,9 @@ class Lookup(commands.Cog):
         meaning = dict.meaning(word)
         synonym = dict.synonym(word)
         antonym = dict.antonym(word)
+        if meaning == None:
+            await ctx.send(embed=discord.Embed(title=f"No definition found for {word}", color=0xFF0000))
+            return
         print(meaning)
         embed = discord.Embed(title=f'Definitions for {word}', description=f'Definitions, synonyms and antonyms for the word "{word}"', color=0xFF0000)
         nouns = ""
@@ -103,10 +106,10 @@ class Lookup(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="translate",
                         description="Define a word",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
@@ -145,10 +148,10 @@ class Lookup(commands.Cog):
         output = translator.translate(kwargs['text'])
         await ctx.send(embed=discord.Embed(title=f'Translation', description=output, color=0xFF0000))
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="wiki",
                         description="Look something up on Wikipedia",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
@@ -203,10 +206,10 @@ class Lookup(commands.Cog):
 
 
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="wolfram",
                         description="Look something up on Wolfram Alpha",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
@@ -238,10 +241,10 @@ class Lookup(commands.Cog):
         except:
             await ctx.send(embed=discord.Embed(title=f'No results found for "{query}"', description='', color=0xFF0000))
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="google",
                         description="Look something up on Google",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(
@@ -272,8 +275,11 @@ class Lookup(commands.Cog):
             create_button(style=ButtonStyle.green, label="Previous", custom_id="previousButton"),
             create_button(style=ButtonStyle.green, label="Next", custom_id="nextButton")
         )
-
-        await ctx.send(results[0], hidden=ephemeral, components=[action_row])
+        try:
+            await ctx.send(results[0], hidden=ephemeral, components=[action_row])
+        except IndexError:
+            await ctx.send(embed=discord.Embed(title=f"No results found for '{query}'", color=0xFF0000))
+            return
 
         while True:
             button_ctx: discord_slash.ComponentContext = await wait_for_component(self.bot, components=action_row)

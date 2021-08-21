@@ -6,6 +6,7 @@ import datetime
 from configs import options
 from functions.school.lektiescanner import lektiescan
 from dateutil.relativedelta import relativedelta
+from configs import options
 import json
 import discord_slash
 from discord_slash import cog_ext
@@ -76,42 +77,19 @@ class Skole(commands.Cog):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
             currentTeacher = author[selection[i]]
-            embedColor = 0xFF5733
             #print('registering colors')
-            if currentClass == 'Tysk' or currentClass == 'Kristendom':
-              embedColor = 0x9900FF
-            elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
-              embedColor = 0xFF0000
-            elif currentClass == 'Engelsk' or currentClass == 'Matematik':
-              embedColor = 0x0000FF
-            elif currentClass == 'Billedkunst':
-              embedColor = 0xFFFF00
-            elif currentClass == 'Geografi' or currentClass == 'Biologi':
-              embedColor = 0x00FF00
-            elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
-              embedColor = 0xFF9900
-            elif currentClass == 'Idræt':
-              embedColor = 0x00FFFF
+            try:
+              embedColor = options.scanColors[currentClass]
+            except:
+              embedColor = 0xFF5733
             #print('colors registered')
             if 1 == 1:
                 #print('registering thumbnails')
-                embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-                if "Birte Holst Andersen" in currentTeacher:
-                  embedThumbnail = "birte"
-                elif "Anne-Mette Hessel" in currentTeacher:
-                  embedThumbnail = "annemette"
-                elif "Camilla Willemoes Holst" in currentTeacher:
-                  embedThumbnail = "camilla"
-                elif "Jens Pedersen" in currentTeacher:
-                  embedThumbnail = "jens"
-                elif "Stig Andersen" in currentTeacher:
-                  embedThumbnail = "stig"
-                elif "Jacob Albrechtsen" in currentTeacher:
-                  embedThumbnail = "jacob"
-                elif "Anne Isaksen Østergaard" in currentTeacher:
-                  embedThumbnail = "anne"
-                if "https" not in embedThumbnail:
-                  embedThumbnail = data["teachers"][embedThumbnail]
+                try:
+                  embedThumbnail = data["teachers"][currentTeacher.split()[4].lower()]
+                except:
+                  embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+                  raise
                 #print('thumbnails registered, handling files')
                 forLoopFiles = []
                 for j in range(0, len(files[selection[i]].split(','))):
@@ -145,42 +123,19 @@ class Skole(commands.Cog):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
             currentTeacher = author[selection[i]]
-            embedColor = 0xFF5733
             #print('registering colors')
-            if currentClass == 'Tysk' or currentClass == 'Kristendom':
-              embedColor = 0x9900FF
-            elif currentClass == 'Dansk eller fysik' or currentClass ==  'Dansk':
-              embedColor = 0xFF0000
-            elif currentClass == 'Engelsk' or currentClass == 'Matematik':
-              embedColor = 0x0000FF
-            elif currentClass == 'Billedkunst':
-              embedColor = 0xFFFF00
-            elif currentClass == 'Geografi' or currentClass == 'Biologi':
-              embedColor = 0x00FF00
-            elif currentClass == 'Historie' or currentClass == 'Samfundsfag':
-              embedColor = 0xFF9900
-            elif currentClass == 'Idræt':
-              embedColor = 0x00FFFF
+            try:
+              embedColor = options.scanColors[currentClass]
+            except:
+              embedColor = 0xFF5733
             #print('colors registered')
             if 1 == 1:
                 #print('registering thumbnails')
-                embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-                if "Birte Holst Andersen" in currentTeacher:
-                  embedThumbnail = "birte"
-                elif "Anne-Mette Hessel" in currentTeacher:
-                  embedThumbnail = "annemette"
-                elif "Camilla Willemoes Holst" in currentTeacher:
-                  embedThumbnail = "camilla"
-                elif "Jens Pedersen" in currentTeacher:
-                  embedThumbnail = "jens"
-                elif "Stig Andersen" in currentTeacher:
-                  embedThumbnail = "stig"
-                elif "Jacob Albrechtsen" in currentTeacher:
-                  embedThumbnail = "jacob"
-                elif "Anne Isaksen Østergaard" in currentTeacher:
-                  embedThumbnail = "anne"
-                if "https" not in embedThumbnail:
-                  embedThumbnail = data["teachers"][embedThumbnail]
+                try:
+                  embedThumbnail = data["teachers"][currentTeacher.split()[4].lower()]
+                except:
+                  embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+                  raise
                 #print('thumbnails registered, handling files')
                 forLoopFiles = []
                 for j in range(0, len(files[selection[i]].split(','))):
@@ -202,11 +157,11 @@ class Skole(commands.Cog):
                 #print('embed sent, reiterating for loop or returning')
           return "success"
 
-    @functions.utils.banned()
     @cog_ext.cog_subcommand(base="schedule",
                         description="Show the schedule for a given day",
                         name="day",
                         guild_ids=functions.utils.servers,
+                        base_default_permission=True,
                         base_permissions=functions.utils.slPerms("banned"),
                         options=[
                           create_option(
@@ -323,23 +278,27 @@ class Skole(commands.Cog):
         except:
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise
-#    '''
-    @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_permissions=functions.utils.slPerms("lektiescan"))
-    async def _scan_all(self, ctx: discord_slash.SlashContext):
-      await self.scan(ctx, mode="all")
+                        
+    @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_default_permission=False, base_permissions=functions.utils.slPerms("lektiescan"), options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+    async def _scan_all(self, ctx: discord_slash.SlashContext, **kwargs):
+      ephemeral=functions.utils.eCheck(**kwargs)
+      await self.scan(ctx, mode="all", private=ephemeral)
 
-    @cog_ext.cog_subcommand(base="scan", name="subject", description="Scan for assignments from a specific subject on Viggo.", guild_ids=functions.utils.servers)
-    async def _scan_subject(self, ctx: discord_slash.SlashContext, *, string):
-      await self.scan(ctx, mode="subject", parameters=string)
+    @cog_ext.cog_subcommand(base="scan", name="subject", description="Scan for assignments from a specific subject on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="subject", description="Which subject?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+    async def _scan_subject(self, ctx: discord_slash.SlashContext, **kwargs):
+      ephemeral=functions.utils.eCheck(**kwargs)
+      await self.scan(ctx, mode="subject", parameters=kwargs["subject"], private=ephemeral)
     
-    @cog_ext.cog_subcommand(base="scan", name="date", description="Scan for assignments from a specific date on Viggo.", guild_ids=functions.utils.servers)
-    async def _scan_date(self, ctx: discord_slash.SlashContext, *, string):
-      await self.scan(ctx, mode="date", parameters=string)
+    @cog_ext.cog_subcommand(base="scan", name="date", description="Scan for assignments from a specific date on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="date", description="Which date?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+    async def _scan_date(self, ctx: discord_slash.SlashContext, **kwargs):
+      ephemeral=functions.utils.eCheck(**kwargs)
+      await self.scan(ctx, mode="date", parameters=kwargs["date"], private=ephemeral)
     
-    @cog_ext.cog_subcommand(base="scan", name="teacher", description="Scan for assignments from a specific teacher on Viggo.", guild_ids=functions.utils.servers)
-    async def _scan_teacher(self, ctx: discord_slash.SlashContext, *, string):
-      await self.scan(ctx, mode="teacher", parameters=string)
-#    '''
+    @cog_ext.cog_subcommand(base="scan", name="teacher", description="Scan for assignments from a specific teacher on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="teacher", description="Which teacher?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+    async def _scan_teacher(self, ctx: discord_slash.SlashContext, **kwargs):
+      ephemeral=functions.utils.eCheck(**kwargs)
+      await self.scan(ctx, mode="teacher", parameters=kwargs["teacher"], private=ephemeral)
+
 
 def setup(bot):
   bot.add_cog(Skole(bot))

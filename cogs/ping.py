@@ -10,10 +10,10 @@ class Ping(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="ping",
                         description="Ping the bot",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(

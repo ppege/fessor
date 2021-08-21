@@ -11,10 +11,10 @@ class Blacklist(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="blacklist",
                         description="Add terms to a list, and certain things will happen when said term is spoken.",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(

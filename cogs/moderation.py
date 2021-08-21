@@ -10,10 +10,10 @@ class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="kick",
                         description="Kick a user",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
@@ -34,10 +34,10 @@ class Moderation(commands.Cog):
         await ctx.guild.kick(kwargs["user"])
         await ctx.send('`%s` kicked - ez' % kwargs["user"], hidden=ephemeral)
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="ban",
                         description="Ban a user",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
@@ -59,10 +59,10 @@ class Moderation(commands.Cog):
         await ctx.guild.ban(user)
         await ctx.send('`%s` banned - ez' % user)
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="unban",
                         description="Unban a user",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
@@ -84,10 +84,10 @@ class Moderation(commands.Cog):
         await ctx.guild.unban(user)
         await ctx.send('`%s` unbanned' % user)
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="mute",
                         description="Mute a user",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
@@ -123,10 +123,10 @@ class Moderation(commands.Cog):
         await kwargs["user"].add_roles(mutedRole, reason=kwargs["reason"])
         await kwargs["user"].send(f" You have been muted. Reason: {kwargs['reason']}")
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="unmute",
                         description="Unmute a user",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(

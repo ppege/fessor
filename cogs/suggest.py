@@ -10,10 +10,10 @@ class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="suggest",
                         description="Suggest a feature",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(

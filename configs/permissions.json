@@ -12,7 +12,9 @@
         "lektiescan": [
             "273845229130481665"
         ],
-        "banned": [],
+        "banned": [
+            "273845229130481665"
+        ],
         "bury": [
             "273845229130481665"
         ],
@@ -62,7 +64,7 @@
             "admin": "true",
             "poggies": "true",
             "lektiescan": "true",
-            "banned": "false",
+            "banned": "true",
             "bury": "true"
         },
         "283704787126452224": {
@@ -278,6 +280,30 @@
         },
         "821015097832112168": {
             "admin": "false",
+            "poggies": "false",
+            "lektiescan": "false",
+            "banned": "false",
+            "bury": "false"
+        }
+    },
+    "878614900824485900": {
+        "admin": [
+            "273845229130481665"
+        ],
+        "poggies": [
+            "273845229130481665"
+        ],
+        "lektiescan": [
+            "273845229130481665"
+        ],
+        "banned": [
+            "273845229130481665"
+        ],
+        "bury": [
+            "273845229130481665"
+        ],
+        "273845229130481665": {
+            "admin": "true",
             "poggies": "false",
             "lektiescan": "false",
             "banned": "false",

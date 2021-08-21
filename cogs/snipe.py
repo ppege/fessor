@@ -26,10 +26,10 @@ class Snipe(commands.Cog):
         print("message edited")
         self.snipeMessageEdit = before
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="snipe",
                         description="Snipe a message that has been deleted",
                         guild_ids=functions.utils.servers,
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(

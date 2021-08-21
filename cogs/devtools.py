@@ -12,7 +12,6 @@ class Devtools(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="execute",
                         description="Executes a command on the host system",
                         guild_ids=functions.utils.servers,
@@ -30,6 +29,7 @@ class Devtools(commands.Cog):
                                 required=False
                             )
                         ],
+                        default_permission=False, 
                         permissions=functions.utils.slPerms("dev")
                     )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
@@ -37,7 +37,6 @@ class Devtools(commands.Cog):
         output = subprocess.run(kwargs["command"], stdout=subprocess.PIPE, shell=True).stdout.decode('utf-8')
         await ctx.send(f'```\n{output}\n```', hidden = ephemeral)
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="update",
                         description="Updates the bot",
                         guild_ids=functions.utils.servers,

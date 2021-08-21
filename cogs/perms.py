@@ -11,10 +11,10 @@ class Perms(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="perms",
                         description="Setup permissions",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("admin"),
                         options=[
                             create_option(
@@ -79,6 +79,7 @@ class Perms(commands.Cog):
     @cog_ext.cog_slash(name="setupperms",
                         description="Setup permissions, THIS RESETS ALL PERMS",
                         guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("dev"),
                         options=[
                             create_option(

@@ -5,62 +5,112 @@ import configparser
 from discord_slash.utils.manage_commands import create_permission
 from discord_slash.model import SlashCommandPermissionType
 
-servers = [
-    799253855677579285,
-    811552770074738688
-]
+config = configparser.ConfigParser()
+config.read('cred.ini')
+
+if config['config']['mode'] == "updates":
+    servers = [
+        878614900824485900
+    ]
+else:
+    servers = [
+        799253855677579285,
+        811552770074738688
+    ]
 
 def slPerms(permission):
     with open("configs/permissions.json", "r") as file:
         data = json.load(file)
-    if permission == "dev":
-        permissions={
-                                811552770074738688: [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
-                                ] + 
-                                [
-                                    create_permission(816611172869603368, SlashCommandPermissionType.ROLE, False)
-                                ],
-                                799253855677579285: [
-                                    create_permission(808717353403154432, SlashCommandPermissionType.ROLE, False),
-                                    create_permission(802105025689812993, SlashCommandPermissionType.ROLE, False)
-                                ] +
-                                [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
-                                ]
-                            }
-    elif permission == "banned":
-        permissions={
-                                811552770074738688: [
-                                    create_permission(816611172869603368, SlashCommandPermissionType.ROLE, True)
-                                ] + 
-                                [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["811552770074738688"]["banned"]
-                                ],
-                                799253855677579285: [
-                                    create_permission(808717353403154432, SlashCommandPermissionType.ROLE, True),
-                                    create_permission(802105025689812993, SlashCommandPermissionType.ROLE, True)
-                                ] +
-                                [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["799253855677579285"]["banned"]
-                                ]
-                            }
+    if config['config']['mode'] == "main":
+        if permission == "dev":
+            permissions={
+                811552770074738688: [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ],
+                799253855677579285: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
+        elif permission == "banned":
+            permissions={
+                811552770074738688: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["811552770074738688"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ],
+                799253855677579285: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["799253855677579285"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
+        else:
+            permissions={
+                811552770074738688: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["811552770074738688"][permission]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["811552770074738688"]["admin"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["811552770074738688"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ],
+                799253855677579285: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["799253855677579285"][permission]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["799253855677579285"]["admin"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["799253855677579285"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
     else:
-        permissions={
-                                811552770074738688: [
-                                    create_permission(816611172869603368, SlashCommandPermissionType.ROLE, False)
-                                ] + 
-                                [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["811552770074738688"][permission]
-                                ],
-                                799253855677579285: [
-                                    create_permission(808717353403154432, SlashCommandPermissionType.ROLE, False),
-                                    create_permission(802105025689812993, SlashCommandPermissionType.ROLE, False)
-                                ] +
-                                [
-                                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["799253855677579285"][permission]
-                                ]
-                            }
+        if permission == "dev":
+            permissions={
+                878614900824485900: [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
+        elif permission == "banned":
+            permissions={
+                878614900824485900: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
+        else:
+            permissions={
+                878614900824485900: 
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"][permission]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"]["admin"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
+                ] +
+                [
+                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+                ]
+            }
     return permissions
 
 def idHandler(id):

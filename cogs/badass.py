@@ -10,8 +10,7 @@ class Badass(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @functions.utils.banned()
-    @cog_ext.cog_slash(name="badass", description="😎", guild_ids=functions.utils.servers, permissions=functions.utils.slPerms("banned"))
+    @cog_ext.cog_slash(name="badass", description="😎", guild_ids=functions.utils.servers, default_permission=True, permissions=functions.utils.slPerms("banned"))
     async def badass(self, ctx: discord_slash.SlashContext):
       await ctx.send('https://imgur.com/a/QqFEkrm')
 

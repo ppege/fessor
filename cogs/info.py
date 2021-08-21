@@ -23,10 +23,10 @@ class Info(commands.Cog):
         uptime = time.time() - data['startTime']
         return str(datetime.timedelta(seconds=uptime))
 
-    @functions.utils.banned()
     @cog_ext.cog_slash(name="info",
                         description="Bot statistics",
                         guild_ids=functions.utils.servers,
+                        default_permission=True, 
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(

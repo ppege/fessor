@@ -12,7 +12,7 @@ class Coinflip(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="coinflip", description="Flips a coin.", guild_ids=functions.utils.servers, permissions=functions.utils.slPerms("banned"))
+    @cog_ext.cog_slash(name="coinflip", description="Flips a coin.", guild_ids=functions.utils.servers, default_permission=True, permissions=functions.utils.slPerms("banned"))
     async def coinflip(self, ctx: discord_slash.SlashContext):
         def getResult():
             result = random.uniform(0, 1)

@@ -23,6 +23,21 @@ translations = {
   "friday": "fredag"
 }
 
+scanColors = {
+  "Tysk": 0x9900FF,
+  "Kristendom": 0x9900FF,
+  "Fysik/kemi": 0xFF0000,
+  "Dansk": 0xFF0000,
+  "Engelsk": 0x0000FF,
+  "Matematik": 0x0000FF,
+  "Billedkunst": 0xFFFF00,
+  "Geografi": 0x00FF00,
+  "Biologi": 0x00FF00,
+  "Historie": 0xFF9900,
+  "Samfundsfag": 0xFF9900,
+  "Idræt": 0x00FFFF
+}
+
 conversions = {
   "mandag": "0",
   "tirsdag": "1",
