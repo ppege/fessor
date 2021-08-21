@@ -1,13 +1,15 @@
 from base64 import decodebytes
+import re
 from discord.ext import commands
 from discord.ext.commands.errors import MissingPermissions
 from discord.utils import get
-from discord import Embed
+from discord import Embed, guild
 import os
 import discord
 import discord.ext.commands
 from discord.ext.commands import CommandNotFound
 import asyncio
+from discord_slash.utils.manage_commands import create_option
 from functions.school import schedule
 import datetime
 import os,sys,inspect
@@ -27,6 +29,7 @@ import json
 import functions.utils
 import discord_slash
 from discord import Client, Intents, Embed
+import subprocess
 
 startTime = time.time()
 with open("data/data.json", "r") as file:
@@ -49,6 +52,8 @@ else:
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 slash = discord_slash.SlashCommand(bot, sync_commands=True)
+
+bot.remove_command('help')
 
 #logging commands
 @bot.event
@@ -84,48 +89,55 @@ async def on_command_error(ctx, error):
     raise error
 
 
-@slash.slash(name="allah", description="placeholder", guild_ids=[811552770074738688])
-async def _allah(ctx: discord_slash.SlashContext):
-    await ctx.reply(content="ok")
+@slash.subcommand(base="cogs", name="load", description="Load a cog", base_permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers)
+async def _cogs_load(ctx: discord_slash.SlashContext, cog):
+  try:
+    await ctx.defer()
+    bot.load_extension(f'cogs.{cog}')
+    await ctx.send(embed=discord.Embed(title=f'{cog} loaded.', description='', color=0xFF0000))
+        
+  except commands.ExtensionAlreadyLoaded:
+      await ctx.send(embed=discord.Embed(title=f'{cog} is already loaded.'))
+  
+  except commands.ExtensionNotFound:
+      await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
 
-@functions.utils.admin()
-@bot.command()
-async def cogs(ctx, action, cog):
-    try:
-        if action == "load":
-            message = await ctx.send(embed=discord.Embed(title=f'Loading {cog}...', description=''))
-            bot.load_extension(f'cogs.{cog}')
-            await message.edit(embed=discord.Embed(title=f'{cog} loaded.', description='', color=0xFF0000))
-        elif action == "unload":
-            message = await ctx.send(embed=discord.Embed(title=f'Unloading {cog}...', description=''))
-            bot.unload_extension(f'cogs.{cog}')
-            await message.edit(embed=discord.Embed(title=f'{cog} unloaded.', description='', color=0xFF0000))
-        elif action == "reload":
-            if cog != "all":
-                message = await ctx.send(embed=discord.Embed(title=f'Reloading {cog}...', description=''))
-                bot.reload_extension(f'cogs.{cog}')
-                await message.edit(embed=discord.Embed(title=f'{cog} reloaded.', description='', color=0xFF0000))
-            else:
-                message = await ctx.send(embed=discord.Embed(title=f'Reloading all cogs...', description=''))
-                fileAmount = len(os.listdir('./cogs'))
-                i = 0
-                for filename in os.listdir('./cogs'):
-                    if filename.endswith('.py'):
-                        i = i + 1
-                        bot.reload_extension(f"cogs.{filename[:-3]}")
-                    if i % 5 == 0:
-                        await message.edit(embed=discord.Embed(title=f'{i} cogs reloaded.'))
-                await message.edit(embed=discord.Embed(title=f'All {i} cogs reloaded.', description='', color=0xFF0000))
-    except commands.ExtensionAlreadyLoaded:
-        await ctx.send(embed=discord.Embed(title=f'{cog} is already loaded.'))
-    except commands.ExtensionNotLoaded:
-        await ctx.send(embed=discord.Embed(title=f'{cog} is not loaded.'))
-    except commands.ExtensionNotFound:
-        await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
+@slash.subcommand(base="cogs", name="unload", description="Unload a cog", guild_ids=functions.utils.servers)
+async def _cogs_unload(ctx: discord_slash.SlashContext, cog):
+  try:
+    await ctx.defer()
+    bot.unload_extension(f'cogs.{cog}')
+    await ctx.send(embed=discord.Embed(title=f'{cog} unloaded.', description='', color=0xFF0000))
 
-@functions.utils.banned()
-@bot.command()
-async def coglist(ctx):
+  except commands.ExtensionNotLoaded:
+      await ctx.send(embed=discord.Embed(title=f'{cog} is not loaded.'))
+  
+  except commands.ExtensionNotFound:
+      await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
+        
+@slash.subcommand(base="cogs", name="reload", description="Reload a cog", guild_ids=functions.utils.servers)
+async def _cogs_reload(ctx: discord_slash.SlashContext, cog):
+  try:
+    if cog != "all":
+        await ctx.defer()
+        bot.reload_extension(f'cogs.{cog}')
+        await ctx.send(embed=discord.Embed(title=f'{cog} reloaded.', description='', color=0xFF0000))
+    else:
+        await ctx.defer()
+        i = len(os.listdir('./cogs'))
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                bot.reload_extension(f"cogs.{filename[:-3]}")
+        await ctx.send(embed=discord.Embed(title=f'All {i} cogs reloaded.', description='', color=0xFF0000))
+  
+  except commands.ExtensionNotLoaded:
+      await ctx.send(embed=discord.Embed(title=f'{cog} is not loaded.'))
+
+  except commands.ExtensionNotFound:
+      await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
+
+@slash.subcommand(base="cogs", name="list", description="List of all cogs", guild_ids=functions.utils.servers)
+async def _cogs_list(ctx: discord_slash.SlashContext):
     fileAmount = len(os.listdir('./cogs'))
     cogList = ""
     i = 0
@@ -135,11 +147,21 @@ async def coglist(ctx):
             cogList = cogList + f"{filename[:-3]}, "
     await ctx.send(embed=discord.Embed(title=f'{i} cogs', description=cogList[:-2], color=0xFF0000))
 
-@functions.utils.admin()
-@bot.command()
-async def shutdown(ctx):
-  await ctx.send(embed=discord.Embed(title='Shutting down...', description='', color=0x0000FF))
-  os.system('python3 fallback.py &')
+@slash.slash(name="shutdown", description="Shuts down the bot.", permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+async def shutdown(ctx: discord_slash.SlashContext, **kwargs):
+  ephemeral=functions.utils.eCheck(**kwargs)
+  await ctx.defer(hidden=ephemeral)
+  fprefix = random.choice(['$', '%', '=', '+', '^', '---', '___', '>', '>>>'])
+  subprocess.Popen(['python3', 'fallback.py', fprefix])
+  await ctx.send(embed=discord.Embed(title='Bot has shut down.', description=f'Fallback prefix: {fprefix}', color=0x0000FF))
+  sys.exit(0)
+
+@slash.slash(name="restart", description="Restarts the bot.", permissions=functions.utils.slPerms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+async def restart(ctx: discord_slash.SlashContext, **kwargs):
+  ephemeral=functions.utils.eCheck(**kwargs)
+  await ctx.defer(hidden=ephemeral)
+  message = await ctx.send(embed=discord.Embed(title='Restarting...', color=0x0000FF))
+  subprocess.Popen(['python3', 'fallback.py', 'restart', str(message.channel.id)])
   sys.exit(0)
 
 try:
