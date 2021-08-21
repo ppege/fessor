@@ -9,8 +9,7 @@ import functions.utils
 import datetime
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option, create_permission
 
 
 class Info(commands.Cog):
@@ -26,7 +25,7 @@ class Info(commands.Cog):
     @cog_ext.cog_slash(name="info",
                         description="Bot statistics",
                         guild_ids=functions.utils.servers,
-                        default_permission=True, 
+                        default_permission=True,
                         permissions=functions.utils.slPerms("banned"),
                         options=[
                             create_option(

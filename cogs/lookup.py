@@ -9,9 +9,9 @@ import configparser
 from googlesearch import search
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.utils.manage_commands import create_option
 from discord_slash.utils.manage_components import wait_for_component, create_button, create_actionrow
-from discord_slash.model import ButtonStyle, SlashCommandPermissionType
+from discord_slash.model import ButtonStyle
 
 
 class Lookup(commands.Cog):
@@ -37,14 +37,15 @@ class Lookup(commands.Cog):
                                 required=False
                             )
                         ])
-    async def define(self, ctx: discord_slash.SlashContext, word, **kwargs):
+    async def define(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
+        word = kwargs["word"]
         await ctx.defer(hidden=ephemeral)
         dict = PyDictionary()
         meaning = dict.meaning(word)
         synonym = dict.synonym(word)
         antonym = dict.antonym(word)
-        if meaning == None:
+        if meaning is None:
             await ctx.send(embed=discord.Embed(title=f"No definition found for {word}", color=0xFF0000))
             return
         print(meaning)
@@ -146,7 +147,7 @@ class Lookup(commands.Cog):
         await ctx.defer(hidden=ephemeral)
         translator = Translator(from_lang=origin, to_lang=destination)
         output = translator.translate(kwargs['text'])
-        await ctx.send(embed=discord.Embed(title=f'Translation', description=output, color=0xFF0000))
+        await ctx.send(embed=discord.Embed(title='Translation', description=output, color=0xFF0000))
 
     @cog_ext.cog_slash(name="wiki",
                         description="Look something up on Wikipedia",
@@ -177,11 +178,8 @@ class Lookup(commands.Cog):
     async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
         await ctx.defer(hidden=ephemeral)
-        if 'dansk' in kwargs:
-            if kwargs["dansk"] == True:
-                wikipedia.set_lang('da')
-            else:
-                wikipedia.set_lang('en')
+        if 'dansk' in kwargs and kwargs["dansk"] == True:
+            wikipedia.set_lang('da')
         else:
             wikipedia.set_lang('en')
         output = wikipedia.summary(kwargs["query"])
@@ -192,10 +190,7 @@ class Lookup(commands.Cog):
             n = 2048
             chunks = [output[i:i+n] for i in range(0, len(output), n)]
             for i in range(len(chunks)):
-                if i == 0:
-                    title = pagetitle
-                else:
-                    title = '‌'
+                title = pagetitle if i == 0 else '‌'
                 embed = discord.Embed(title=title, description=chunks[i], color=0xFF0000, url=url)
                 embed.set_thumbnail(url=thumbnail)
                 await ctx.send(embed=embed, hidden=ephemeral)
@@ -266,11 +261,8 @@ class Lookup(commands.Cog):
         query = kwargs["query"]
         await ctx.defer(hidden=ephemeral)
         i = 0
-        results = []
         reaction = None
-        for j in search(query, tld="co.in", num=10, stop=10, pause=2):
-            results.append(j)
-
+        results = [j for j in search(query, tld="co.in", num=10, stop=10, pause=2)]
         action_row = create_actionrow(
             create_button(style=ButtonStyle.green, label="Previous", custom_id="previousButton"),
             create_button(style=ButtonStyle.green, label="Next", custom_id="nextButton")
@@ -284,11 +276,11 @@ class Lookup(commands.Cog):
         while True:
             button_ctx: discord_slash.ComponentContext = await wait_for_component(self.bot, components=action_row)
             if button_ctx.custom_id == "previousButton":
-                i = i - 1
-                await button_ctx.edit_origin(content=str(results[i]))
+                i -= 1
             else:
-                i = i + 1
-                await button_ctx.edit_origin(content=str(results[i]))
+                i += 1
+
+            await button_ctx.edit_origin(content=str(results[i]))
             #await button_ctx.edit_origin(content=f"{button_ctx.custom_id}")
             #if str(reaction) == '➡️':
             #    i = i + 1

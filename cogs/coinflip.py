@@ -4,8 +4,8 @@ import random
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
-from discord_slash.model import ButtonStyle, SlashCommandPermissionType
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import ButtonStyle
+from discord_slash.utils.manage_commands import create_choice, create_permission
 import functions.utils
 
 class Coinflip(commands.Cog):
@@ -16,15 +16,12 @@ class Coinflip(commands.Cog):
     async def coinflip(self, ctx: discord_slash.SlashContext):
         def getResult():
             result = random.uniform(0, 1)
-            if result > 0.5:
-                output = "Heads!"
-            else:
-                output = "Tails!"
+            output = "Heads!" if result > 0.5 else "Tails!"
             return output, result
         output, result = getResult()
         action_row = create_actionrow(create_button(style=ButtonStyle.green, label="Reroll"))
 
-        message = await ctx.send(embed=discord.Embed(title=output, description=f"Float: {str(result)}", color=0xFF0000), components=[action_row])
+        await ctx.send(embed=discord.Embed(title=output, description=f"Float: {str(result)}", color=0xFF0000), components=[action_row])
 
         while(True):
             button_ctx: discord_slash.ComponentContext = await wait_for_component(self.bot, components=action_row)

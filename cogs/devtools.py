@@ -5,8 +5,7 @@ import subprocess
 import git
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option, create_permission
 
 class Devtools(commands.Cog):
     def __init__(self, bot):
@@ -29,7 +28,7 @@ class Devtools(commands.Cog):
                                 required=False
                             )
                         ],
-                        default_permission=False, 
+                        default_permission=False,
                         permissions=functions.utils.slPerms("dev")
                     )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):

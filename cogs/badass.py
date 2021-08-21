@@ -3,8 +3,6 @@ from discord.ext import commands
 import functions.utils
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_permission
-from discord_slash.model import SlashCommandPermissionType
 
 class Badass(commands.Cog):
     def __init__(self, bot):
