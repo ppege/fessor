@@ -48,62 +48,29 @@ class Lookup(commands.Cog):
         if meaning is None:
             await ctx.send(embed=discord.Embed(title=f"No definition found for {word}", color=0xFF0000))
             return
-        print(meaning)
-        embed = discord.Embed(title=f'Definitions for {word}', description=f'Definitions, synonyms and antonyms for the word "{word}"', color=0xFF0000)
-        nouns = ""
-        verbs = ""
-        adjectives = ""
-        adverbs = ""
-        synonyms = ""
-        antonyms = ""
+        embed = discord.Embed(title=f'Definitions', description=f'Definitions for the word "{word}"', color=0xFF0000)
+        
+        itemDict={
+            "Noun": "",
+            "Verb": "",
+            "Adjective": "",
+            "Adverb": "",
+            "synonyms": "",
+            "antonyms": ""
+        }
 
-        if 'Noun' in meaning:
-            for i in range(len(meaning['Noun'])):
-                if '(' in meaning['Noun'][i] or meaning['Noun'][i].startswith('or'):
-                    continue
-                nouns = nouns + meaning['Noun'][i] + "\n\n"
-            nouns = nouns.replace('(', '')
-            embed.add_field(name='Noun', value=nouns)
+        itemList=[
+            'Noun', 'Verb', 'Adjective', 'Adverb'
+        ]
 
-        if 'Verb' in meaning:
-            for i in range(len(meaning['Verb'])):
-                if '(' in meaning['Verb'][i] or meaning['Verb'][i].startswith('or'):
-                    continue
-                verbs = verbs + meaning['Verb'][i] + "\n\n"
-            verbs = verbs.replace('(', '')
-            embed.add_field(name='Verb', value=verbs)
-
-        if 'Adjective' in meaning:
-            for i in range(len(meaning['Adjective'])):
-                if '(' in meaning['Adjective'][i] or meaning['Adjective'][i].startswith('or'):
-                    continue
-                adjectives = adjectives + meaning['Adjective'][i] + "\n\n"
-            adjectives = adjectives.replace('(', '')
-            embed.add_field(name='Adjective', value=adjectives)
-
-        if 'Adverb' in meaning:
-            for i in range(len(meaning['Adverb'])):
-                if '(' in meaning['Adverb'][i] or meaning['Adverb'][i].startswith('or'):
-                    continue
-                adverbs = adverbs + meaning['Adverb'][i] + "\n\n"
-            adverbs = adverbs.replace('(', '')
-            embed.add_field(name='Adverb', value=adverbs)
-
-        if synonym != None:
-            for i in range(len(synonym)):
-                if '(' in synonym[i] or synonym[i].startswith('or'):
-                    continue
-                synonyms = synonyms + synonym[i] + ", "
-            synonyms = synonyms.replace('(', '')[:-2]
-            embed.add_field(name='Synonyms', value=synonyms)
-
-        if antonym != None:
-            for i in range(len(antonym)):
-                if '(' in antonym[i] or antonym[i].startswith('or'):
-                    continue
-                antonyms = antonyms + antonym[i] + ", "
-            antonyms = antonyms.replace('(', '')[:-2]
-            embed.add_field(name='Antonyms', value=antonyms)
+        for item in itemList:
+            if item in meaning:
+                for itemMeaning in meaning[item]:
+                    if '(' in itemMeaning or itemMeaning.startswith('or'):
+                        continue
+                    itemDict[item] += itemMeaning + "\n\n"
+                itemDict[item] = itemDict[item].replace('(', '')
+                embed.add_field(name=item, value=itemDict[item])
 
         await ctx.send(embed=embed)
 

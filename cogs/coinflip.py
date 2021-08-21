@@ -5,7 +5,6 @@ import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
 from discord_slash.model import ButtonStyle
-from discord_slash.utils.manage_commands import create_choice, create_permission
 import functions.utils
 
 class Coinflip(commands.Cog):

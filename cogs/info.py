@@ -9,7 +9,7 @@ import functions.utils
 import datetime
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_permission
+from discord_slash.utils.manage_commands import create_option
 
 
 class Info(commands.Cog):
