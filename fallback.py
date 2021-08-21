@@ -5,11 +5,7 @@ import sys
 import configparser
 import subprocess
 
-if sys.argv[1] != "restart":
-  prefix=sys.argv[1]
-else:
-  prefix="$"
-
+prefix = sys.argv[1] if sys.argv[1] != "restart" else "$"
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 

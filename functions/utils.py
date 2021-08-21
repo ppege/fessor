@@ -78,39 +78,38 @@ def slPerms(permission):
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ]
             }
+    elif permission == "dev":
+        permissions={
+            878614900824485900: [
+                create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+            ]
+        }
+    elif permission == "banned":
+        permissions={
+            878614900824485900: 
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
+            ] +
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+            ]
+        }
     else:
-        if permission == "dev":
-            permissions={
-                878614900824485900: [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
-                ]
-            }
-        elif permission == "banned":
-            permissions={
-                878614900824485900: 
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
-                ] +
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
-                ]
-            }
-        else:
-            permissions={
-                878614900824485900: 
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"][permission]
-                ] +
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"]["admin"]
-                ] +
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
-                ] +
-                [
-                    create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
-                ]
-            }
+        permissions={
+            878614900824485900: 
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"][permission]
+            ] +
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"]["admin"]
+            ] +
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
+            ] +
+            [
+                create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
+            ]
+        }
     return permissions
 
 def idHandler(id):
@@ -126,9 +125,10 @@ def admin():
     def wrapper(ctx):
         config = configparser.ConfigParser()
         config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
+        return (
+            config[str(ctx.author.id)]['admin'] == 'true'
+            and config[str(ctx.author.id)]['banned'] == 'false'
+        )
     return commands.check(wrapper)
 
 def settings():
@@ -168,9 +168,7 @@ def banned():
     def wrapper(ctx):
         config = configparser.ConfigParser()
         config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
+        return config[str(ctx.author.id)]['banned'] == 'false'
     return commands.check(wrapper)
 
 def slander():
@@ -200,7 +198,4 @@ def eCheck(**kwargs):
         print(kwargs["private"])
     except:
         return False
-    if kwargs["private"] == True:
-        return True
-    else:
-        return False
+    return kwargs["private"] == True

@@ -66,14 +66,13 @@ class Skole(commands.Cog):
 
         if selection == []:
             return
-        else:
-            channel = self.bot.get_channel(816693284147691530)
-            await self.autopost(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
+        channel = self.bot.get_channel(816693284147691530)
+        await self.autopost(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
 
     async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
         with open("data/scans.json", "r") as file:
             data = json.load(file)
-        for i in range(0, len(selection)):
+        for i in range(len(selection)):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
             currentTeacher = author[selection[i]]
@@ -91,15 +90,19 @@ class Skole(commands.Cog):
                   embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
                   raise
                 #print('thumbnails registered, handling files')
-                forLoopFiles = []
-                for j in range(0, len(files[selection[i]].split(','))):
-                  forLoopFiles.append(files[selection[i]].split(',')[j])
-                forLoopFileNames = []
-                for j in range(0, len(fileNames[selection[i]].split(','))):
-                  forLoopFileNames.append(fileNames[selection[i]].split(',')[j])
+                forLoopFiles = [
+                    files[selection[i]].split(',')[j]
+                    for j in range(len(files[selection[i]].split(',')))
+                ]
+
+                forLoopFileNames = [
+                    fileNames[selection[i]].split(',')[j]
+                    for j in range(len(fileNames[selection[i]].split(',')))
+                ]
+
                 fileOutput = ""
-                for k in range(0, len(forLoopFiles)):
-                  fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
+                for k in range(len(forLoopFiles)):
+                    fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
                 #print('files handled, creating embed')
                 embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
                 embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
@@ -111,15 +114,15 @@ class Skole(commands.Cog):
                 await channel.send(embed=embed)
 
     async def post(self, ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
-          with open("configs/assets.json", "r") as file:
-            data = json.load(file)
-          print('post() called')
-          try:
-            print(selection[0])
-          except:
-            print('poop')
-            return "fail"
-          for i in range(0, len(selection)):
+        with open("configs/assets.json", "r") as file:
+          data = json.load(file)
+        print('post() called')
+        try:
+          print(selection[0])
+        except:
+          print('poop')
+          return "fail"
+        for i in range(len(selection)):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
             currentTeacher = author[selection[i]]
@@ -137,15 +140,19 @@ class Skole(commands.Cog):
                   embedThumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
                   raise
                 #print('thumbnails registered, handling files')
-                forLoopFiles = []
-                for j in range(0, len(files[selection[i]].split(','))):
-                  forLoopFiles.append(files[selection[i]].split(',')[j])
-                forLoopFileNames = []
-                for j in range(0, len(fileNames[selection[i]].split(','))):
-                  forLoopFileNames.append(fileNames[selection[i]].split(',')[j])
+                forLoopFiles = [
+                    files[selection[i]].split(',')[j]
+                    for j in range(len(files[selection[i]].split(',')))
+                ]
+
+                forLoopFileNames = [
+                    fileNames[selection[i]].split(',')[j]
+                    for j in range(len(fileNames[selection[i]].split(',')))
+                ]
+
                 fileOutput = ""
-                for k in range(0, len(forLoopFiles)):
-                  fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
+                for k in range(len(forLoopFiles)):
+                    fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
                 #print('files handled, creating embed')
                 embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
                 embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
@@ -154,8 +161,8 @@ class Skole(commands.Cog):
                 embed.set_thumbnail(url=embedThumbnail)
                 print('embed %d created, sending embed' % selection[i])
                 await ctx.send(embed=embed)
-                #print('embed sent, reiterating for loop or returning')
-          return "success"
+                        #print('embed sent, reiterating for loop or returning')
+        return "success"
 
     @cog_ext.cog_subcommand(base="schedule",
                         description="Show the schedule for a given day",
@@ -213,68 +220,72 @@ class Skole(commands.Cog):
     async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
         try:
-          await ctx.defer(hidden=ephemeral)
-          begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(True)
-          if kwargs["mode"] == "all":
-            lektieList = []
-            for i in range(0, len(begivenhed)):
-              lektieList.append(str(i + 1) + ". " + begivenhed[i] + " | Afleveres " + tidspunkt[i])
-            description = "\n\n".join(lektieList)
-            Field2 = "Use the command again with a different mode to see full assignments"
-            embed=discord.Embed(title="Found %d assignments" % len(begivenhed), description=description, color=0xFF0000)
-            embed.add_field(name="What now?", value=Field2)
-            await ctx.send(embed=embed)
-            return
-          else:
-            if kwargs["mode"] == "subject":
-              numList = []
-              for i in range(0, len(begivenhed)):
-                if kwargs["parameters"] in begivenhed[i]:
-                  numList.append(i)
-              userInput = numList
-            elif kwargs["mode"] == "date":
-              if kwargs["parameters"] == "tomorrow":
-                tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-                tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
-                userInput = tomorrow
-                numList = []
-                for i in range(0, len(tidspunkt)):
-                  if str(userInput) in tidspunkt[i]:
-                    numList.append(i)
-                userInput = numList
-              elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
-                weekday = datetime.datetime.today().weekday()
-                if kwargs["parameters"] in options.translations.keys():
-                  kwargs["parameters"] = options.translations[kwargs["parameters"]]
-                diff = weekday - int(options.conversions[kwargs["parameters"]])
-                targetDate = datetime.date.today() - datetime.timedelta(days=diff)
-                targetDate = targetDate.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
-                userInput = targetDate
-                numList = []
-                for i in range(0, len(tidspunkt)):
-                  if str(userInput) in tidspunkt[i]:
-                    numList.append(i)
-                userInput = numList
-              else:
-                numList = []
-                for i in range(0, len(begivenhed)):
-                  if str(kwargs["parameters"]) in tidspunkt[i]:
-                    numList.append(i)
-                userInput = numList
-            elif kwargs["mode"] == "teacher":
-              numList = []
-              for i in range(0, len(author)):
-                if str(kwargs["parameters"]) in author[i]:
-                  numList.append(i)
-              userInput = numList
-          if str(userInput) == "[]":
-            await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
-            return
-          try:
-            await self.post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput, url)
-          except:
-            await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
-            raise
+            await ctx.defer(hidden=ephemeral)
+            begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url = lektiescan(True)
+            if kwargs["mode"] == "all":
+                lektieList = [
+                    str(i + 1)
+                    + ". "
+                    + begivenhed[i]
+                    + " | Afleveres "
+                    + tidspunkt[i]
+                    for i in range(len(begivenhed))
+                ]
+
+                description = "\n\n".join(lektieList)
+                Field2 = "Use the command again with a different mode to see full assignments"
+                embed=discord.Embed(title="Found %d assignments" % len(begivenhed), description=description, color=0xFF0000)
+                embed.add_field(name="What now?", value=Field2)
+                await ctx.send(embed=embed)
+                return
+            else:
+                if kwargs["mode"] == "subject":
+                    numList = [
+                        i
+                        for i in range(len(begivenhed))
+                        if kwargs["parameters"] in begivenhed[i]
+                    ]
+
+                    userInput = numList
+                elif kwargs["mode"] == "date":
+                    if kwargs["parameters"] == "tomorrow":
+                        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+                        tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+                        userInput = tomorrow
+                        numList = [i for i in range(len(tidspunkt)) if str(userInput) in tidspunkt[i]]
+                    elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
+                        weekday = datetime.datetime.today().weekday()
+                        if kwargs["parameters"] in options.translations.keys():
+                          kwargs["parameters"] = options.translations[kwargs["parameters"]]
+                        diff = weekday - int(options.conversions[kwargs["parameters"]])
+                        targetDate = datetime.date.today() - datetime.timedelta(days=diff)
+                        targetDate = targetDate.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+                        userInput = targetDate
+                        numList = [i for i in range(len(tidspunkt)) if str(userInput) in tidspunkt[i]]
+                    else:
+                        numList = [
+                            i
+                            for i in range(len(begivenhed))
+                            if str(kwargs["parameters"]) in tidspunkt[i]
+                        ]
+
+                    userInput = numList
+                elif kwargs["mode"] == "teacher":
+                    numList = [
+                        i
+                        for i in range(len(author))
+                        if str(kwargs["parameters"]) in author[i]
+                    ]
+
+                    userInput = numList
+            if str(userInput) == "[]":
+              await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
+              return
+            try:
+              await self.post(ctx, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, userInput, url)
+            except:
+              await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
+              raise
         except:
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise

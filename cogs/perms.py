@@ -63,12 +63,11 @@ class Perms(commands.Cog):
         user = kwargs["user"]
         value = kwargs["value"]
         userID = str(user.id)
-        if kwargs["value"] == "true":
-            if not userID in data[guildID][permission]:
+        if value == "true":
+            if userID not in data[guildID][permission]:
                 data[guildID][permission].append(userID)
-        else:
-            if userID in data[guildID][permission]:
-                data[guildID][permission].remove(userID)
+        elif userID in data[guildID][permission]:
+            data[guildID][permission].remove(userID)
         data[guildID][userID][permission] = value
 
         with open("configs/permissions.json", "w") as file:

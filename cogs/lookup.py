@@ -48,8 +48,13 @@ class Lookup(commands.Cog):
         if meaning is None:
             await ctx.send(embed=discord.Embed(title=f"No definition found for {word}", color=0xFF0000))
             return
-        embed = discord.Embed(title=f'Definitions', description=f'Definitions for the word "{word}"', color=0xFF0000)
-        
+        embed = discord.Embed(
+            title='Definitions',
+            description=f'Definitions for the word "{word}"',
+            color=0xFF0000,
+        )
+
+
         itemDict={
             "Noun": "",
             "Verb": "",

@@ -146,7 +146,7 @@ class Moderation(commands.Cog):
         functions.utils.eCheck(**kwargs)
         mutedRole = discord.utils.get(ctx.guild.roles, name="Muted")
         await kwargs["user"].remove_roles(mutedRole)
-        await kwargs["user"].send(f"Du er unmuted nu NOOB")
+        await kwargs["user"].send('Du er unmuted nu NOOB')
         embed = discord.Embed(title="Unmuted", description=f"{kwargs['user'].mention} has been unmuted",colour=discord.Colour.light_gray())
         await ctx.send(embed=embed)
 
