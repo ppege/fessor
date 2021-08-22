@@ -69,10 +69,10 @@ class Skole(commands.Cog):
     async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
         with open("data/scans.json", "r") as file:
             data = json.load(file)
-        for i in enumerate(selection):
+        for i in selection:
             #print('creating post %d' % i)
-            currentClass = begivenhed[selection[i]]
-            currentTeacher = author[selection[i]]
+            currentClass = begivenhed[i]
+            currentTeacher = author[i]
             #print('registering colors')
             try:
               embedColor = options.scanColors[currentClass]
@@ -88,25 +88,25 @@ class Skole(commands.Cog):
                   raise
                 #print('thumbnails registered, handling files')
                 forLoopFiles = [
-                    files[selection[i]].split(',')[j]
-                    for j in range(len(files[selection[i]].split(',')))
+                    files[i].split(',')[j]
+                    for j in range(len(files[i].split(',')))
                 ]
 
                 forLoopFileNames = [
-                    fileNames[selection[i]].split(',')[j]
-                    for j in range(len(fileNames[selection[i]].split(',')))
+                    fileNames[i].split(',')[j]
+                    for j in range(len(fileNames[i].split(',')))
                 ]
 
                 fileOutput = ""
                 for k in enumerate(forLoopFiles):
                     fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
                 #print('files handled, creating embed')
-                embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
-                embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
-                embed.set_footer(text=f"{author[selection[i]]}")
+                embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor, url=url[i])
+                embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
+                embed.set_footer(text=f"{author[i]}")
                 embed.add_field(name="Filer", value=fileOutput, inline=True)
                 embed.set_thumbnail(url=embedThumbnail)
-                print('embed %d created, sending embed' % selection[i])
+                print('embed %d created, sending embed' % selection)
                 await channel.send('@everyone ny lektie!')
                 await channel.send(embed=embed)
 
@@ -119,10 +119,10 @@ class Skole(commands.Cog):
         except:
           print('poop')
           return "fail"
-        for i in enumerate(selection):
+        for i in selection:
             #print('creating post %d' % i)
-            currentClass = begivenhed[selection[i]]
-            currentTeacher = author[selection[i]]
+            currentClass = begivenhed[i]
+            currentTeacher = author[i]
             #print('registering colors')
             try:
               embedColor = options.scanColors[currentClass]
@@ -138,25 +138,26 @@ class Skole(commands.Cog):
                   raise
                 #print('thumbnails registered, handling files')
                 forLoopFiles = [
-                    files[selection[i]].split(',')[j]
-                    for j in range(len(files[selection[i]].split(',')))
+                    files[i].split(',')[j]
+                    for j in range(len(files[i].split(',')))
                 ]
 
                 forLoopFileNames = [
-                    fileNames[selection[i]].split(',')[j]
-                    for j in range(len(fileNames[selection[i]].split(',')))
+                    fileNames[i].split(',')[j]
+                    for j in range(len(fileNames[i].split(',')))
                 ]
 
                 fileOutput = ""
                 for k in enumerate(forLoopFiles):
+                    k = k[0]
                     fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
                 #print('files handled, creating embed')
-                embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
-                embed.add_field(name="Beskrivelse", value=beskrivelse[selection[i]], inline=True)
-                embed.set_footer(text=f"{author[selection[i]]}")
+                embed=discord.Embed(title=begivenhed[i], description=tidspunkt[i], color=embedColor, url=url[i])
+                embed.add_field(name="Beskrivelse", value=beskrivelse[i], inline=True)
+                embed.set_footer(text=f"{author[i]}")
                 embed.add_field(name="Filer", value=fileOutput, inline=True)
                 embed.set_thumbnail(url=embedThumbnail)
-                print('embed %d created, sending embed' % selection[i])
+                print(f'embed {i} created, sending embed')
                 await ctx.send(embed=embed)
                         #print('embed sent, reiterating for loop or returning')
         return "success"
