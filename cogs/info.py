@@ -46,7 +46,6 @@ class Info(commands.Cog):
         uptime = self.getUptime()
         my_system = platform.uname()
         repo = git.Repo()
-        count = repo.git.rev_list('--count', 'HEAD')
         version = repo.git.describe()
         commit = str(repo.head.commit)[:7]
         description = f"Version: `{version}`\nExact ping: `{ping}`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nServers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nMode: `{config['config']['mode']}`"

@@ -4,7 +4,6 @@ import functions.utils
 import datetime
 from configs import options
 from functions.school.lektiescanner import lektiescan
-from dateutil.relativedelta import relativedelta
 import json
 import discord_slash
 from discord_slash import cog_ext
@@ -297,12 +296,12 @@ class Skole(commands.Cog):
     async def _scan_subject(self, ctx: discord_slash.SlashContext, **kwargs):
       ephemeral=functions.utils.eCheck(**kwargs)
       await self.scan(ctx, mode="subject", parameters=kwargs["subject"], private=ephemeral)
-    
+
     @cog_ext.cog_subcommand(base="scan", name="date", description="Scan for assignments from a specific date on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="date", description="Which date?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_date(self, ctx: discord_slash.SlashContext, **kwargs):
       ephemeral=functions.utils.eCheck(**kwargs)
       await self.scan(ctx, mode="date", parameters=kwargs["date"], private=ephemeral)
-    
+
     @cog_ext.cog_subcommand(base="scan", name="teacher", description="Scan for assignments from a specific teacher on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="teacher", description="Which teacher?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_teacher(self, ctx: discord_slash.SlashContext, **kwargs):
       ephemeral=functions.utils.eCheck(**kwargs)

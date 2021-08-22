@@ -231,7 +231,6 @@ class Lookup(commands.Cog):
         query = kwargs["query"]
         await ctx.defer(hidden=ephemeral)
         i = 0
-        reaction = None
         results = [j for j in search(query, tld="co.in", num=10, stop=10, pause=2)]
         action_row = create_actionrow(
             create_button(style=ButtonStyle.green, label="Previous", custom_id="previousButton"),

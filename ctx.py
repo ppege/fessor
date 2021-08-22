@@ -107,7 +107,7 @@ async def _cogs_unload(ctx: discord_slash.SlashContext, cog):
 
   except commands.ExtensionNotFound:
       await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
-        
+
 @slash.subcommand(base="cogs", name="reload", description="Reload a cog", guild_ids=functions.utils.servers)
 async def _cogs_reload(ctx: discord_slash.SlashContext, cog):
   try:
@@ -122,7 +122,7 @@ async def _cogs_reload(ctx: discord_slash.SlashContext, cog):
             if filename.endswith('.py'):
                 bot.reload_extension(f"cogs.{filename[:-3]}")
         await ctx.send(embed=discord.Embed(title=f'All {i} cogs reloaded.', description='', color=0xFF0000))
-  
+
   except commands.ExtensionNotLoaded:
       await ctx.send(embed=discord.Embed(title=f'{cog} is not loaded.'))
 
