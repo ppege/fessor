@@ -41,7 +41,7 @@ def slPerms(permission):
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ],
-                799253855677579285: 
+                799253855677579285:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["799253855677579285"]["banned"]
                 ] +
@@ -51,7 +51,7 @@ def slPerms(permission):
             }
         else:
             permissions={
-                811552770074738688: 
+                811552770074738688:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["811552770074738688"][permission]
                 ] +
@@ -96,7 +96,7 @@ def slPerms(permission):
         }
     else:
         permissions={
-            878614900824485900: 
+            878614900824485900:
             [
                 create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"][permission]
             ] +

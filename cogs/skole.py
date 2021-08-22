@@ -1,3 +1,4 @@
+import enum
 import discord
 from discord.ext import commands, tasks
 import functions.utils
@@ -119,7 +120,7 @@ class Skole(commands.Cog):
         except:
           print('poop')
           return "fail"
-        for i in range(len(selection)):
+        for i in enumerate(selection):
             #print('creating post %d' % i)
             currentClass = begivenhed[selection[i]]
             currentTeacher = author[selection[i]]
@@ -148,7 +149,7 @@ class Skole(commands.Cog):
                 ]
 
                 fileOutput = ""
-                for k in range(len(forLoopFiles)):
+                for k in enumerate(forLoopFiles):
                     fileOutput = fileOutput + "[" + forLoopFileNames[k] + "](" + forLoopFiles[k] + ")\n"
                 #print('files handled, creating embed')
                 embed=discord.Embed(title=begivenhed[selection[i]], description=tidspunkt[selection[i]], color=embedColor, url=url[selection[i]])
@@ -286,7 +287,7 @@ class Skole(commands.Cog):
         except:
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise
-        
+    
     @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_default_permission=False, base_permissions=functions.utils.slPerms("lektiescan"), options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_all(self, ctx: discord_slash.SlashContext, **kwargs):
       ephemeral=functions.utils.eCheck(**kwargs)

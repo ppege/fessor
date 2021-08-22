@@ -88,10 +88,10 @@ async def _cogs_load(ctx: discord_slash.SlashContext, cog):
     await ctx.defer()
     bot.load_extension(f'cogs.{cog}')
     await ctx.send(embed=discord.Embed(title=f'{cog} loaded.', description='', color=0xFF0000))
-  
+
   except commands.ExtensionAlreadyLoaded:
       await ctx.send(embed=discord.Embed(title=f'{cog} is already loaded.'))
-  
+
   except commands.ExtensionNotFound:
       await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
 
