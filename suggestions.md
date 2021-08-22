@@ -1,4 +1,4 @@
 # Suggestions
 
-## Suggestion from kanye northeast#9760
-- balls
+## Suggestion from kayne west#9760
+#### auto translate birtes textbuch assignments!!

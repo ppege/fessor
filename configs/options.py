@@ -1,26 +1,41 @@
 settings = ['lock', 'funnymode']
 values = ['on', 'off']
 skemaer = {
-  "mandag": "https://i.imgur.com/dWer1b7.png",
-  "tirsdag": "https://i.imgur.com/f98WCF8.png",
-  "onsdag": "https://i.imgur.com/46vs948.png",
-  "torsdag": "https://i.imgur.com/kEhraci.png",
-  "fredag": "https://i.imgur.com/C3p0iY6.png"
+  "mandag": "https://i.imgur.com/wlb5xEI.png",
+  "tirsdag": "https://i.imgur.com/mvv9boM.png",
+  "onsdag": "https://i.imgur.com/Cs9YQs5.png",
+  "torsdag": "https://i.imgur.com/UEFE1x1.png",
+  "fredag": "https://i.imgur.com/FI51Gaf.png"
 }
 schedules = {
-  "0": "https://i.imgur.com/dWer1b7.png",
-  "1": "https://i.imgur.com/f98WCF8.png",
-  "2": "https://i.imgur.com/46vs948.png",
-  "3": "https://i.imgur.com/kEhraci.png",
-  "4": "https://i.imgur.com/C3p0iY6.png"
+  "0": "https://i.imgur.com/wlb5xEI.png",
+  "1": "https://i.imgur.com/mvv9boM.png",
+  "2": "https://i.imgur.com/Cs9YQs5.png",
+  "3": "https://i.imgur.com/UEFE1x1.png",
+  "4": "https://i.imgur.com/FI51Gaf.png"
 }
 
 translations = {
-  "mandag": "monday",
-  "tirsdag": "tuesday",
-  "onsdag": "wednesday",
-  "torsdag": "thursday",
-  "fredag": "friday"
+  "monday": "mandag",
+  "tuesday": "tirsdag",
+  "wednesday": "onsdag",
+  "thursday": "torsdag",
+  "friday": "fredag"
+}
+
+scanColors = {
+  "Tysk": 0x9900FF,
+  "Kristendom": 0x9900FF,
+  "Fysik/kemi": 0xFF0000,
+  "Dansk": 0xFF0000,
+  "Engelsk": 0x0000FF,
+  "Matematik": 0x0000FF,
+  "Billedkunst": 0xFFFF00,
+  "Geografi": 0x00FF00,
+  "Biologi": 0x00FF00,
+  "Historie": 0xFF9900,
+  "Samfundsfag": 0xFF9900,
+  "Idræt": 0x00FFFF
 }
 
 conversions = {
