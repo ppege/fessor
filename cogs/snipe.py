@@ -4,8 +4,7 @@ import functions.utils
 import datetime
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Snipe(commands.Cog):
     def __init__(self, bot):
@@ -18,7 +17,7 @@ class Snipe(commands.Cog):
     async def on_message_delete(self, message):
         print("message deleted")
         self.snipeMessage = message
-    
+
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         if before.content == after.content:

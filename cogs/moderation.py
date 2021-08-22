@@ -3,8 +3,7 @@ from discord.ext import commands
 import functions.utils
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -57,7 +56,7 @@ class Moderation(commands.Cog):
         ephemeral = functions.utils.eCheck(**kwargs)
         user = await self.bot.fetch_user(kwargs["user"])
         await ctx.guild.ban(user)
-        await ctx.send('`%s` banned - ez' % user)
+        await ctx.send(f'`{user}` banned - ez', hidden=ephemeral)
 
     @cog_ext.cog_slash(name="unban",
                         description="Unban a user",
@@ -82,7 +81,7 @@ class Moderation(commands.Cog):
         ephemeral = functions.utils.eCheck(**kwargs)
         user = await self.bot.fetch_user(kwargs["user"])
         await ctx.guild.unban(user)
-        await ctx.send('`%s` unbanned' % user)
+        await ctx.send(f'`{user}` unbanned', hidden=ephemeral)
 
     @cog_ext.cog_slash(name="mute",
                         description="Mute a user",

@@ -27,14 +27,14 @@ def slPerms(permission):
                 811552770074738688: [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ],
-                799253855677579285: 
+                799253855677579285:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ]
             }
         elif permission == "banned":
             permissions={
-                811552770074738688: 
+                811552770074738688:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["811552770074738688"]["banned"]
                 ] +
@@ -86,7 +86,7 @@ def slPerms(permission):
         }
     elif permission == "banned":
         permissions={
-            878614900824485900: 
+            878614900824485900:
             [
                 create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
             ] +
@@ -196,6 +196,6 @@ def bury():
 def eCheck(**kwargs):
     try:
         print(kwargs["private"])
-    except:
+    except KeyError:
         return False
     return kwargs["private"] == True

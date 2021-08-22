@@ -1,9 +1,7 @@
 from base64 import decodebytes
-import re
 from discord.ext import commands
 from discord.ext.commands.errors import MissingPermissions
 from discord.utils import get
-from discord import Embed, guild
 import os
 import discord
 import discord.ext.commands
@@ -28,7 +26,6 @@ import string
 import json
 import functions.utils
 import discord_slash
-from discord import Client, Intents, Embed
 import subprocess
 
 startTime = time.time()
@@ -91,7 +88,7 @@ async def _cogs_load(ctx: discord_slash.SlashContext, cog):
     await ctx.defer()
     bot.load_extension(f'cogs.{cog}')
     await ctx.send(embed=discord.Embed(title=f'{cog} loaded.', description='', color=0xFF0000))
-        
+  
   except commands.ExtensionAlreadyLoaded:
       await ctx.send(embed=discord.Embed(title=f'{cog} is already loaded.'))
   

@@ -4,8 +4,7 @@ import functions.utils
 import json
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Perms(commands.Cog):
     def __init__(self, bot):
@@ -99,8 +98,8 @@ class Perms(commands.Cog):
         guildID = str(guildID)
         try:
             data.pop(guildID)
-        except:
-            print("balls")
+        except KeyError:
+            pass
         data[guildID] = {}
         ids = [member.id for member in guild.members]
         data[guildID]["admin"] = []
@@ -108,8 +107,8 @@ class Perms(commands.Cog):
         data[guildID]["lektiescan"] = []
         data[guildID]["banned"] = []
         data[guildID]["bury"] = []
-        for id in ids:
-            data[guildID][id] = {
+        for memberID in ids:
+            data[guildID][memberID] = {
                 "admin": "false",
                 "poggies": "false",
                 "lektiescan": "false",
