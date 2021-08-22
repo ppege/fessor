@@ -287,23 +287,29 @@
         }
     },
     "878614900824485900": {
-        "admin": [
-            "273845229130481665"
-        ],
-        "poggies": [
-            "273845229130481665"
-        ],
+        "admin": [],
+        "poggies": [],
         "lektiescan": [
-            "273845229130481665"
+            "814962136823365633"
         ],
-        "banned": [
-            "273845229130481665"
-        ],
-        "bury": [
-            "273845229130481665"
-        ],
+        "banned": [],
+        "bury": [],
         "273845229130481665": {
-            "admin": "true",
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "false",
+            "banned": "false",
+            "bury": "false"
+        },
+        "814962136823365633": {
+            "admin": "false",
+            "poggies": "false",
+            "lektiescan": "true",
+            "banned": "false",
+            "bury": "false"
+        },
+        "818837870021443614": {
+            "admin": "false",
             "poggies": "false",
             "lektiescan": "false",
             "banned": "false",

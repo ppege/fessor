@@ -73,7 +73,6 @@ class Perms(commands.Cog):
             json.dump(data, file, indent=4)
         await ctx.send(embed=discord.Embed(title="Permission changed."))
 
-    @functions.utils.admin()
     @cog_ext.cog_slash(name="setupperms",
                         description="Setup permissions, THIS RESETS ALL PERMS",
                         guild_ids=functions.utils.servers,
