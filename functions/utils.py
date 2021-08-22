@@ -64,7 +64,7 @@ def slPerms(permission):
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ],
-                799253855677579285: 
+                799253855677579285:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["799253855677579285"][permission]
                 ] +

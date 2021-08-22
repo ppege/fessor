@@ -104,7 +104,7 @@ async def _cogs_unload(ctx: discord_slash.SlashContext, cog):
 
   except commands.ExtensionNotLoaded:
       await ctx.send(embed=discord.Embed(title=f'{cog} is not loaded.'))
-  
+
   except commands.ExtensionNotFound:
       await ctx.send(embed=discord.Embed(title=f'Cog "{cog}" does not exist.'))
         

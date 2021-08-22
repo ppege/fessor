@@ -33,7 +33,7 @@ class Devtools(commands.Cog):
                     )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
         ephemeral = functions.utils.eCheck(**kwargs)
-        output = subprocess.run(kwargs["command"], stdout=subprocess.PIPE, shell=True).stdout.decode('utf-8')
+        output = subprocess.run(kwargs["command"], stdout=subprocess.PIPE).stdout.decode('utf-8')
         await ctx.send(f'```\n{output}\n```', hidden = ephemeral)
 
     @cog_ext.cog_slash(name="update",

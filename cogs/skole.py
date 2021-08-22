@@ -1,4 +1,3 @@
-import enum
 import discord
 from discord.ext import commands, tasks
 import functions.utils
@@ -287,7 +286,7 @@ class Skole(commands.Cog):
         except:
           await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
           raise
-    
+
     @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_default_permission=False, base_permissions=functions.utils.slPerms("lektiescan"), options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_all(self, ctx: discord_slash.SlashContext, **kwargs):
       ephemeral=functions.utils.eCheck(**kwargs)
