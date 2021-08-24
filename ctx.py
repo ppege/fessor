@@ -29,14 +29,20 @@ import discord_slash
 import subprocess
 
 startTime = time.time()
-with open("data/data.json", "r") as file:
+try:
+  with open("data/data.json", "r") as file:
     data = json.load(file)
-with open("data/data.json", "w") as file:
+except FileNotFoundError:
+  with open("data/data.json", "w+") as file:
+    data={}
     data['startTime'] = startTime
     json.dump(data, file, indent=4)
+with open("data/data.json", "w") as file:
+  data['startTime'] = startTime
+  json.dump(data, file, indent=4)
 def getUptime():
-    uptime = time.time() - startTime
-    return str(datetime.timedelta(seconds=uptime))
+  uptime = time.time() - startTime
+  return str(datetime.timedelta(seconds=uptime))
 
 config = configparser.ConfigParser()
 config.read('cred.ini')
