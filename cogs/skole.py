@@ -66,7 +66,7 @@ class Skole(commands.Cog):
         await self.autopost(channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url)
 
     async def autopost(self, channel, begivenhed, beskrivelse, author, files, tidspunkt, fileNames, selection, url):
-        with open("data/scans.json", "r") as file:
+        with open("configs/assets.json", "r") as file:
             data = json.load(file)
         for i in selection:
             #print('creating post %d' % i)
