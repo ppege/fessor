@@ -16,8 +16,8 @@ class Bury(commands.Cog):
                         permissions=functions.utils.slPerms("bury"),
                         options=[
                             create_option(
-                                name="private", 
-                                description="send the message privately?", 
+                                name="private",
+                                description="send the message privately?",
                                 option_type=5,
                                 required=False
                                 )
