@@ -9,16 +9,16 @@ class Bury(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="bury", 
-                        description="Buries the chat!", 
-                        guild_ids=functions.utils.servers, 
-                        default_permission=False, 
+    @cog_ext.cog_slash(name="bury",
+                        description="Buries the chat!",
+                        guild_ids=functions.utils.servers,
+                        default_permission=False,
                         permissions=functions.utils.slPerms("bury"),
                         options=[
                             create_option(
                                 name="private", 
                                 description="send the message privately?", 
-                                option_type=5, 
+                                option_type=5,
                                 required=False
                                 )
                             ]

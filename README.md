@@ -11,11 +11,8 @@
 Discord bot designed for the matematikfessor.dk discord server.
 
 ## Features
--  Viggo assignment scanner
--  Permission system
--  Moderation features
--  Slash commands
--  Chat burying! - A great, new, non-destructive alternative to purging chat
-
-## coming soon
--  gif scanner
+-   Viggo assignment scanner
+-   Permission system
+-   Moderation features
+-   Slash commands
+-   Chat burying! - A great, new, non-destructive alternative to purging chat
