@@ -1,4 +1,6 @@
-<img src="fessor.svg">
+<p align="center">
+    <img src="fessor.png">
+</p>
 
 [![Version Badge](https://img.shields.io/github/v/tag/nangurepo/fessor?label=version)](https://img.shields.io/github/v/tag/nangurepo/fessor?label=version)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/97c57bb49e0f4fbe94b38967169f17c4)](https://app.codacy.com/gh/NanguRepo/fessor?utm_source=github.com&utm_medium=referral&utm_content=NanguRepo/fessor&utm_campaign=Badge_Grade_Settings)
