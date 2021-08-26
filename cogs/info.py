@@ -1,23 +1,27 @@
+"""This cog adds the info command that relays a bunch of statistics"""
+import json
+import configparser
+import time
+import platform
+import datetime
 import discord
 from discord.ext import commands
 import git
-import configparser
-import json
-import time
-import platform
-import functions.utils
-import datetime
+import functions.utils # pylint: disable=import-error
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option
 
 
 class Info(commands.Cog):
+    """Info cog"""
     def __init__(self, bot):
         self.bot = bot
 
-    def getUptime(self):
-        with open("data/data.json", "r") as file:
+    @classmethod
+    def get_uptime(cls):
+        """Reads the start time of the bot from data.json then subtracts it from the current time"""
+        with open("data/data.json", "r") as file: # pylint: disable=unspecified-encoding
             data = json.load(file)
         uptime = time.time() - data['startTime']
         return str(datetime.timedelta(seconds=uptime))
@@ -36,22 +40,33 @@ class Info(commands.Cog):
                             )
                         ])
     async def info(self, ctx: discord_slash.SlashContext, **kwargs):
+        """The info command"""
         ephemeral = functions.utils.eCheck(**kwargs)
-        serverCount = len(self.bot.guilds)
-        ping = self.bot.latency * 1000
         config = configparser.ConfigParser()
         config.read('cred.ini')
-        with open("data/data.json", "r") as file:
-          data = json.load(file)
-        uptime = self.getUptime()
-        my_system = platform.uname()
+        with open("data/data.json", "r") as file: # pylint: disable=unspecified-encoding
+            data = json.load(file)
         repo = git.Repo()
-        version = repo.git.describe()
-        commit = str(repo.head.commit)[:7]
-        description = f"Version: `{version}`\nExact ping: `{ping}`\nUptime: `{uptime}`\nUses: `{data['useCount']}`\nServers: `{serverCount}`\nSystem: `{my_system.node} (running {my_system.system})`\nMode: `{config['config']['mode']}`"
-        embed=discord.Embed(title='Information and statistics', description=description, color=0x000143)
-        embed.add_field(name='Latest changes', value=f"`{commit}`\n{repo.head.commit.message}")
+        description = (
+            f"Version: `{repo.git.describe()}`\n"
+            f"Exact ping: `{self.bot.latency * 1000}`\n"
+            f"Uptime: `{self.get_uptime()}`\n"
+            f"Uses: `{data['useCount']}`\n"
+            f"Servers: `{len(self.bot.guilds)}`\n"
+            f"System: `{platform.uname().node} (running {platform.uname().system})`\n"
+            f"Mode: `{config['config']['mode']}`"
+        )
+        embed=discord.Embed(
+            title='Information and statistics',
+            description=description,
+            color=0x000143
+        )
+        embed.add_field(
+            name='Latest changes',
+            value=f"`{str(repo.head.commit)[:7]}`\n{repo.head.commit.message}"
+        )
         embed.set_footer(text='Created and maintained by Nangu')
         await ctx.send(embed=embed, hidden=ephemeral)
 def setup(bot):
+    """Adds the cog"""
     bot.add_cog(Info(bot))

@@ -1,7 +1,7 @@
 """This cog adds the coinflip command which flips a coin"""
+import random
 import discord
 from discord.ext import commands
-import random
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component # pylint: disable=line-too-long
@@ -39,7 +39,7 @@ class Coinflip(commands.Cog):
                 self.bot,
                 components=action_row
             )
-            output, result = getResult()
+            output, result = get_result()
             await button_ctx.edit_origin(
                 embed=discord.Embed(
                     title=output,
@@ -49,4 +49,5 @@ class Coinflip(commands.Cog):
             )
 
 def setup(bot):
+    """Adds the cog"""
     bot.add_cog(Coinflip(bot))

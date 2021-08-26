@@ -1,29 +1,34 @@
+# pylint: disable=line-too-long
+"""This cog adds a snipe command, that picks up deleted or edited messages and allows the user to see what was previously there"""
+import datetime
 import discord
 from discord.ext import commands
-import functions.utils
-import datetime
+import functions.utils # pylint: disable=import-error
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Snipe(commands.Cog):
+    """The snipe cog"""
     def __init__(self, bot):
         self.bot = bot
 
-    snipeMessage = {}
-    snipeMessageEdit = {}
+    snipe_message = {}
+    snipe_message_edit = {}
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
+        """Picks up message deletions"""
         print("message deleted")
-        self.snipeMessage = message
+        self.snipe_message = message
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        """Picks up message edits"""
         if before.content == after.content:
             return
         print("message edited")
-        self.snipeMessageEdit = before
+        self.snipe_message_edit = before
 
     @cog_ext.cog_slash(name="snipe",
                         description="Snipe a message that has been deleted",
@@ -50,21 +55,23 @@ class Snipe(commands.Cog):
                         ]
                     )
     async def snipe(self, ctx: discord_slash.SlashContext, **kwargs):
+        """The snipe command, provides the user with the option to snipe a deletion or an edit"""
         if kwargs["mode"] == "edit":
-            self.snipeMessage = self.snipeMessageEdit
+            self.snipe_message = self.snipe_message_edit
         embed = discord.Embed(
             title='Sniped!',
-            description=f"Sent at {self.snipeMessage.created_at + datetime.timedelta(hours=2)} by {self.snipeMessage.author.mention}",
+            description=f"Sent at {self.snipe_message.created_at + datetime.timedelta(hours=2)} by {self.snipe_message.author.mention}",
             color=0x00FFFF,
         )
 
-        embed.add_field(name='Message content', value=self.snipeMessage.content)
+        embed.add_field(name='Message content', value=self.snipe_message.content)
         if kwargs["mode"] == "edit":
             await ctx.send("Sniped", hidden=True)
-            await self.snipeMessage.reply(embed=embed)
+            await self.snipe_message.reply(embed=embed)
         else:
             await ctx.send(embed=embed)
 
 
 def setup(bot):
+    """Adds the cog"""
     bot.add_cog(Snipe(bot))

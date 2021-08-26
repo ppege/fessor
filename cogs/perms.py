@@ -1,12 +1,15 @@
+"""This cog adds commands related to permissions"""
+# pylint: disable=line-too-long, unspecified-encoding
+import json
 import discord
 from discord.ext import commands
-import functions.utils
-import json
+import functions.utils # pylint: disable=import-error
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Perms(commands.Cog):
+    """The perms cog"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -53,21 +56,22 @@ class Perms(commands.Cog):
                         ]
                     )
     async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
+        """Command to change a given user's permissions related to the bot"""
         ephemeral = functions.utils.eCheck(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
             data = json.load(file)
-        guildID = str(ctx.guild.id)
+        guild_id = str(ctx.guild.id)
         permission = kwargs["permission"]
         user = kwargs["user"]
         value = kwargs["value"]
-        userID = str(user.id)
+        user_id = str(user.id)
         if value == "true":
-            if userID not in data[guildID][permission]:
-                data[guildID][permission].append(userID)
-        elif userID in data[guildID][permission]:
-            data[guildID][permission].remove(userID)
-        data[guildID][userID][permission] = value
+            if user_id not in data[guild_id][permission]:
+                data[guild_id][permission].append(user_id)
+        elif user_id in data[guild_id][permission]:
+            data[guild_id][permission].remove(user_id)
+        data[guild_id][user_id][permission] = value
 
         with open("configs/permissions.json", "w") as file:
             json.dump(data, file, indent=4)
@@ -87,27 +91,28 @@ class Perms(commands.Cog):
                             )
                         ]
                     )
-    async def setupPerms(self, ctx: discord_slash.SlashContext, **kwargs):
+    async def setup_perms(self, ctx: discord_slash.SlashContext, **kwargs):
+        """Command to setup all perms for a guild"""
         ephemeral = functions.utils.eCheck(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
             data = json.load(file)
-        guildID = ctx.guild.id
-        guild = self.bot.get_guild(guildID)
-        guildID = str(guildID)
+        guild_id = ctx.guild.id
+        guild = self.bot.get_guild(guild_id)
+        guild_id = str(guild_id)
         try:
-            data.pop(guildID)
+            data.pop(guild_id)
         except KeyError:
             pass
-        data[guildID] = {}
+        data[guild_id] = {}
         ids = [member.id for member in guild.members]
-        data[guildID]["admin"] = []
-        data[guildID]["poggies"] = []
-        data[guildID]["lektiescan"] = []
-        data[guildID]["banned"] = []
-        data[guildID]["bury"] = []
-        for memberID in ids:
-            data[guildID][memberID] = {
+        data[guild_id]["admin"] = []
+        data[guild_id]["poggies"] = []
+        data[guild_id]["lektiescan"] = []
+        data[guild_id]["banned"] = []
+        data[guild_id]["bury"] = []
+        for member_id in ids:
+            data[guild_id][member_id] = {
                 "admin": "false",
                 "poggies": "false",
                 "lektiescan": "false",
@@ -119,4 +124,5 @@ class Perms(commands.Cog):
         await ctx.send(embed=discord.Embed(title="Permissions have been set up."))
 
 def setup(bot):
+    """Adds the cog"""
     bot.add_cog(Perms(bot))
