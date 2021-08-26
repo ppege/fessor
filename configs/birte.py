@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+"""Bunch of old call/response commands"""
 commands = {
     "nanga": ["UwU Baka", "https://tenor.com/view/uw-u-gif-20126650"],
     "william": ["https://giphy.com/gifs/memecandy-WTcj5b17IZ8xbdCMBs", "https://giphy.com/gifs/memecandy-XfOcnCFcEAiIiol1ej", "Baby Nanga mener du", "Mener du ikke baby Nanga, ham der er født i år 2015"],
