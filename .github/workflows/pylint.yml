@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint discord discord-py-slash-commmand gitpython pydictionary translate wikipedia wolframalpha google requests
+        pip install pylint discord discord-py-slash-command gitpython pydictionary translate wikipedia wolframalpha google requests
     - name: Analysing the code with pylint
       run: |
         find . | grep .py$ | grep --invert-match scraps | xargs pylint
