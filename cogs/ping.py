@@ -2,10 +2,10 @@
 # pylint: disable=line-too-long
 import discord
 from discord.ext import commands
-import functions.utils # pylint: disable=import-error
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option
+import functions.utils # pylint: disable=import-error
 
 class Ping(commands.Cog):
     """The ping cog"""

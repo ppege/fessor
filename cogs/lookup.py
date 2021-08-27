@@ -3,7 +3,6 @@
 import configparser
 import discord
 from discord.ext import commands
-import functions.utils # pylint: disable=import-error
 from PyDictionary import PyDictionary
 from translate import Translator
 import wikipedia
@@ -14,6 +13,7 @@ from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option
 from discord_slash.utils.manage_components import wait_for_component, create_button, create_actionrow
 from discord_slash.model import ButtonStyle
+import functions.utils # pylint: disable=import-error
 
 
 class Lookup(commands.Cog):

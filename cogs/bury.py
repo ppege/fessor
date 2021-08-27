@@ -1,9 +1,9 @@
 """This cog adds the bury command. The command sends a bunch of newlines and a zero-width non-joiner to clean the chat without destruction""" # pylint: disable=line-too-long
 from discord.ext import commands
-import functions.utils # pylint: disable=import-error
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option
+import functions.utils # pylint: disable=import-error
 
 class Bury(commands.Cog):
     """Bury cog"""
