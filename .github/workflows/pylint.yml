@@ -19,4 +19,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint `find . | grep .py$ | xargs`
+        find . | grep .py$ | grep --invert-match scraps | xargs pylint
