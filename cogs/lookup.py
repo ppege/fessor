@@ -25,25 +25,19 @@ class Lookup(commands.Cog):
                         description="Define a word",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="word",
                                 description="which word to define?",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def define(self, ctx: discord_slash.SlashContext, **kwargs):
         """Find definition of a word and relay it in an embed"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         word = kwargs["word"]
         await ctx.defer(hidden=ephemeral)
         dictionary = PyDictionary()
@@ -86,7 +80,7 @@ class Lookup(commands.Cog):
                         description="Define a word",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="from",
@@ -105,18 +99,12 @@ class Lookup(commands.Cog):
                                 description="the text to translate",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def translate(self, ctx: discord_slash.SlashContext, **kwargs):
         """Translate a string from a chosen language to a chosen language and relay it in an embed"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         origin = kwargs['from']
         destination = kwargs['to']
         await ctx.defer(hidden=ephemeral)
@@ -128,7 +116,7 @@ class Lookup(commands.Cog):
                         description="Look something up on Wikipedia",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="query",
@@ -141,18 +129,12 @@ class Lookup(commands.Cog):
                                 description="find results in danish",
                                 option_type=5,
                                 required=False
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wikipedia and relay it in one or multiple embeds"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         if 'dansk' in kwargs and kwargs["dansk"] is True:
             wikipedia.set_lang('da')
@@ -181,25 +163,19 @@ class Lookup(commands.Cog):
                         description="Look something up on Wolfram Alpha",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="query",
                                 description="what to look up?",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def wolfram(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wolframaplha.com and relay it to the user through an embed"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]
         config = configparser.ConfigParser()
         config.read('cred.ini')
@@ -217,25 +193,19 @@ class Lookup(commands.Cog):
                         description="Look something up on Google",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="query",
                                 description="what to look up?",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def google(self, ctx: discord_slash.SlashContext, **kwargs):
         """Googles something and sends the first ten results to the user with buttons to cycle through the links"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]
         await ctx.defer(hidden=ephemeral)
         i = 0

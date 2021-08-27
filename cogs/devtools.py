@@ -22,20 +22,14 @@ class Devtools(commands.Cog):
                                 description="the command to execute",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ],
+                        ] + functions.utils.privateOption,
                         default_permission=False,
-                        permissions=functions.utils.slPerms("dev")
+                        permissions=functions.utils.slash_perms("dev")
                     )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
         """Execute command line commands on the host device"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         output = subprocess.check_output(kwargs["command"], stderr=subprocess.STDOUT, shell=True)
         output = str(output)
@@ -46,19 +40,12 @@ class Devtools(commands.Cog):
                         description="Updates the bot",
                         guild_ids=functions.utils.servers,
                         default_permission=False,
-                        options=[
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
-                            )
-                        ],
-                        permissions=functions.utils.slPerms("dev")
+                        options=functions.utils.privateOption,
+                        permissions=functions.utils.slash_perms("dev")
                     )
     async def update(self, ctx: discord_slash.SlashContext, **kwargs):
         """Use git pull to update the bot"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         repo = git.Repo()
         remote = repo.remotes.origin
         await ctx.defer(hidden=ephemeral)

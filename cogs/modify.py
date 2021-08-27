@@ -20,7 +20,7 @@ class Modify(commands.Cog):
                         description="Modify the link registry",
                         guild_ids=functions.utils.servers,
                         default_permission=False,
-                        permissions=functions.utils.slPerms("dev"),
+                        permissions=functions.utils.slash_perms("dev"),
                         options=[
                             create_option(
                                 name="category",
@@ -45,17 +45,12 @@ class Modify(commands.Cog):
                                 description="which value to change?",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ])
+                        ] + functions.utils.privateOption
+                    )
     async def modify(self, ctx: discord_slash.SlashContext, **kwargs):
         """The modify command, used to modify the file lektiescanner uses to figure out which thumbnails to use"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         self.data[kwargs["category"]][kwargs["key"]] = kwargs["value"]
         with open('configs/assets.json', 'w') as file:
             json.dump(self.data, file, indent=4)

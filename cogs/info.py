@@ -9,7 +9,6 @@ from discord.ext import commands
 import git
 import discord_slash
 from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Info(commands.Cog):
@@ -29,28 +28,19 @@ class Info(commands.Cog):
                         description="Bot statistics",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
-                        options=[
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
-                            )
-                        ])
+                        permissions=functions.utils.slash_perms("banned"),
+                        options=functions.utils.privateOption)
     async def info(self, ctx: discord_slash.SlashContext, **kwargs):
         """The info command"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()
         config.read('cred.ini')
-        with open("data/data.json", "r") as file: # pylint: disable=unspecified-encoding
-            data = json.load(file)
         repo = git.Repo()
         description = (
             f"Version: `{repo.git.describe()}`\n"
             f"Exact ping: `{self.bot.latency * 1000}`\n"
             f"Uptime: `{self.get_uptime()}`\n"
-            f"Uses: `{data['useCount']}`\n"
+            #f"Times used: `{data['useCount']}`\n"
             f"Servers: `{len(self.bot.guilds)}`\n"
             f"System: `{platform.uname().node} (running {platform.uname().system})`\n"
             f"Mode: `{config['config']['mode']}`"

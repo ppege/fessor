@@ -17,7 +17,8 @@ class Coinflip(commands.Cog):
                         description="Flips a coin.",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned")
+                        permissions=functions.utils.slash_perms("banned"),
+                        options=functions.utils.privateOption
                     )
     async def coinflip(self, ctx: discord_slash.SlashContext):
         """The coinflip command"""

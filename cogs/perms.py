@@ -17,7 +17,7 @@ class Perms(commands.Cog):
                         description="Setup permissions",
                         guild_ids=functions.utils.servers,
                         default_permission=False,
-                        permissions=functions.utils.slPerms("admin"),
+                        permissions=functions.utils.slash_perms("admin"),
                         options=[
                             create_option(
                                 name="user",
@@ -46,18 +46,12 @@ class Perms(commands.Cog):
                                         value="false"
                                     )
                                 ]
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command to change a given user's permissions related to the bot"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
             data = json.load(file)
@@ -81,19 +75,12 @@ class Perms(commands.Cog):
                         description="Setup permissions, THIS RESETS ALL PERMS",
                         guild_ids=functions.utils.servers,
                         default_permission=False,
-                        permissions=functions.utils.slPerms("dev"),
-                        options=[
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
-                            )
-                        ]
+                        permissions=functions.utils.slash_perms("dev"),
+                        options=functions.utils.privateOption
                     )
     async def setup_perms(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command to setup all perms for a guild"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
             data = json.load(file)

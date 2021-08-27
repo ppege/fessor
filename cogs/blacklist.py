@@ -18,7 +18,7 @@ class Blacklist(commands.Cog):
                         description="Add terms to a list to block them.",
                         guild_ids=functions.utils.servers,
                         default_permission=False,
-                        permissions=functions.utils.slPerms("admin"),
+                        permissions=functions.utils.slash_perms("admin"),
                         options=[
                             create_option(
                                 name="action",
@@ -42,27 +42,28 @@ class Blacklist(commands.Cog):
                                 option_type=3,
                                 required=True
                             )
-                        ]
+                        ] + functions.utils.privateOption
     )
 
-    async def blacklist(self, ctx: discord_slash.SlashContext, action, string):
+    async def blacklist(self, ctx: discord_slash.SlashContext, **kwargs):
         """The blacklist command"""
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()
         config.read('configs/config.ini')
         old_cfg = config['blacklist']['list'].split(', ')
         output = "Error"
-        if action == "add":
-            old_cfg.append(string)
-            output = "Successfully added %s to the blacklist!" % (string)
-        if action == "remove":
-            old_cfg.remove(string)
-            output = "Successfully removed %s from the blacklist!" % (string)
+        if kwargs["action"] == "add":
+            old_cfg.append(kwargs["string"])
+            output = "Successfully added %s to the blacklist!" % (kwargs["string"])
+        if kwargs["action"] == "remove":
+            old_cfg.remove(kwargs["string"])
+            output = "Successfully removed %s from the blacklist!" % (kwargs["string"])
         new_cfg = ', '.join(old_cfg)
         config['blacklist']['list'] = new_cfg
         with open('configs/config.ini', 'w') as configfile:
             config.write(configfile)
         embed=discord.Embed(title=output, description="", color=0xFF0000)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):
     """Adds the cog"""

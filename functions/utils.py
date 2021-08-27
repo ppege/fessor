@@ -1,24 +1,36 @@
-import discord
-from discord.ext import commands
+"""Collection of utilities used by all cogs"""
 import json
 import configparser
-from discord_slash.utils.manage_commands import create_permission
+from discord_slash.utils.manage_commands import create_permission, create_option
 from discord_slash.model import SlashCommandPermissionType
 
 config = configparser.ConfigParser()
 config.read('cred.ini')
 
-if config['config']['mode'] == "updates":
-    servers = [
-        878614900824485900
-    ]
-else:
-    servers = [
-        799253855677579285,
-        811552770074738688
-    ]
+try:
+    if config['config']['mode'] == "updates":
+        servers = [
+            878614900824485900
+        ]
+    else:
+        servers = [
+            799253855677579285,
+            811552770074738688
+        ]
+except KeyError:
+    print("cred.ini does not exist yet")
 
-def slPerms(permission):
+privateOption = [
+    create_option(
+        name="private",
+        description="send the message privately?",
+        option_type=5,
+        required=False
+    )
+]
+
+def slash_perms(permission):
+    """Permission handler used by all commands in the bot; goes through permissions.json to check if the user has permission to use a command"""
     with open("configs/permissions.json", "r") as file:
         data = json.load(file)
     if config['config']['mode'] == "main":
@@ -112,90 +124,10 @@ def slPerms(permission):
         }
     return permissions
 
-def idHandler(id):
-  if "<@!" in id:
-    id = id.replace('<@!', '').replace('>', '')
-  elif "<@" in id:
-    id = id.replace('<@', '').replace('>', '')
-  else:
-    id = id
-  return id
-
-def admin():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        return (
-            config[str(ctx.author.id)]['admin'] == 'true'
-            and config[str(ctx.author.id)]['banned'] == 'false'
-        )
-    return commands.check(wrapper)
-
-def settings():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['settings'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
-    return commands.check(wrapper)
-
-def poggies():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['poggies'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
-    return commands.check(wrapper)
-
-def lektiescan():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['lektiescan'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
-    return commands.check(wrapper)
-
-def banned():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        return config[str(ctx.author.id)]['banned'] == 'false'
-    return commands.check(wrapper)
-
-def slander():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['slander'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
-    return commands.check(wrapper)
-
-def bury():
-    def wrapper(ctx):
-        config = configparser.ConfigParser()
-        config.read('configs/config.ini')
-        if config[str(ctx.author.id)]['bury'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        if config[str(ctx.author.id)]['admin'] == 'true' and config[str(ctx.author.id)]['banned'] == 'false':
-            return True
-        return False
-    return commands.check(wrapper)
-
-def eCheck(**kwargs):
+def ephemeral_check(**kwargs):
+    """Checks if the private keyword exists, then checks if it is true"""
     try:
         print(kwargs["private"])
     except KeyError:
         return False
-    return kwargs["private"] == True
+    return kwargs["private"]

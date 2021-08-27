@@ -34,7 +34,7 @@ class Snipe(commands.Cog):
                         description="Snipe a message that has been deleted",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="mode",

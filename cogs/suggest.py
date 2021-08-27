@@ -16,25 +16,19 @@ class Suggest(commands.Cog):
                         description="Suggest a feature",
                         guild_ids=functions.utils.servers,
                         default_permission=True,
-                        permissions=functions.utils.slPerms("banned"),
+                        permissions=functions.utils.slash_perms("banned"),
                         options=[
                             create_option(
                                 name="suggestion",
                                 description="what do you suggest?",
                                 option_type=3,
                                 required=True
-                            ),
-                            create_option(
-                                name="private",
-                                description="send the message privately?",
-                                option_type=5,
-                                required=False
                             )
-                        ]
+                        ] + functions.utils.privateOption
                     )
     async def suggest(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command which lets the user send a suggestion to fessor"""
-        ephemeral = functions.utils.eCheck(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         suggestion = kwargs["suggestion"]
         with open("suggestions.md", "a") as file:
             content = "\n## Suggestion from %s\n#### %s" % (ctx.author, suggestion)
