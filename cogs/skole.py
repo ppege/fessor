@@ -24,7 +24,7 @@ class Skole(commands.Cog):
     @tasks.loop(minutes=5.0)
     async def scan_loop(self):
         """This function runs every five minutes and checks if the lektiescanner's output is different from the last"""
-        assignment_data = lektiescan(False)
+        assignment_data = lektiescan()
         selection = []
         with open("data/scans.json", "r") as file:
             data = json.load(file)
@@ -206,7 +206,7 @@ class Skole(commands.Cog):
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         try:
             await ctx.defer(hidden=ephemeral)
-            assignment_data = lektiescan(True)
+            assignment_data = lektiescan()
             if kwargs["mode"] == "all":
                 lektie_list = [
                     str(i + 1)
