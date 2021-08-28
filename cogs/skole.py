@@ -29,33 +29,34 @@ class Skole(commands.Cog):
         with open("data/scans.json", "r") as file:
             data = json.load(file)
         try:
-            for i in enumerate(assignment_data['beskrivelse']):
+            for i in enumerate(assignment_data['description']):
                 i = i[0]
-                if assignment_data['beskrivelse'][i] in data['scans']['beskrivelse']:
+                if assignment_data['description'][i] in data['scans']['description']:
                     continue
-                data['scans']['begivenhed'].append(assignment_data['begivenhed'][i])
-                data['scans']['beskrivelse'].append(assignment_data['beskrivelse'][i])
+                data['scans']['subject'].append(assignment_data['subject'][i])
+                data['scans']['description'].append(assignment_data['description'][i])
                 data['scans']['author'].append(assignment_data['author'][i])
                 data['scans']['files'].append(assignment_data['files'][i])
-                data['scans']['tidspunkt'].append(assignment_data['tidspunkt'][i])
+                data['scans']['time'].append(assignment_data['time'][i])
                 data['scans']['file_names'].append(assignment_data['file_names'][i])
                 data['scans']['url'].append(assignment_data['url'][i])
                 selection.append(i)
         except KeyError:
-            data['scans']['begivenhed'] = []
-            data['scans']['beskrivelse'] = []
+            data['scans']['subject'] = []
+            data['scans']['description'] = []
             data['scans']['author'] = []
             data['scans']['files'] = []
-            data['scans']['tidspunkt'] = []
+            data['scans']['time'] = []
             data['scans']['file_names'] = []
-            for i in enumerate(assignment_data['beskrivelse']):
-                if assignment_data['beskrivelse'][i] in data['scans']['beskrivelse']:
+            for i in enumerate(assignment_data['description']):
+                i = i[0]
+                if assignment_data['description'][i] in data['scans']['description']:
                     continue
-                data['scans']['begivenhed'].append(assignment_data['begivenhed'][i])
-                data['scans']['beskrivelse'].append(assignment_data['beskrivelse'][i])
+                data['scans']['subject'].append(assignment_data['subject'][i])
+                data['scans']['description'].append(assignment_data['description'][i])
                 data['scans']['author'].append(assignment_data['author'][i])
                 data['scans']['files'].append(assignment_data['files'][i])
-                data['scans']['tidspunkt'].append(assignment_data['tidspunkt'][i])
+                data['scans']['time'].append(assignment_data['time'][i])
                 data['scans']['file_names'].append(assignment_data['file_names'][i])
                 data['scans']['url'].append(assignment_data['url'][i])
                 selection.append(i)
@@ -74,51 +75,7 @@ class Skole(commands.Cog):
         with open("configs/assets.json", "r") as file:
             data = json.load(file)
         for i in selection:
-            current_class = assignment_data['begivenhed'][i]
-            try:
-                embed_color = options.scanColors[current_class]
-            except KeyError:
-                embed_color = 0xFF5733
-            current_teacher = assignment_data['author'][i]
-            try:
-                embed_thumbnail = data["teachers"][current_teacher.split()[4].lower()]
-            except:
-                embed_thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-                raise
-            for_loop_files = [
-                assignment_data['files'][i].split(',')[j]
-                for j in range(len(assignment_data['files'][i].split(',')))
-            ]
-
-            for_loop_file_names = [
-                assignment_data['file_names'][i].split(',')[j]
-                for j in range(len(assignment_data['file_names'][i].split(',')))
-            ]
-
-            file_output = ""
-            for k in enumerate(for_loop_files):
-                file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
-            embed=discord.Embed(title=assignment_data['begivenhed'][i], description=assignment_data['tidspunkt'][i], color=embed_color, url=assignment_data['url'][i])
-            embed.add_field(name="Description", value=assignment_data['beskrivelse'][i], inline=True)
-            embed.set_footer(text=f"{assignment_data['author'][i]}")
-            embed.add_field(name="Filer", value=file_output, inline=True)
-            embed.set_thumbnail(url=embed_thumbnail)
-            print('embed %d created, sending embed' % selection)
-            await channel.send('@everyone ny lektie!')
-            await channel.send(embed=embed)
-
-    async def post(self, ctx, assignment_data, selection):
-        """Formats assignment data to an embed then posts it to the channel in which the scan command was used"""
-        with open("configs/assets.json", "r") as file:
-            data = json.load(file)
-        print('post() called')
-        try:
-            print(selection[0])
-        except IndexError:
-            print('poop')
-            return "fail"
-        for i in selection:
-            current_class = assignment_data['begivenhed'][i]
+            current_class = assignment_data['subject'][i]
             try:
                 embed_color = options.scanColors[current_class]
             except KeyError:
@@ -143,8 +100,53 @@ class Skole(commands.Cog):
             for k in enumerate(for_loop_files):
                 k = k[0]
                 file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
-            embed=discord.Embed(title=assignment_data['begivenhed'][i], description=assignment_data['tidspunkt'][i], color=embed_color, url=assignment_data['url'][i])
-            embed.add_field(name="Description", value=assignment_data['beskrivelse'][i], inline=True)
+            embed=discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
+            embed.add_field(name="Description", value=assignment_data['description'][i], inline=True)
+            embed.set_footer(text=f"{assignment_data['author'][i]}")
+            embed.add_field(name="Filer", value=file_output, inline=True)
+            embed.set_thumbnail(url=embed_thumbnail)
+            print('embed %d created, sending embed' % selection)
+            await channel.send('@everyone ny lektie!')
+            await channel.send(embed=embed)
+
+    async def post(self, ctx, assignment_data, selection):
+        """Formats assignment data to an embed then posts it to the channel in which the scan command was used"""
+        with open("configs/assets.json", "r") as file:
+            data = json.load(file)
+        print('post() called')
+        try:
+            print(selection[0])
+        except IndexError:
+            print('poop')
+            return "fail"
+        for i in selection:
+            current_class = assignment_data['subject'][i]
+            try:
+                embed_color = options.scanColors[current_class]
+            except KeyError:
+                embed_color = 0xFF5733
+            current_teacher = assignment_data['author'][i]
+            try:
+                embed_thumbnail = data["teachers"][current_teacher.split()[4].lower()]
+            except:
+                embed_thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+                raise
+            for_loop_files = [
+                assignment_data['files'][i].split(',')[j]
+                for j in range(len(assignment_data['files'][i].split(',')))
+            ]
+
+            for_loop_file_names = [
+                assignment_data['file_names'][i].split(',')[j]
+                for j in range(len(assignment_data['file_names'][i].split(',')))
+            ]
+
+            file_output = ""
+            for k in enumerate(for_loop_files):
+                k = k[0]
+                file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
+            embed=discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
+            embed.add_field(name="Description", value=assignment_data['description'][i], inline=True)
             embed.set_footer(text=f"{assignment_data['author'][i]}")
             embed.add_field(name="Files", value=file_output, inline=True)
             embed.set_thumbnail(url=embed_thumbnail)
@@ -211,23 +213,23 @@ class Skole(commands.Cog):
                 lektie_list = [
                     str(i + 1)
                     + ". "
-                    + assignment_data['begivenhed'][i]
+                    + assignment_data['subject'][i]
                     + " | Afleveres "
-                    + assignment_data['tidspunkt'][i]
-                    for i in range(len(assignment_data['begivenhed']))
+                    + assignment_data['time'][i]
+                    for i in range(len(assignment_data['subject']))
                 ]
 
                 description = "\n\n".join(lektie_list)
                 field_2 = "Use the command again with a different mode to see full assignments"
-                embed=discord.Embed(title="Found %d assignments" % len(assignment_data['begivenhed']), description=description, color=0xFF0000)
+                embed=discord.Embed(title="Found %d assignments" % len(assignment_data['subject']), description=description, color=0xFF0000)
                 embed.add_field(name="What now?", value=field_2)
                 await ctx.send(embed=embed)
                 return
             if kwargs["mode"] == "subject":
                 num_list = [
                     i
-                    for i in range(len(assignment_data['begivenhed']))
-                    if kwargs["parameters"] in assignment_data['begivenhed'][i]
+                    for i in range(len(assignment_data['subject']))
+                    if kwargs["parameters"] in assignment_data['subject'][i]
                 ]
 
                 user_input = num_list
@@ -236,7 +238,7 @@ class Skole(commands.Cog):
                     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
                     tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
                     user_input = tomorrow
-                    num_list = [i for i in range(len(assignment_data['tidspunkt'])) if str(assignment_data['user_input']) in assignment_data['tidspunkt'][i]]
+                    num_list = [i for i in range(len(assignment_data['time'])) if str(assignment_data['user_input']) in assignment_data['time'][i]]
                 elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
                     weekday = datetime.datetime.today().weekday()
                     if kwargs["parameters"] in options.translations.keys():
@@ -245,12 +247,12 @@ class Skole(commands.Cog):
                     target_date = datetime.date.today() - datetime.timedelta(days=diff)
                     target_date = target_date.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
                     user_input = target_date
-                    num_list = [i for i in range(len(assignment_data['tidspunkt'])) if str(user_input) in assignment_data['tidspunkt'][i]]
+                    num_list = [i for i in range(len(assignment_data['time'])) if str(user_input) in assignment_data['time'][i]]
                 else:
                     num_list = [
                         i
-                        for i in range(len(assignment_data['begivenhed']))
-                        if str(kwargs["parameters"]) in assignment_data['tidspunkt'][i]
+                        for i in range(len(assignment_data['subject']))
+                        if str(kwargs["parameters"]) in assignment_data['time'][i]
                     ]
 
                 user_input = num_list

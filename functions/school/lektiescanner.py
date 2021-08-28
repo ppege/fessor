@@ -88,9 +88,9 @@ def lektiescan():
         "fingerprint": config['config']['FINGERPRINT']
     }
     assignment_data = {
-        "begivenhed": [],
-        "tidspunkt": [],
-        "beskrivelse": [],
+        "subject": [],
+        "time": [],
+        "description": [],
         "author": [],
         "files": [],
         "file_names": [],
@@ -104,20 +104,9 @@ def lektiescan():
             s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
             home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
         assignment_data = extract_data(links[i], home_page, assignment_data)
-        link_in_post, double_link = get_links_in_post(assignment_data['description'][i])
-        remove_hex(assignment_data['description'][i], double_link, link_in_post)
-        
-        
-        
-        
-        beskrivelse.append(finished_description)
+        description = assignment_data["description"][i]
+        link_in_post, double_link = get_links_in_post(description)
+        description = remove_hex(description, double_link, link_in_post)
+        assignment_data['description'][i] = description
 
-    return {
-        'begivenhed': begivenhed,
-        'beskrivelse': beskrivelse,
-        'author': author,
-        'files': files,
-        'tidspunkt': tidspunkt,
-        'file_names': file_names,
-        'url': url
-    }
+    return assignment_data

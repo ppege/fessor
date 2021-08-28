@@ -41,44 +41,16 @@
             "\nGut Gemacht, s. 15"
         ],
         "author": [
-            "17. maj 11:02 af Camilla Willemoes Holst",
-            "25. maj 17:33 af Birte Holst Andersen",
-            "27. maj 10:56 af Camilla Willemoes Holst",
-            "27. maj 10:59 af Camilla Willemoes Holst",
-            "31. maj 14:00 af Birte Holst Andersen",
-            "31. maj 14:21 af Birte Holst Andersen",
-            "3. jun 12:48 af Birte Holst Andersen",
-            "7. jun 14:23 af Birte Holst Andersen",
-            "12. aug 10:34 by Anne-Mette Hessel",
-            "12. aug 12:35 by Anne-Mette Hessel",
-            "13. aug 12:31 by Birte Holst Andersen",
-            "16. aug 11:21 by Jacob Albrechtsen",
-            "18. aug 15:18 by Birte Holst Andersen",
-            "19. aug 10:32 by Anne-Mette Hessel",
-            "19. aug 12:37 by Anne-Mette Hessel",
             "20. aug 11:09 by Jacob Albrechtsen",
             "21. aug 18:09 by Birte Holst Andersen",
+            "19. aug 12:37 by Anne-Mette Hessel",
             "25. aug 13:34 by Birte Holst Andersen"
         ],
         "files": [
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen"
+            "None",
+            "None",
+            "None",
+            "None"
         ],
         "tidspunkt": [
             "31. maj 10:10",
@@ -101,24 +73,10 @@
             "26. aug 12:50"
         ],
         "file_names": [
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen",
-            "Ingen"
+            "None",
+            "None",
+            "None",
+            "None"
         ],
         "url": [
             "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1701/#modal",
@@ -138,7 +96,29 @@
             "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1752/#modal",
             "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1760/#modal",
             "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1762/#modal",
+            "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1774/#modal",
+            "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1760/#modal",
+            "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1762/#modal",
+            "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1752/#modal",
             "https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/1774/#modal"
+        ],
+        "subject": [
+            "Historie",
+            "Tysk",
+            "Biologi",
+            "Tysk"
+        ],
+        "description": [
+            "\ne28099s\n https://historie.gyldendal.dk/forloeb/den-kolde-krig/kapitler/03-hvad-er-den-kolde-krig/03-det-amerikanske-system",
+            "\n\n Alinea",
+            "\n naturfag",
+            "\n 15"
+        ],
+        "time": [
+            "23. aug 10:45",
+            "24. aug 12:00",
+            "26. aug 12:00",
+            "26. aug 12:50"
         ]
     }
 }
