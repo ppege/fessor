@@ -1,4 +1,4 @@
-"""This cog adds commands related to permissions"""
+"""This cog adds commands related to permissions."""
 # pylint: disable=line-too-long, unspecified-encoding
 import json
 import discord
@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Perms(commands.Cog):
-    """The perms cog"""
+    """The perms cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -50,7 +50,7 @@ class Perms(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Command to change a given user's permissions related to the bot"""
+        """Command to change a given user's permissions related to the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
@@ -79,7 +79,7 @@ class Perms(commands.Cog):
                         options=functions.utils.privateOption
                     )
     async def setup_perms(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Command to setup all perms for a guild"""
+        """Command to setup all perms for a guild."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         with open("configs/permissions.json", "r") as file:
@@ -111,5 +111,5 @@ class Perms(commands.Cog):
         await ctx.send(embed=discord.Embed(title="Permissions have been set up."))
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Perms(bot))

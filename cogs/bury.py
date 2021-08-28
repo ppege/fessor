@@ -1,4 +1,4 @@
-"""This cog adds the bury command. The command sends a bunch of newlines and a zero-width non-joiner to clean the chat without destruction""" # pylint: disable=line-too-long
+"""This cog adds the bury command. The command sends a bunch of newlines and a zero-width non-joiner to clean the chat without destruction.""" # pylint: disable=line-too-long
 from discord.ext import commands
 import discord_slash
 from discord_slash import cog_ext
@@ -17,11 +17,11 @@ class Bury(commands.Cog):
                         options=functions.utils.privateOption
                         )
     async def bury(self, ctx: discord_slash.SlashContext, **kwargs):
-        """The bury command sends newlines to clean chat"""
+        """The bury command sends newlines to clean chat."""
         ephemeral=functions.utils.ephemeral_check(**kwargs)
         bury = '‌\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n‌' # pylint: disable=line-too-long
         await ctx.send(content=bury, hidden=ephemeral)
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Bury(bot))

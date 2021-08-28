@@ -1,4 +1,4 @@
-"""This cog adds the info command that relays a bunch of statistics"""
+"""This cog adds the info command that relays a bunch of statistics."""
 import json
 import configparser
 import time
@@ -12,13 +12,13 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Info(commands.Cog):
-    """Info cog"""
+    """Info cog."""
     def __init__(self, bot):
         self.bot = bot
 
     @classmethod
     def get_uptime(cls):
-        """Reads the start time of the bot from data.json then subtracts it from the current time"""
+        """Reads the start time of the bot from data.json then subtracts it from the current time."""
         with open("data/data.json", "r") as file: # pylint: disable=unspecified-encoding
             data = json.load(file)
         uptime = time.time() - data['startTime']
@@ -31,7 +31,7 @@ class Info(commands.Cog):
                         permissions=functions.utils.slash_perms("banned"),
                         options=functions.utils.privateOption)
     async def info(self, ctx: discord_slash.SlashContext, **kwargs):
-        """The info command"""
+        """The info command."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()
         config.read('cred.ini')
@@ -57,5 +57,5 @@ class Info(commands.Cog):
         embed.set_footer(text='Created and maintained by Nangu')
         await ctx.send(embed=embed, hidden=ephemeral)
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Info(bot))

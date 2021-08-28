@@ -1,5 +1,5 @@
 # pylint: disable=line-too-long, unspecified-encoding
-"""This cog adds school related commands to relay assignments and schedules"""
+"""This cog adds school related commands to relay assignments and schedules."""
 import json
 import datetime
 import discord
@@ -12,7 +12,7 @@ from configs import options # pylint: disable=import-error
 from functions.school.lektiescanner import lektiescan # pylint: disable=import-error
 
 class Skole(commands.Cog):
-    """The skole cog"""
+    """The skole cog."""
     def __init__(self, bot):
         self.bot = bot # pylint: disable=no-member
         self.scan_loop.start() # pylint: disable=no-member
@@ -23,7 +23,7 @@ class Skole(commands.Cog):
 
     @tasks.loop(minutes=5.0)
     async def scan_loop(self):
-        """This function runs every five minutes and checks if the lektiescanner's output is different from the last"""
+        """This function runs every five minutes and checks if the lektiescanner's output is different from the last."""
         assignment_data = lektiescan()
         selection = []
         with open("data/scans.json", "r") as file:
@@ -71,7 +71,7 @@ class Skole(commands.Cog):
         await self.autopost(channel, assignment_data, selection)
 
     async def autopost(self, channel, assignment_data, selection):
-        """This function formats the data as an embed then posts it in a specific channel"""
+        """This function formats the data as an embed then posts it in a specific channel."""
         with open("configs/assets.json", "r") as file:
             data = json.load(file)
         for i in selection:
@@ -110,7 +110,7 @@ class Skole(commands.Cog):
             await channel.send(embed=embed)
 
     async def post(self, ctx, assignment_data, selection):
-        """Formats assignment data to an embed then posts it to the channel in which the scan command was used"""
+        """Formats assignment data to an embed then posts it to the channel in which the scan command was used."""
         with open("configs/assets.json", "r") as file:
             data = json.load(file)
         print('post() called')
@@ -150,7 +150,6 @@ class Skole(commands.Cog):
             embed.set_footer(text=f"{assignment_data['author'][i]}")
             embed.add_field(name="Files", value=file_output, inline=True)
             embed.set_thumbnail(url=embed_thumbnail)
-            print(f'embed {i} created, sending embed')
             await ctx.send(embed=embed)
         return "success"
 
@@ -176,7 +175,7 @@ class Skole(commands.Cog):
                         ]
                     )
     async def schedule(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Relays the schedule of a specific day"""
+        """Relays the schedule of a specific day."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         day = kwargs["day"]
         try:
@@ -204,7 +203,7 @@ class Skole(commands.Cog):
         await ctx.send(output, hidden=ephemeral)
 
     async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Function that obtains raw data from the lektiescanner function and formats the text, then calls post"""
+        """Function that obtains raw data from the lektiescanner function and formats the text, then calls post."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         try:
             await ctx.defer(hidden=ephemeral)
@@ -298,5 +297,5 @@ class Skole(commands.Cog):
 
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Skole(bot))

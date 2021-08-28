@@ -1,4 +1,4 @@
-"""This cog adds the blacklist command, which lets admins block strings from chat"""
+"""This cog adds the blacklist command, which lets admins block strings from chat."""
 # pylint: disable=unspecified-encoding
 import configparser
 import discord
@@ -46,7 +46,7 @@ class Blacklist(commands.Cog):
     )
 
     async def blacklist(self, ctx: discord_slash.SlashContext, **kwargs):
-        """The blacklist command"""
+        """The blacklist command."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()
         config.read('configs/config.ini')
@@ -66,5 +66,5 @@ class Blacklist(commands.Cog):
         await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Blacklist(bot))

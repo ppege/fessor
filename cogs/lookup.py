@@ -1,4 +1,4 @@
-"""This cog adds several commands that help users look things up"""
+"""This cog adds several commands that help users look things up."""
 # pylint: disable=line-too-long
 import configparser
 import discord
@@ -17,7 +17,7 @@ import functions.utils # pylint: disable=import-error
 
 
 class Lookup(commands.Cog):
-    """Lookup cog"""
+    """Lookup cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,7 +36,7 @@ class Lookup(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def define(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Find definition of a word and relay it in an embed"""
+        """Find definition of a word and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         word = kwargs["word"]
         await ctx.defer(hidden=ephemeral)
@@ -103,7 +103,7 @@ class Lookup(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def translate(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Translate a string from a chosen language to a chosen language and relay it in an embed"""
+        """Translate a string from a chosen language to a chosen language and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         origin = kwargs['from']
         destination = kwargs['to']
@@ -133,7 +133,7 @@ class Lookup(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Look something up on wikipedia and relay it in one or multiple embeds"""
+        """Look something up on wikipedia and relay it in one or multiple embeds."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         if 'dansk' in kwargs and kwargs["dansk"] is True:
@@ -174,7 +174,7 @@ class Lookup(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def wolfram(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Look something up on wolframaplha.com and relay it to the user through an embed"""
+        """Look something up on wolframaplha.com and relay it to the user through an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]
         config = configparser.ConfigParser()
@@ -204,7 +204,7 @@ class Lookup(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def google(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Googles something and sends the first ten results to the user with buttons to cycle through the links"""
+        """Googles something and sends the first ten results to the user with buttons to cycle through the links."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]
         await ctx.defer(hidden=ephemeral)
@@ -228,20 +228,8 @@ class Lookup(commands.Cog):
                 i += 1
 
             await button_ctx.edit_origin(content=str(results[i]))
-            #await button_ctx.edit_origin(content=f"{button_ctx.custom_id}")
-            #if str(reaction) == '➡️':
-            #    i = i + 1
-            #    await message.edit(content=str(results[i]))
-            #elif str(reaction) == '⬅️':
-            #    i = i - 1
-            #    await message.edit(content=str(results[i]))
-
-            #try:
-            #    reaction, user = await self.bot.wait_for('reaction_add', timeout = 60.0, check = check)
-            #except:
-            #    break
 
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Lookup(bot))

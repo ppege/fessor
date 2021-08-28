@@ -1,4 +1,4 @@
-"""This cog adds several developer tools, only usable by users with IDs in permissions.json's devlist""" # pylint: disable=line-too-long
+"""This cog adds several developer tools, only usable by users with IDs in permissions.json's devlist.""" # pylint: disable=line-too-long
 import subprocess
 import discord
 from discord.ext import commands
@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Devtools(commands.Cog):
-    """Devtools cog"""
+    """Devtools cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -28,7 +28,7 @@ class Devtools(commands.Cog):
                         permissions=functions.utils.slash_perms("dev")
                     )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Execute command line commands on the host device"""
+        """Execute command line commands on the host device."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
         output = subprocess.check_output(kwargs["command"], stderr=subprocess.STDOUT, shell=True)
@@ -44,7 +44,7 @@ class Devtools(commands.Cog):
                         permissions=functions.utils.slash_perms("dev")
                     )
     async def update(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Use git pull to update the bot"""
+        """Use git pull to update the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         repo = git.Repo()
         remote = repo.remotes.origin
@@ -53,5 +53,5 @@ class Devtools(commands.Cog):
         await ctx.send(embed=discord.Embed(title='Bot updated.', color=0xFF0000))
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Devtools(bot))

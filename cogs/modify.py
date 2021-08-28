@@ -1,4 +1,4 @@
-"""This cog adds the modify command, which devs can use to modify the assets file"""
+"""This cog adds the modify command, which devs can use to modify the assets file."""
 # pylint: disable=line-too-long, unspecified-encoding
 import json
 import discord
@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Modify(commands.Cog):
-    """Modify cog"""
+    """Modify cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -49,7 +49,7 @@ class Modify(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def modify(self, ctx: discord_slash.SlashContext, **kwargs):
-        """The modify command, used to modify the file lektiescanner uses to figure out which thumbnails to use"""
+        """The modify command, used to modify the file lektiescanner uses to figure out which thumbnails to use."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         self.data[kwargs["category"]][kwargs["key"]] = kwargs["value"]
         with open('configs/assets.json', 'w') as file:
@@ -59,5 +59,5 @@ class Modify(commands.Cog):
         await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Modify(bot))

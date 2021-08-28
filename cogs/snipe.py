@@ -1,5 +1,5 @@
 # pylint: disable=line-too-long
-"""This cog adds a snipe command, that picks up deleted or edited messages and allows the user to see what was previously there"""
+"""This cog adds a snipe command, that picks up deleted or edited messages and allows the user to see what was previously there."""
 import datetime
 import discord
 from discord.ext import commands
@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Snipe(commands.Cog):
-    """The snipe cog"""
+    """The snipe cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -18,13 +18,13 @@ class Snipe(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        """Picks up message deletions"""
+        """Picks up message deletions."""
         print("message deleted")
         self.snipe_message = message
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        """Picks up message edits"""
+        """Picks up message edits."""
         if before.content == after.content:
             return
         print("message edited")
@@ -55,7 +55,7 @@ class Snipe(commands.Cog):
                         ]
                     )
     async def snipe(self, ctx: discord_slash.SlashContext, **kwargs):
-        """The snipe command, provides the user with the option to snipe a deletion or an edit"""
+        """The snipe command, provides the user with the option to snipe a deletion or an edit."""
         if kwargs["mode"] == "edit":
             self.snipe_message = self.snipe_message_edit
         embed = discord.Embed(
@@ -73,5 +73,5 @@ class Snipe(commands.Cog):
 
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Snipe(bot))

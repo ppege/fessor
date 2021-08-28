@@ -1,4 +1,4 @@
-"""This cog adds the coinflip command which flips a coin"""
+"""This cog adds the coinflip command which flips a coin."""
 import random
 import discord
 from discord.ext import commands
@@ -9,7 +9,7 @@ from discord_slash.model import ButtonStyle
 import functions.utils # pylint: disable=import-error
 
 class Coinflip(commands.Cog):
-    """Coinflip cog"""
+    """Coinflip cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -21,7 +21,7 @@ class Coinflip(commands.Cog):
                         options=functions.utils.privateOption
                     )
     async def coinflip(self, ctx: discord_slash.SlashContext):
-        """The coinflip command"""
+        """The coinflip command."""
         def get_result():
             result = random.uniform(0, 1)
             output = "Heads!" if result > 0.5 else "Tails!"
@@ -50,5 +50,5 @@ class Coinflip(commands.Cog):
             )
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Coinflip(bot))

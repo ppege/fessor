@@ -1,5 +1,5 @@
 # pylint: disable=line-too-long, unspecified-encoding
-"""This cog adds the suggest command, which lets the user send a suggestion for fessor"""
+"""This cog adds the suggest command, which lets the user send a suggestion for fessor."""
 import discord
 from discord.ext import commands
 import discord_slash
@@ -8,7 +8,7 @@ from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Suggest(commands.Cog):
-    """The suggest cog"""
+    """The suggest cog."""
     def __init__(self, bot):
         self.bot = bot
 
@@ -27,7 +27,7 @@ class Suggest(commands.Cog):
                         ] + functions.utils.privateOption
                     )
     async def suggest(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Command which lets the user send a suggestion to fessor"""
+        """Command which lets the user send a suggestion to fessor."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         suggestion = kwargs["suggestion"]
         with open("suggestions.md", "a") as file:
@@ -38,5 +38,5 @@ class Suggest(commands.Cog):
         await ctx.send(embed=discord.Embed(title='Suggestion sendt', description=suggestion, color=0xFF0000), hidden=ephemeral)
 
 def setup(bot):
-    """Adds the cog"""
+    """Adds the cog."""
     bot.add_cog(Suggest(bot))
