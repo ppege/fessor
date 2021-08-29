@@ -192,7 +192,7 @@ class Skole(commands.Cog):
 
     @cog_ext.cog_subcommand(base="schedule", name="today", description="Show today's schedule.", guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _schedule_today(self, ctx: discord_slash.SlashContext, **kwargs):
-        """Relays the current day's schedule; defaults to monday if it's a weekend"""
+        """Relays the current day's schedule; defaults to monday if it's a weekend."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         today = datetime.datetime.today().weekday()
         if today >= 5:
@@ -202,77 +202,112 @@ class Skole(commands.Cog):
         output = options.schedules[today]
         await ctx.send(output, hidden=ephemeral)
 
+    async def send_all(self, ctx: discord_slash.SlashContext, assignment_data):
+        """Sends all assignments in one embed; doesn't send descriptions."""
+        lektie_list = [
+            str(i + 1)
+            + ". "
+            + assignment_data['subject'][i]
+            + " | Afleveres "
+            + assignment_data['time'][i]
+            for i in range(len(assignment_data['subject']))
+        ]
+
+        description = "\n\n".join(lektie_list)
+        field_2 = "Use the command again with a different mode to see full assignments"
+        embed=discord.Embed(title="Found %d assignments" % len(assignment_data['subject']), description=description, color=0xFF0000)
+        embed.add_field(name="What now?", value=field_2)
+        await ctx.send(embed=embed)
+        return
+
+    def find_subjects(self, assignment_data, parameters):
+        """Finds assignments of a specific subject."""
+        return [
+            i
+            for i in range(len(assignment_data['subject']))
+            if parameters in assignment_data['subject'][i]
+        ]
+
+    def find_dates(self, assignment_data, parameters):
+        """Finds assignments from a specific date."""
+        if parameters == "tomorrow":
+            tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+            tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+            user_input = tomorrow
+            return [
+                i
+                for i in range(len(assignment_data['time']))
+                if str(assignment_data['user_input']) in assignment_data['time'][i]
+            ]
+
+        if (
+            parameters not in options.translations.keys()
+            and parameters not in options.translations.values()
+        ):
+            return [
+                i
+                for i in range(len(assignment_data['subject']))
+                if str(parameters) in assignment_data['time'][i]
+            ]
+
+        weekday = datetime.datetime.today().weekday()
+        if parameters in options.translations.keys():
+            parameters = options.translations[parameters]
+        diff = weekday - int(options.conversions[parameters])
+        target_date = datetime.date.today() - datetime.timedelta(days=diff)
+        target_date = target_date.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
+        user_input = target_date
+        return [
+            i
+            for i in range(len(assignment_data['time']))
+            if str(user_input) in assignment_data['time'][i]
+        ]
+
+    def find_teacher(self, assignment_data, parameters):
+        """Finds assignments from a specific teacher."""
+        return [
+            i
+            for i in range(len(assignment_data['author']))
+            if str(parameters) in assignment_data['author'][i]
+        ]
+
+    async def handle_mode(self, ctx, assignment_data, mode, parameters):
+        """Handles mode and parameters to know what to look for."""
+        if mode == "all":
+            await self.send_all(ctx, assignment_data)
+            return None
+        if mode == "subject":
+            user_input = self.find_subjects(assignment_data, parameters)
+        elif mode == "date":
+            user_input = self.find_dates(assignment_data, parameters)
+        elif mode == "teacher":
+            user_input = self.find_teacher(assignment_data, parameters)
+        return user_input
+
     async def scan(self, ctx: discord_slash.SlashContext, **kwargs):
         """Function that obtains raw data from the lektiescanner function and formats the text, then calls post."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
+        if 'parameters' not in kwargs:
+            kwargs['parameters'] = None
         try:
             await ctx.defer(hidden=ephemeral)
             assignment_data = lektiescan()
-            if kwargs["mode"] == "all":
-                lektie_list = [
-                    str(i + 1)
-                    + ". "
-                    + assignment_data['subject'][i]
-                    + " | Afleveres "
-                    + assignment_data['time'][i]
-                    for i in range(len(assignment_data['subject']))
-                ]
-
-                description = "\n\n".join(lektie_list)
-                field_2 = "Use the command again with a different mode to see full assignments"
-                embed=discord.Embed(title="Found %d assignments" % len(assignment_data['subject']), description=description, color=0xFF0000)
-                embed.add_field(name="What now?", value=field_2)
-                await ctx.send(embed=embed)
-                return
-            if kwargs["mode"] == "subject":
-                num_list = [
-                    i
-                    for i in range(len(assignment_data['subject']))
-                    if kwargs["parameters"] in assignment_data['subject'][i]
-                ]
-
-                user_input = num_list
-            elif kwargs["mode"] == "date":
-                if kwargs["parameters"] == "tomorrow":
-                    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-                    tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
-                    user_input = tomorrow
-                    num_list = [i for i in range(len(assignment_data['time'])) if str(assignment_data['user_input']) in assignment_data['time'][i]]
-                elif kwargs["parameters"] in options.translations.keys() or kwargs["parameters"] in options.translations.values():
-                    weekday = datetime.datetime.today().weekday()
-                    if kwargs["parameters"] in options.translations.keys():
-                        kwargs["parameters"] = options.translations[kwargs["parameters"]]
-                    diff = weekday - int(options.conversions[kwargs["parameters"]])
-                    target_date = datetime.date.today() - datetime.timedelta(days=diff)
-                    target_date = target_date.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
-                    user_input = target_date
-                    num_list = [i for i in range(len(assignment_data['time'])) if str(user_input) in assignment_data['time'][i]]
-                else:
-                    num_list = [
-                        i
-                        for i in range(len(assignment_data['subject']))
-                        if str(kwargs["parameters"]) in assignment_data['time'][i]
-                    ]
-
-                user_input = num_list
-            elif kwargs["mode"] == "teacher":
-                num_list = [
-                    i
-                    for i in range(len(assignment_data['author']))
-                    if str(kwargs["parameters"]) in assignment_data['author'][i]
-                ]
-
-                user_input = num_list
+            print(assignment_data['description'])
+            user_input = await self.handle_mode(ctx, assignment_data, kwargs['mode'], kwargs['parameters'])
             if str(user_input) == "[]":
-                await ctx.send(embed=discord.Embed(title='Ingen lektier fundet :weary:', description='', color=0xFF0000))
+                await ctx.send(embed=discord.Embed(title='No assignments found :weary:', color=0xFF0000))
                 return
-            try:
-                await self.post(ctx, assignment_data, user_input)
-            except:
-                await ctx.send(embed=discord.Embed(title="EPIC FAIL :rofl:", description="Du skal skrive et tal, der passer til de lektier, botten har fundet!!!!! :rage::rage::rage:"))
-                raise
-        except:
-            await ctx.send(embed=discord.Embed(title="Scan fejlede.", description="", color=0xFF0000))
+            if user_input is None:
+                return
+            await self.post(ctx, assignment_data, user_input)
+        except Exception as error:
+            await ctx.send(
+                embed=discord.Embed(
+                    title='Scan failed.',
+                    description=f'Exception:\n```\n{error}\n```',
+                    color=16711680,
+                )
+            )
             raise
 
     @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_default_permission=False, base_permissions=functions.utils.slash_perms("lektiescan"), options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
