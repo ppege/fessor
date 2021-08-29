@@ -1,5 +1,4 @@
 """This cog adds commands related to permissions."""
-# pylint: disable=line-too-long, unspecified-encoding
 import json
 import discord
 from discord.ext import commands
@@ -13,42 +12,43 @@ class Perms(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="perms",
-                        description="Setup permissions",
-                        guild_ids=functions.utils.servers,
-                        default_permission=False,
-                        permissions=functions.utils.slash_perms("admin"),
-                        options=[
-                            create_option(
-                                name="user",
-                                description="which users permissions to change",
-                                option_type=6,
-                                required=True
-                            ),
-                            create_option(
-                                name="permission",
-                                description="which permission to change",
-                                option_type=3,
-                                required=True
-                            ),
-                            create_option(
-                                name="value",
-                                description="what to change the permission to",
-                                option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(
-                                        name="true",
-                                        value="true"
-                                    ),
-                                    create_choice(
-                                        name="false",
-                                        value="false"
-                                    )
-                                ]
-                            )
-                        ] + functions.utils.privateOption
+    @cog_ext.cog_slash(
+        name="perms",
+        description="Setup permissions",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        permissions=functions.utils.slash_perms("admin"),
+        options=[
+            create_option(
+                name="user",
+                description="which users permissions to change",
+                option_type=6,
+                required=True
+            ),
+            create_option(
+                name="permission",
+                description="which permission to change",
+                option_type=3,
+                required=True
+            ),
+            create_option(
+                name="value",
+                description="what to change the permission to",
+                option_type=3,
+                required=True,
+                choices=[
+                    create_choice(
+                        name="true",
+                        value="true"
+                    ),
+                    create_choice(
+                        name="false",
+                        value="false"
                     )
+                ]
+            )
+        ] + functions.utils.privateOption
+    )
     async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command to change a given user's permissions related to the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -71,13 +71,14 @@ class Perms(commands.Cog):
             json.dump(data, file, indent=4)
         await ctx.send(embed=discord.Embed(title="Permission changed."))
 
-    @cog_ext.cog_slash(name="setupperms",
-                        description="Setup permissions, THIS RESETS ALL PERMS",
-                        guild_ids=functions.utils.servers,
-                        default_permission=False,
-                        permissions=functions.utils.slash_perms("dev"),
-                        options=functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="setupperms",
+        description="Setup permissions, THIS RESETS ALL PERMS",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        permissions=functions.utils.slash_perms("dev"),
+        options=functions.utils.privateOption
+    )
     async def setup_perms(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command to setup all perms for a guild."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

@@ -1,4 +1,4 @@
-"""This cog adds several developer tools, only usable by users with IDs in permissions.json's devlist.""" # pylint: disable=line-too-long
+"""This cog adds several developer tools, only usable by users with IDs in permissions.json's devlist."""
 import subprocess
 import discord
 from discord.ext import commands
@@ -13,20 +13,21 @@ class Devtools(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="execute",
-                        description="Executes a command on the host system",
-                        guild_ids=functions.utils.servers,
-                        options=[
-                            create_option(
-                                name="command",
-                                description="the command to execute",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption,
-                        default_permission=False,
-                        permissions=functions.utils.slash_perms("dev")
-                    )
+    @cog_ext.cog_slash(
+        name="execute",
+        description="Executes a command on the host system",
+        guild_ids=functions.utils.servers,
+        options=[
+            create_option(
+                name="command",
+                description="the command to execute",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption,
+        default_permission=False,
+        permissions=functions.utils.slash_perms("dev")
+    )
     async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
         """Execute command line commands on the host device."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -36,13 +37,14 @@ class Devtools(commands.Cog):
         output = output.replace('\\n', '\n').replace('\\r', '\r').replace('\\t', '\t')[2:-1]
         await ctx.send(f'```\n{output}\n```', hidden = ephemeral)
 
-    @cog_ext.cog_slash(name="update",
-                        description="Updates the bot",
-                        guild_ids=functions.utils.servers,
-                        default_permission=False,
-                        options=functions.utils.privateOption,
-                        permissions=functions.utils.slash_perms("dev")
-                    )
+    @cog_ext.cog_slash(
+        name="update",
+        description="Updates the bot",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        options=functions.utils.privateOption,
+        permissions=functions.utils.slash_perms("dev")
+    )
     async def update(self, ctx: discord_slash.SlashContext, **kwargs):
         """Use git pull to update the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

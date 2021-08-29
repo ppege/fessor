@@ -16,38 +16,39 @@ class Modify(commands.Cog):
     with open("configs/assets.json", "r") as file:
         data = json.load(file)
 
-    @cog_ext.cog_slash(name="modify",
-                        description="Modify the link registry",
-                        guild_ids=functions.utils.servers,
-                        default_permission=False,
-                        permissions=functions.utils.slash_perms("dev"),
-                        options=[
-                            create_option(
-                                name="category",
-                                description="which category to change?",
-                                option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(name=key, value=key) for key in data.keys()
-                                ]
-                            ),
-                            create_option(
-                                name="key",
-                                description="which key to change?",
-                                option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(name=key, value=key) for key in data["teachers"].keys()
-                                ]
-                            ),
-                            create_option(
-                                name="value",
-                                description="which value to change?",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="modify",
+        description="Modify the link registry",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        permissions=functions.utils.slash_perms("dev"),
+        options=[
+            create_option(
+                name="category",
+                description="which category to change?",
+                option_type=3,
+                required=True,
+                choices=[
+                    create_choice(name=key, value=key) for key in data.keys()
+                ]
+            ),
+            create_option(
+                name="key",
+                description="which key to change?",
+                option_type=3,
+                required=True,
+                choices=[
+                    create_choice(name=key, value=key) for key in data["teachers"].keys()
+                ]
+            ),
+            create_option(
+                name="value",
+                description="which value to change?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def modify(self, ctx: discord_slash.SlashContext, **kwargs):
         """The modify command, used to modify the file lektiescanner uses to figure out which thumbnails to use."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

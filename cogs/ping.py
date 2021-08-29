@@ -11,13 +11,14 @@ class Ping(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="ping",
-                        description="Ping the bot",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="ping",
+        description="Ping the bot",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=functions.utils.privateOption
+    )
     async def ping(self, ctx: discord_slash.SlashContext, **kwargs):
         """The ping command, returns the bot's ping."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

@@ -19,17 +19,19 @@ class Info(commands.Cog):
     @classmethod
     def get_uptime(cls):
         """Reads the start time of the bot from data.json then subtracts it from the current time."""
-        with open("data/data.json", "r") as file: # pylint: disable=unspecified-encoding
+        with open("data/data.json", "r") as file:
             data = json.load(file)
         uptime = time.time() - data['startTime']
         return str(datetime.timedelta(seconds=uptime))
 
-    @cog_ext.cog_slash(name="info",
-                        description="Bot statistics",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=functions.utils.privateOption)
+    @cog_ext.cog_slash(
+        name="info",
+        description="Bot statistics",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=functions.utils.privateOption
+    )
     async def info(self, ctx: discord_slash.SlashContext, **kwargs):
         """The info command."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

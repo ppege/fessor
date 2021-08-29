@@ -1,4 +1,3 @@
-# pylint: disable=line-too-long, unspecified-encoding
 """This cog adds school related commands to relay assignments and schedules."""
 import json
 import datetime
@@ -153,27 +152,28 @@ class Skole(commands.Cog):
             await ctx.send(embed=embed)
         return "success"
 
-    @cog_ext.cog_subcommand(base="schedule",
-                        description="Show the schedule for a given day",
-                        name="day",
-                        guild_ids=functions.utils.servers,
-                        base_default_permission=True,
-                        base_permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                          create_option(
-                            name="day",
-                            description="Which day's schedule?",
-                            option_type=3,
-                            required=True
-                          ),
-                          create_option(
-                            name="private",
-                            description="send the message privately?",
-                            option_type=5,
-                            required=False
-                          )
-                        ]
-                    )
+    @cog_ext.cog_subcommand(
+        base="schedule",
+        description="Show the schedule for a given day",
+        name="day",
+        guild_ids=functions.utils.servers,
+        base_default_permission=True,
+        base_permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+            name="day",
+            description="Which day's schedule?",
+            option_type=3,
+            required=True
+            ),
+            create_option(
+            name="private",
+            description="send the message privately?",
+            option_type=5,
+            required=False
+            )
+        ]
+    )
     async def schedule(self, ctx: discord_slash.SlashContext, **kwargs):
         """Relays the schedule of a specific day."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -190,7 +190,20 @@ class Skole(commands.Cog):
         except KeyError:
             await ctx.send(embed=discord.Embed(title='Invalid day', description="Might tomorrow be a saturday or a sunday?"), hidden=ephemeral)
 
-    @cog_ext.cog_subcommand(base="schedule", name="today", description="Show today's schedule.", guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
+    @cog_ext.cog_subcommand(
+        base="schedule",
+        name="today",
+        description="Show today's schedule.",
+        guild_ids=functions.utils.servers,
+        options=[
+            create_option(
+                name="private",
+                description="send the message privately?",
+                option_type=5,
+                required=False
+            )
+        ]
+    )
     async def _schedule_today(self, ctx: discord_slash.SlashContext, **kwargs):
         """Relays the current day's schedule; defaults to monday if it's a weekend."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

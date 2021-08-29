@@ -1,5 +1,4 @@
-"""This cog adds the blacklist command, which lets admins block strings from chat."""
-# pylint: disable=unspecified-encoding
+"""Adds the blacklist command, which lets admins block strings from chat."""
 import configparser
 import discord
 from discord.ext import commands
@@ -9,40 +8,42 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Blacklist(commands.Cog):
+
     """Blacklist cog"""
     def __init__(self, bot):
-        """Loads the cog"""
+        """Loads the cog."""
         self.bot = bot
 
-    @cog_ext.cog_slash(name="blacklist",
-                        description="Add terms to a list to block them.",
-                        guild_ids=functions.utils.servers,
-                        default_permission=False,
-                        permissions=functions.utils.slash_perms("admin"),
-                        options=[
-                            create_option(
-                                name="action",
-                                description="to add or to remove, that is the question",
-                                option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(
-                                        name="add",
-                                        value="add"
-                                    ),
-                                    create_choice(
-                                        name="remove",
-                                        value="remove"
-                                    )
-                                ]
-                            ),
-                            create_option(
-                                name="string",
-                                description="the string that will be caught",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
+    @cog_ext.cog_slash(
+        name="blacklist",
+        description="Add terms to a list to block them.",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        permissions=functions.utils.slash_perms("admin"),
+        options=[
+            create_option(
+                name="action",
+                description="to add or to remove, that is the question",
+                option_type=3,
+                required=True,
+                choices=[
+                    create_choice(
+                        name="add",
+                        value="add"
+                    ),
+                    create_choice(
+                        name="remove",
+                        value="remove"
+                    )
+                ]
+            ),
+            create_option(
+                name="string",
+                description="the string that will be caught",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
     )
 
     async def blacklist(self, ctx: discord_slash.SlashContext, **kwargs):
@@ -62,7 +63,7 @@ class Blacklist(commands.Cog):
         config['blacklist']['list'] = new_cfg
         with open('configs/config.ini', 'w') as configfile:
             config.write(configfile)
-        embed=discord.Embed(title=output, description="", color=0xFF0000)
+        embed=discord.Embed(title=output, color=0xFF0000)
         await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):

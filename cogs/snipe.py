@@ -30,30 +30,31 @@ class Snipe(commands.Cog):
         print("message edited")
         self.snipe_message_edit = before
 
-    @cog_ext.cog_slash(name="snipe",
-                        description="Snipe a message that has been deleted",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="mode",
-                                description="which event to catch",
-                                option_type=3,
-                                required=True,
-                                choices=[
-                                    create_choice(
-                                        name="Deletion",
-                                        value="del"
-                                    ),
-                                    create_choice(
-                                        name="Edit",
-                                        value="edit"
-                                    )
-                                ]
-                            )
-                        ]
+    @cog_ext.cog_slash(
+        name="snipe",
+        description="Snipe a message that has been deleted",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="mode",
+                description="which event to catch",
+                option_type=3,
+                required=True,
+                choices=[
+                    create_choice(
+                        name="Deletion",
+                        value="del"
+                    ),
+                    create_choice(
+                        name="Edit",
+                        value="edit"
                     )
+                ]
+            )
+        ]
+    )
     async def snipe(self, ctx: discord_slash.SlashContext, **kwargs):
         """The snipe command, provides the user with the option to snipe a deletion or an edit."""
         if kwargs["mode"] == "edit":

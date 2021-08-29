@@ -1,5 +1,4 @@
 """This cog adds several commands that help users look things up."""
-# pylint: disable=line-too-long
 import configparser
 import discord
 from discord.ext import commands
@@ -21,20 +20,21 @@ class Lookup(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="define",
-                        description="Define a word",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="word",
-                                description="which word to define?",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="define",
+        description="Define a word",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="word",
+                description="which word to define?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def define(self, ctx: discord_slash.SlashContext, **kwargs):
         """Find definition of a word and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -76,32 +76,33 @@ class Lookup(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @cog_ext.cog_slash(name="translate",
-                        description="Define a word",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="from",
-                                description="which language to translate from?",
-                                option_type=3,
-                                required=True
-                            ),
-                            create_option(
-                                name="to",
-                                description="which language to translate to?",
-                                option_type=3,
-                                required=True
-                            ),
-                            create_option(
-                                name="text",
-                                description="the text to translate",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="translate",
+        description="Define a word",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="from",
+                description="which language to translate from?",
+                option_type=3,
+                required=True
+            ),
+            create_option(
+                name="to",
+                description="which language to translate to?",
+                option_type=3,
+                required=True
+            ),
+            create_option(
+                name="text",
+                description="the text to translate",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def translate(self, ctx: discord_slash.SlashContext, **kwargs):
         """Translate a string from a chosen language to a chosen language and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -112,26 +113,27 @@ class Lookup(commands.Cog):
         output = translator.translate(kwargs['text'])
         await ctx.send(embed=discord.Embed(title='Translation', description=output, color=0xFF0000))
 
-    @cog_ext.cog_slash(name="wiki",
-                        description="Look something up on Wikipedia",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="query",
-                                description="what to look up?",
-                                option_type=3,
-                                required=True
-                            ),
-                            create_option(
-                                name="dansk",
-                                description="find results in danish",
-                                option_type=5,
-                                required=False
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="wiki",
+        description="Look something up on Wikipedia",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="query",
+                description="what to look up?",
+                option_type=3,
+                required=True
+            ),
+            create_option(
+                name="dansk",
+                description="find results in danish",
+                option_type=5,
+                required=False
+            )
+        ] + functions.utils.privateOption
+    )
     async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wikipedia and relay it in one or multiple embeds."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -159,20 +161,21 @@ class Lookup(commands.Cog):
 
 
 
-    @cog_ext.cog_slash(name="wolfram",
-                        description="Look something up on Wolfram Alpha",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="query",
-                                description="what to look up?",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="wolfram",
+        description="Look something up on Wolfram Alpha",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="query",
+                description="what to look up?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def wolfram(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wolframaplha.com and relay it to the user through an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
@@ -189,20 +192,21 @@ class Lookup(commands.Cog):
         except StopIteration:
             await ctx.send(embed=discord.Embed(title=f'No results found for "{query}"', description='', color=0xFF0000))
 
-    @cog_ext.cog_slash(name="google",
-                        description="Look something up on Google",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="query",
-                                description="what to look up?",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="google",
+        description="Look something up on Google",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="query",
+                description="what to look up?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def google(self, ctx: discord_slash.SlashContext, **kwargs):
         """Googles something and sends the first ten results to the user with buttons to cycle through the links."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)

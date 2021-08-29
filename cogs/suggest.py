@@ -12,20 +12,21 @@ class Suggest(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="suggest",
-                        description="Suggest a feature",
-                        guild_ids=functions.utils.servers,
-                        default_permission=True,
-                        permissions=functions.utils.slash_perms("banned"),
-                        options=[
-                            create_option(
-                                name="suggestion",
-                                description="what do you suggest?",
-                                option_type=3,
-                                required=True
-                            )
-                        ] + functions.utils.privateOption
-                    )
+    @cog_ext.cog_slash(
+        name="suggest",
+        description="Suggest a feature",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="suggestion",
+                description="what do you suggest?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
     async def suggest(self, ctx: discord_slash.SlashContext, **kwargs):
         """Command which lets the user send a suggestion to fessor."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
