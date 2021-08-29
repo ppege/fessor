@@ -25,6 +25,7 @@ def extract_data(link, home_page, assignment_data):
     new_time = re.findall("(?<=<dd>).*?(?= <)", home_page)
     assignment_data["time"].append(new_time[0])
     new_description = re.findall("(?<=<div class=\"content\">).*?(?=</div>)", home_page)
+    print(new_description[0])
     assignment_data["description"].append(new_description[0])
     new_author = re.findall("(?<=<p><small class=\"muted\">).*?(?=</small></p>)", home_page)
     assignment_data["author"].append(new_author[0])

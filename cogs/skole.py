@@ -67,46 +67,7 @@ class Skole(commands.Cog):
         if selection == []:
             return
         channel = self.bot.get_channel(816693284147691530)
-        await self.autopost(channel, assignment_data, selection)
-
-    async def autopost(self, channel, assignment_data, selection):
-        """This function formats the data as an embed then posts it in a specific channel."""
-        with open("configs/assets.json", "r") as file:
-            data = json.load(file)
-        for i in selection:
-            current_class = assignment_data['subject'][i]
-            try:
-                embed_color = options.scanColors[current_class]
-            except KeyError:
-                embed_color = 0xFF5733
-            current_teacher = assignment_data['author'][i]
-            try:
-                embed_thumbnail = data["teachers"][current_teacher.split()[4].lower()]
-            except:
-                embed_thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
-                raise
-            for_loop_files = [
-                assignment_data['files'][i].split(',')[j]
-                for j in range(len(assignment_data['files'][i].split(',')))
-            ]
-
-            for_loop_file_names = [
-                assignment_data['file_names'][i].split(',')[j]
-                for j in range(len(assignment_data['file_names'][i].split(',')))
-            ]
-
-            file_output = ""
-            for k in enumerate(for_loop_files):
-                k = k[0]
-                file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
-            embed=discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
-            embed.add_field(name="Description", value=assignment_data['description'][i], inline=True)
-            embed.set_footer(text=f"{assignment_data['author'][i]}")
-            embed.add_field(name="Filer", value=file_output, inline=True)
-            embed.set_thumbnail(url=embed_thumbnail)
-            print('embed %d created, sending embed' % selection)
-            await channel.send('@everyone ny lektie!')
-            await channel.send(embed=embed)
+        await self.post(channel, assignment_data, selection)
 
     async def post(self, ctx, assignment_data, selection):
         """Formats assignment data to an embed then posts it to the channel in which the scan command was used."""

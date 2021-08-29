@@ -21,8 +21,9 @@ class Coinflip(commands.Cog):
         permissions=functions.utils.slash_perms("banned"),
         options=functions.utils.privateOption
     )
-    async def coinflip(self, ctx: discord_slash.SlashContext):
+    async def coinflip(self, ctx: discord_slash.SlashContext, **kwargs):
         """The coinflip command."""
+        ephemeral=functions.utils.ephemeral_check(**kwargs)
         def get_result():
             result = random.uniform(0, 1)
             output = "Heads!" if result > 0.5 else "Tails!"
@@ -34,7 +35,8 @@ class Coinflip(commands.Cog):
             title=output,
             description=f"Float: {str(result)}",
             color=0xFF0000),
-            components=[action_row]
+            components=[action_row],
+            hidden=ephemeral
         )
 
         while True:
