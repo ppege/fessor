@@ -56,7 +56,7 @@ def get_links_in_post(description):
 
 def remove_hex(description, double_link, link_in_post):
     """Filters out hexadecimal symbols from data"""
-    pre_hex_removal = description.replace('<p>', '\n').replace('</p>', '').replace('<strong>', '').replace('</strong>', '').replace('<br>', '').replace('<a href=\"', '').replace('\" rel=\"noopener noreferrer\" target=\"_blank\">', '').replace('</a>', '').replace(double_link, link_in_post)
+    pre_hex_removal = description.replace('<p>', '\n').replace('</p>', '').replace('<strong>', '').replace('</strong>', '').replace('<br>', '').replace('<a href=\"', '').replace('\" rel=\"noopener noreferrer\" target=\"_blank\">', '').replace('</a>', '').replace(double_link, link_in_post).replace('&amp;', '&')
     pre_hex_removal = pre_hex_removal.replace('\\x', '|')
     hex_to_remove = re.findall("(?<=\|).*?(?= |\n)", pre_hex_removal) ##########IMPORTANT!!!! place backslash before the first pipe if the function isnt working
     for j in enumerate(hex_to_remove):

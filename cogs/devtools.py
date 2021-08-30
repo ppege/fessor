@@ -32,8 +32,7 @@ class Devtools(commands.Cog):
         """Execute command line commands on the host device."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
-        output = subprocess.check_output(kwargs["command"], stderr=subprocess.STDOUT, shell=True)
-        output = str(output)
+        output = subprocess.check_output(kwargs["command"], stderr=subprocess.STDOUT, shell=True, timeout=20)
         output = output.replace('\\n', '\n').replace('\\r', '\r').replace('\\t', '\t')[2:-1]
         await ctx.send(f'```\n{output}\n```', hidden = ephemeral)
 
