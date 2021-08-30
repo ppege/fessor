@@ -1,4 +1,4 @@
-"""Collection of dictionaries and lists"""
+"""Collection of dictionaries and lists."""
 settings = ['lock', 'funnymode']
 values = ['on', 'off']
 skemaer = {

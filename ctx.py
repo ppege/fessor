@@ -64,7 +64,7 @@ async def on_command(ctx):
 
 @bot.event
 async def on_ready():
-    """This function is executed once the bot is ready."""
+    """Executed once the bot is ready."""
     print('fessor is online.')
     await bot.change_presence(activity=discord.Game(name="2169 lines of code"))
 
