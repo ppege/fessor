@@ -1,5 +1,4 @@
-"""This cog adds the modify command, which devs can use to modify the assets file."""
-# pylint: disable=line-too-long, unspecified-encoding
+"""Adds the modify command, which devs can use to modify the assets file."""
 import json
 import discord
 from discord.ext import commands
@@ -9,6 +8,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Modify(commands.Cog):
+
     """Modify cog."""
     def __init__(self, bot):
         self.bot = bot
@@ -56,7 +56,7 @@ class Modify(commands.Cog):
         with open('configs/assets.json', 'w') as file:
             json.dump(self.data, file, indent=4)
         output = "Successfully replaced"
-        embed=discord.Embed(title=output, description="", color=0xFF0000)
+        embed = discord.Embed(title=output, color=0xFF0000)
         await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):

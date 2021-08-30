@@ -1,5 +1,4 @@
-"""This cog adds a ping command."""
-# pylint: disable=line-too-long
+"""Adds a ping command."""
 import discord
 from discord.ext import commands
 import discord_slash
@@ -7,6 +6,7 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Ping(commands.Cog):
+    
     """The ping cog."""
     def __init__(self, bot):
         self.bot = bot

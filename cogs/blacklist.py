@@ -9,7 +9,7 @@ import functions.utils # pylint: disable=import-error
 
 class Blacklist(commands.Cog):
 
-    """Blacklist cog"""
+    """Blacklist cog."""
     def __init__(self, bot):
         """Loads the cog."""
         self.bot = bot
@@ -63,7 +63,7 @@ class Blacklist(commands.Cog):
         config['blacklist']['list'] = new_cfg
         with open('configs/config.ini', 'w') as configfile:
             config.write(configfile)
-        embed=discord.Embed(title=output, color=0xFF0000)
+        embed = discord.Embed(title=output, color=0xFF0000)
         await ctx.send(embed=embed, hidden=ephemeral)
 
 def setup(bot):

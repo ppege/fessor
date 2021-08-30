@@ -1,4 +1,4 @@
-"""This cog adds school related commands to relay assignments and schedules."""
+"""Adds school related commands to relay assignments and schedules."""
 import json
 import datetime
 import discord
@@ -11,18 +11,20 @@ from configs import options # pylint: disable=import-error
 from functions.school.lektiescanner import lektiescan # pylint: disable=import-error
 
 class Skole(commands.Cog):
+
     """The skole cog."""
     def __init__(self, bot):
         self.bot = bot # pylint: disable=no-member
         self.scan_loop.start() # pylint: disable=no-member
 
     def cog_unload(self):
+        """Unloads the cog."""
         self.scan_loop.cancel() # pylint: disable=no-member
 
 
     @tasks.loop(minutes=5.0)
     async def scan_loop(self):
-        """This function runs every five minutes and checks if the lektiescanner's output is different from the last."""
+        """Runs every five minutes and checks if the lektiescanner's output is different from the last."""
         assignment_data = lektiescan()
         selection = []
         with open("data/scans.json", "r") as file:
@@ -106,7 +108,7 @@ class Skole(commands.Cog):
             for k in enumerate(for_loop_files):
                 k = k[0]
                 file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
-            embed=discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
+            embed = discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
             embed.add_field(name="Description", value=assignment_data['description'][i], inline=True)
             embed.set_footer(text=f"{assignment_data['author'][i]}")
             embed.add_field(name="Files", value=file_output, inline=True)
@@ -190,7 +192,7 @@ class Skole(commands.Cog):
 
         description = "\n\n".join(lektie_list)
         field_2 = "Use the command again with a different mode to see full assignments"
-        embed=discord.Embed(title="Found %d assignments" % len(assignment_data['subject']), description=description, color=0xFF0000)
+        embed = discord.Embed(title="Found %d assignments" % len(assignment_data['subject']), description=description, color=0xFF0000)
         embed.add_field(name="What now?", value=field_2)
         await ctx.send(embed=embed)
         return
@@ -290,22 +292,22 @@ class Skole(commands.Cog):
 
     @cog_ext.cog_subcommand(base="scan", name="all", description="Scan for an index of all assignments on Viggo.", guild_ids=functions.utils.servers, base_default_permission=False, base_permissions=functions.utils.slash_perms("lektiescan"), options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_all(self, ctx: discord_slash.SlashContext, **kwargs):
-        ephemeral=functions.utils.ephemeral_check(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await self.scan(ctx, mode="all", private=ephemeral)
 
     @cog_ext.cog_subcommand(base="scan", name="subject", description="Scan for assignments from a specific subject on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="subject", description="Which subject?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_subject(self, ctx: discord_slash.SlashContext, **kwargs):
-        ephemeral=functions.utils.ephemeral_check(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await self.scan(ctx, mode="subject", parameters=kwargs["subject"], private=ephemeral)
 
     @cog_ext.cog_subcommand(base="scan", name="date", description="Scan for assignments from a specific date on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="date", description="Which date?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_date(self, ctx: discord_slash.SlashContext, **kwargs):
-        ephemeral=functions.utils.ephemeral_check(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await self.scan(ctx, mode="date", parameters=kwargs["date"], private=ephemeral)
 
     @cog_ext.cog_subcommand(base="scan", name="teacher", description="Scan for assignments from a specific teacher on Viggo.", guild_ids=functions.utils.servers, options=[create_option(name="teacher", description="Which teacher?", option_type=3, required=True), create_option(name="private", description="send the message privately?", option_type=5, required=False)])
     async def _scan_teacher(self, ctx: discord_slash.SlashContext, **kwargs):
-        ephemeral=functions.utils.ephemeral_check(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         await self.scan(ctx, mode="teacher", parameters=kwargs["teacher"], private=ephemeral)
 
 

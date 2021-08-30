@@ -5,6 +5,7 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Bury(commands.Cog):
+
     """Bury cog."""
     def __init__(self, bot):
         self.bot = bot
@@ -19,7 +20,7 @@ class Bury(commands.Cog):
     )
     async def bury(self, ctx: discord_slash.SlashContext, **kwargs):
         """The bury command sends newlines to clean chat."""
-        ephemeral=functions.utils.ephemeral_check(**kwargs)
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
         bury = '‌\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n‌'
         await ctx.send(content=bury, hidden=ephemeral)
 

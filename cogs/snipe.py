@@ -1,5 +1,4 @@
-# pylint: disable=line-too-long
-"""This cog adds a snipe command, that picks up deleted or edited messages and allows the user to see what was previously there."""
+"""Adds a snipe command, that picks up deleted or edited messages and allows the user to see what was previously there."""
 import datetime
 import discord
 from discord.ext import commands
@@ -9,6 +8,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Snipe(commands.Cog):
+    
     """The snipe cog."""
     def __init__(self, bot):
         self.bot = bot

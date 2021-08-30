@@ -1,4 +1,4 @@
-"""This cog adds several commands that help users look things up."""
+"""Adds several commands that help users look things up."""
 import configparser
 import discord
 from discord.ext import commands
@@ -16,6 +16,7 @@ import functions.utils # pylint: disable=import-error
 
 
 class Lookup(commands.Cog):
+
     """Lookup cog."""
     def __init__(self, bot):
         self.bot = bot
@@ -52,7 +53,7 @@ class Lookup(commands.Cog):
         )
 
 
-        item_dict={
+        item_dict = {
             "Noun": "",
             "Verb": "",
             "Adjective": "",
@@ -61,7 +62,7 @@ class Lookup(commands.Cog):
             "antonyms": ""
         }
 
-        item_list=[
+        item_list = [
             'Noun', 'Verb', 'Adjective', 'Adverb'
         ]
 

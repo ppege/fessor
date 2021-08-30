@@ -1,4 +1,4 @@
-"""This cog adds the info command that relays a bunch of statistics."""
+"""Adds the info command that relays a bunch of statistics."""
 import json
 import configparser
 import time
@@ -12,6 +12,7 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Info(commands.Cog):
+
     """Info cog."""
     def __init__(self, bot):
         self.bot = bot
@@ -47,7 +48,7 @@ class Info(commands.Cog):
             f"System: `{platform.uname().node} (running {platform.uname().system})`\n"
             f"Mode: `{config['config']['mode']}`"
         )
-        embed=discord.Embed(
+        embed = discord.Embed(
             title='Information and statistics',
             description=description,
             color=0x000143

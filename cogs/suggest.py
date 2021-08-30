@@ -1,5 +1,4 @@
-# pylint: disable=line-too-long, unspecified-encoding
-"""This cog adds the suggest command, which lets the user send a suggestion for fessor."""
+"""Adds the suggest command, which lets the user send a suggestion for fessor."""
 import discord
 from discord.ext import commands
 import discord_slash
@@ -8,6 +7,7 @@ from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Suggest(commands.Cog):
+    
     """The suggest cog."""
     def __init__(self, bot):
         self.bot = bot

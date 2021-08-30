@@ -1,4 +1,4 @@
-"""Collection of utilities used by all cogs"""
+"""Collection of utilities used by all cogs."""
 import json
 import configparser
 from discord_slash.utils.manage_commands import create_permission, create_option
@@ -30,12 +30,12 @@ privateOption = [
 ]
 
 def slash_perms(permission):
-    """Permission handler used by all commands in the bot; goes through permissions.json to check if the user has permission to use a command"""
+    """Permission handler used by all commands in the bot; goes through permissions.json to check if the user has permission to use a command."""
     with open("configs/permissions.json", "r") as file:
         data = json.load(file)
     if config['config']['mode'] == "main":
         if permission == "dev":
-            permissions={
+            permissions = {
                 811552770074738688: [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
                 ],
@@ -45,7 +45,7 @@ def slash_perms(permission):
                 ]
             }
         elif permission == "banned":
-            permissions={
+            permissions = {
                 811552770074738688:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["811552770074738688"]["banned"]
@@ -62,7 +62,7 @@ def slash_perms(permission):
                 ]
             }
         else:
-            permissions={
+            permissions = {
                 811552770074738688:
                 [
                     create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["811552770074738688"][permission]
@@ -91,13 +91,13 @@ def slash_perms(permission):
                 ]
             }
     elif permission == "dev":
-        permissions={
+        permissions = {
             878614900824485900: [
                 create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["developers"]
             ]
         }
     elif permission == "banned":
-        permissions={
+        permissions = {
             878614900824485900:
             [
                 create_permission(int(userID), SlashCommandPermissionType.USER, False) for userID in data["878614900824485900"]["banned"]
@@ -107,7 +107,7 @@ def slash_perms(permission):
             ]
         }
     else:
-        permissions={
+        permissions = {
             878614900824485900:
             [
                 create_permission(int(userID), SlashCommandPermissionType.USER, True) for userID in data["878614900824485900"][permission]
@@ -125,7 +125,7 @@ def slash_perms(permission):
     return permissions
 
 def ephemeral_check(**kwargs):
-    """Checks if the private keyword exists, then checks if it is true"""
+    """Checks if the private keyword exists, then checks if it is true."""
     try:
         print(kwargs["private"])
     except KeyError:

@@ -1,4 +1,4 @@
-"""This cog adds several developer tools, only usable by users with IDs in permissions.json's devlist."""
+"""Adds several developer tools, only usable by users with IDs in permissions.json's devlist."""
 import subprocess
 import discord
 from discord.ext import commands
@@ -9,6 +9,7 @@ from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Devtools(commands.Cog):
+    
     """Devtools cog."""
     def __init__(self, bot):
         self.bot = bot
@@ -34,7 +35,7 @@ class Devtools(commands.Cog):
         await ctx.defer(hidden=ephemeral)
         output = subprocess.check_output(kwargs["command"], stderr=subprocess.STDOUT, shell=True, timeout=20)
         output = output.replace('\\n', '\n').replace('\\r', '\r').replace('\\t', '\t')[2:-1]
-        await ctx.send(f'```\n{output}\n```', hidden = ephemeral)
+        await ctx.send(f'```\n{output}\n```', hidden=ephemeral)
 
     @cog_ext.cog_slash(
         name="update",

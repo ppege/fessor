@@ -1,4 +1,4 @@
-"""The main file that should be launched to start the bot; loads all cogs and logs in to the bot"""
+"""The main file that should be launched to start the bot; loads all cogs and logs in to the bot."""
 import os
 import datetime
 import sys
@@ -17,17 +17,17 @@ import functions.utils
 startTime = time.time()
 try:
     with open("data/data.json", "r") as file:
-        data = json.load(file)
+        DATA = json.load(file)
 except FileNotFoundError:
     with open("data/data.json", "w+") as file:
-        data={}
-        data['startTime'] = startTime
-        json.dump(data, file, indent=4)
+        DATA={}
+        DATA['startTime'] = startTime
+        json.dump(DATA, file, indent=4)
 with open("data/data.json", "w") as file:
-    data['startTime'] = startTime
-    json.dump(data, file, indent=4)
+    DATA['startTime'] = startTime
+    json.dump(DATA, file, indent=4)
 def get_uptime():
-    """Get bot uptime by subtracting start time from current time"""
+    """Get bot uptime by subtracting start time from current time."""
     uptime = time.time() - startTime
     return str(datetime.timedelta(seconds=uptime))
 
@@ -48,7 +48,7 @@ bot.remove_command('help')
 #logging commands
 @bot.event
 async def on_command(ctx):
-    """Logs command use; this function is currently unused"""
+    """Logs command use; this function is currently unused."""
     with open("data/log.txt", "a") as log:
         log.write(f"[{datetime.datetime.now()}] {ctx.author}: \"{ctx.message.content}\" | Message ID: {ctx.message.id} | Author ID: {ctx.author.id}\n")
     with open("data/data.json", "r") as json_file:
@@ -64,14 +64,14 @@ async def on_command(ctx):
 
 @bot.event
 async def on_ready():
-    """This function is executed once the bot is ready"""
+    """This function is executed once the bot is ready."""
     print('fessor is online.')
     await bot.change_presence(activity=discord.Game(name="2169 lines of code"))
 
 
 @bot.event
 async def on_command_error(ctx, error):
-    """Command error handling; this function is not in use"""
+    """Command error handling; this function is not in use."""
     if isinstance(error, CommandNotFound):
         await ctx.send(embed=discord.Embed(title='Invalid kommando', description='Brug .help for en liste af kommandoer'))
         return
@@ -141,8 +141,8 @@ async def _cogs_list(ctx: discord_slash.SlashContext):
 
 @slash.slash(name="shutdown", description="Shuts down the bot.", default_permission=False, permissions=functions.utils.slash_perms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
 async def shutdown(ctx: discord_slash.SlashContext, **kwargs):
-    """Command to shut down the bot. Opens a background script with a randomized prefix to let me remotely start the bot again"""
-    ephemeral=functions.utils.ephemeral_check(**kwargs)
+    """Command to shut down the bot. Opens a background script with a randomized prefix to let me remotely start the bot again."""
+    ephemeral = functions.utils.ephemeral_check(**kwargs)
     await ctx.defer(hidden=ephemeral)
     fprefix = random.choice(['$', '%', '=', '+', '^', '---', '___', '>', '>>>'])
     subprocess.Popen(['python3', 'fallback.py', fprefix])
@@ -151,8 +151,8 @@ async def shutdown(ctx: discord_slash.SlashContext, **kwargs):
 
 @slash.slash(name="restart", description="Restarts the bot.", default_permission=False, permissions=functions.utils.slash_perms("dev"), guild_ids=functions.utils.servers, options=[create_option(name="private", description="send the message privately?", option_type=5, required=False)])
 async def restart(ctx: discord_slash.SlashContext, **kwargs):
-    """Restarts the bot by running fallback.py with the restart argument"""
-    ephemeral=functions.utils.ephemeral_check(**kwargs)
+    """Restarts the bot by running fallback.py with the restart argument."""
+    ephemeral = functions.utils.ephemeral_check(**kwargs)
     await ctx.defer(hidden=ephemeral)
     message = await ctx.send(embed=discord.Embed(title='Restarting...', color=0x0000FF))
     subprocess.Popen(['python3', 'fallback.py', 'restart', str(message.channel.id)])
