@@ -88,7 +88,7 @@ class Skole(commands.Cog):
                 embed_color = 0xFF5733
             current_teacher = assignment_data['author'][i]
             try:
-                embed_thumbnail = data["teachers"][current_teacher.split()[4].lower()]
+                embed_thumbnail = data['teachers'][current_teacher.replace(" ".join(current_teacher.split(' ')[:4]), '').lstrip().lower()]
             except:
                 embed_thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
                 raise
