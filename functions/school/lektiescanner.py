@@ -1,77 +1,118 @@
-from requests import Session
-from bs4 import BeautifulSoup as bs
+"""Scans for assignments on viggo using requests and the POST method."""
 import re
-import os
 import configparser
+from requests import Session
 
-def lektiescan(output):
-  config = configparser.ConfigParser()
-  config.read('cred.ini')
-  if output == True:
-      print('lektiescanning...')
-  UserName = config['config']['USERNAME']
-  Password = config['config']['PASSWORD']
-  fingerprint = config['config']['FINGERPRINT']
-  with Session() as s:
-    site = s.get("https://nr-aadal.viggo.dk/Basic/Account/Login")
-    bs_content = bs(site.content, "html.parser")
-    login_data = {"UserName": UserName, "Password": Password, "fingerprint": fingerprint}
-    s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
-    home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment")
-    home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø')
-    links = re.findall("(?<=<a href=\"/Basic/HomeworkAndAssignment/Details/).*?(?=/#modal)", home_page)
-    begivenhed = []
-    tidspunkt = []
-    beskrivelse = []
-    author = []
-    files = []
-    fileNames = []
-    url = []
-    for i in range(0, len(links)):
-        home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
-        url.append("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
-        home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø').replace('&nbsp;', '')
-        newBegivenhed = re.findall("(?<=class=\"ajaxModal\">).*?(?=</a>)", home_page)
-        begivenhed.append(newBegivenhed[0].replace('&#xE6;', 'æ'))
-        newTidspunkt = re.findall("(?<=<dd>).*?(?= <)", home_page)
-        tidspunkt.append(newTidspunkt[0])
-        newBeskrivelse = re.findall("(?<=<div class=\"content\">).*?(?=</div>)", home_page)
-        linkInPost = ''
-        if "\" rel=\"noopener noreferrer\" target=\"_blank\">" in newBeskrivelse[0]:
-            linkInPost = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", newBeskrivelse[0])[0]
-        doubleLink = linkInPost + linkInPost
-        preHexRemoval = newBeskrivelse[0].replace('<p>', '\n').replace('</p>', '').replace('<strong>', '').replace('</strong>', '').replace('<br>', '').replace('<a href=\"', '').replace('\" rel=\"noopener noreferrer\" target=\"_blank\">', '').replace('</a>', '').replace(doubleLink, linkInPost)
-        preHexRemoval = preHexRemoval.replace('\\x', '|')
-        hexToRemove = re.findall("(?<=\|).*?(?= |\n)", preHexRemoval)
-        for i in range(0, len(hexToRemove)):
-          shitToReplaceInForLoop = hexToRemove[i]
-          preHexRemoval = preHexRemoval.replace(shitToReplaceInForLoop, '')
-        finishedBeskrivelse = preHexRemoval.replace('|', '')
-        newAuthor = re.findall("(?<=<p><small class=\"muted\">).*?(?=</small></p>)", home_page)
-        author.append(newAuthor[0])
-        newFil = re.findall("(?<=<a class=\"ajaxModal\" href=\").*?(?=\")", home_page)
-        if len(newFil) != 0:
-          for i in range(0, len(newFil)):
-            newFil[i] = "https://nr-aadal.viggo.dk" + newFil[i]
-          fileCollection = str(newFil).replace('[', '').replace(']', '').replace('\'', '')
-        else:
-          fileCollection = "Ingen"
-        files.append(fileCollection)
-        newFileName = re.findall("(?<=<span>).*?(?=</span>)", home_page)
-        if len(newFileName) != 0:
-          for i in range(0, len(newFileName)):
-            newFileName[i] = newFileName[i].replace('&#xE6;', 'æ')
-          fileNameCollection = str(newFileName).replace('[', '').replace(']', '').replace('\'', '')
-        else:
-          fileNameCollection = "Ingen"
-        fileNames.append(fileNameCollection)
-        if linkInPost != '':
-          target = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", newBeskrivelse[0])
-          href = re.findall("(?<=<a href=\").*?(?=\")", newBeskrivelse[0])
-          for i in range(0, len(href)):
-            if target[i] != href[i]:
-              finishedBeskrivelse = finishedBeskrivelse.replace(target[i], '')
-              finishedBeskrivelse = finishedBeskrivelse.replace(href[i], f"[{target[i]}]({href[i]})")
-        beskrivelse.append(finishedBeskrivelse)
+def get_links(info):
+    """Gets all assignment links from viggo's assignments page."""
+    with Session() as s: # pylint: disable=invalid-name
+        login_data = {"UserName": info["user_name"], "Password": info["password"], "fingerprint": info["fingerprint"]}
+        s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
+        home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment")
+        home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø')
+    return re.findall(
+        "(?<=<a href=\"/Basic/HomeworkAndAssignment/Details/).*?(?=/#modal)",
+        home_page,
+    )
 
-  return begivenhed, beskrivelse, author, files, tidspunkt, fileNames, url
+def extract_data(link, home_page, assignment_data):
+    """Extracts data from viggo using regex."""
+    assignment_data["url"].append("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + link + "/#modal")
+    home_page = str(home_page.content).replace('\\n', '\n').replace('\\r', '\r').replace('\\xc3\\xb8', 'ø').replace('\\xc3\\xa5', 'å').replace('&#xF8;', 'ø').replace('&#xE5;', 'å').replace('\\xc3\\xa6', 'æ').replace('\\xc3\\x98', 'Ø').replace('&nbsp;', '')
+    new_subject = re.findall("(?<=class=\"ajaxModal\">).*?(?=</a>)", home_page)
+    assignment_data["subject"].append(new_subject[0].replace('&#xE6;', 'æ'))
+    new_time = re.findall("(?<=<dd>).*?(?= <)", home_page)
+    assignment_data["time"].append(new_time[0])
+    new_description = re.findall("(?<=<div class=\"content\">).*?(?=</div>)", home_page)
+    #assignment_data["description"].append(new_description[0])
+    new_author = re.findall("(?<=<p><small class=\"muted\">).*?(?=</small></p>)", home_page)
+    assignment_data["author"].append(new_author[0])
+    new_file = re.findall("(?<=<a class=\"ajaxModal\" href=\").*?(?=\")", home_page)
+    if new_file:
+        for j in enumerate(new_file):
+            j = j[0]
+            new_file[j] = "https://nr-aadal.viggo.dk" + new_file[j]
+        file_collection = str(new_file).replace('[', '').replace(']', '').replace('\'', '')
+    else:
+        file_collection = "None"
+    assignment_data["files"].append(file_collection)
+    new_file_name = re.findall("(?<=<span>).*?(?=</span>)", home_page)
+    if new_file_name:
+        for j in enumerate(new_file_name):
+            j = j[0]
+            new_file_name[j] = new_file_name[j].replace('&#xE6;', 'æ')
+        file_name_collection = str(new_file_name).replace('[', '').replace(']', '').replace('\'', '')
+    else:
+        file_name_collection = "None"
+    assignment_data["file_names"].append(file_name_collection)
+    return assignment_data, new_description[0]
+
+def get_links_in_post(description):
+    """Gets non-labelled hyperlinks in a post and doubles them for future formatting."""
+    link_in_post = ''
+    if "\" rel=\"noopener noreferrer\" target=\"_blank\">" in description:
+        link_in_post = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", description)[0]
+    return link_in_post, link_in_post + link_in_post
+
+def remove_hex(description, double_link, link_in_post):
+    """Filters out hexadecimal symbols from data."""
+    pre_hex_removal = description.replace('<p>', '\n').replace('</p>', '').replace('<strong>', '').replace('</strong>', '').replace('<br>', '').replace('<a href=\"', '').replace('\" rel=\"noopener noreferrer\" target=\"_blank\">', '').replace('</a>', '').replace(double_link, link_in_post).replace('&amp;', '&')
+    pre_hex_removal = pre_hex_removal.replace('\\x', '|')
+    hex_to_remove = re.findall("(?<=\\|).*?(?= |\n)", pre_hex_removal)
+    for j in enumerate(hex_to_remove):
+        j = j[0]
+        replacements = hex_to_remove[j]
+        pre_hex_removal = pre_hex_removal.replace(replacements, '')
+    description = pre_hex_removal.replace('|', '')
+    return description
+
+def format_links(link_in_post, description):
+    """Formats links to labelled hyperlinks if possible."""
+    finished_description = ''
+    if link_in_post != '':
+        target = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", description)
+        href = re.findall("(?<=<a href=\").*?(?=\")", description)
+        for j in enumerate(href):
+            j = j[0]
+            if target[j] != href[j]:
+                finished_description = description.replace(target[j], '')
+                finished_description = finished_description.replace(href[j], f"[{target[j]}]({href[j]})")
+        return finished_description
+    return description
+def scrape_page(link, login_info):
+    """Scrapes the contents of a viggo assignment page."""
+    with Session() as s: # pylint: disable=invalid-name
+        login_data = {"UserName": login_info["user_name"], "Password": login_info["password"], "fingerprint": login_info["fingerprint"]}
+        s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
+        home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + link + "/#modal")
+    return home_page
+
+def lektiescan():
+    """Function that scans assignments then returns each element in a dictionary."""
+    config = configparser.ConfigParser()
+    config.read('cred.ini')
+    login_info = {
+        "user_name": config['config']['USERNAME'],
+        "password": config['config']['PASSWORD'],
+        "fingerprint": config['config']['FINGERPRINT']
+    }
+    assignment_data = {
+        "subject": [],
+        "time": [],
+        "description": [],
+        "author": [],
+        "files": [],
+        "file_names": [],
+        "url": []
+    }
+    links = get_links(login_info)
+    for i in enumerate(links):
+        i = i[0]
+        home_page = scrape_page(links[i], login_info)
+        assignment_data, description = extract_data(links[i], home_page, assignment_data)
+        link_in_post, double_link = get_links_in_post(description)
+        description = remove_hex(description, double_link, link_in_post)
+        description = format_links(link_in_post, description)
+        assignment_data['description'].append(description)
+
+    return assignment_data
