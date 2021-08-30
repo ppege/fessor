@@ -69,7 +69,8 @@ class Skole(commands.Cog):
         channel = self.bot.get_channel(816693284147691530)
         await self.post(channel, assignment_data, selection)
 
-    async def post(self, ctx, assignment_data, selection):
+    @staticmethod
+    async def post(ctx, assignment_data, selection):
         """Formats assignment data to an embed then posts it to the channel in which the scan command was used."""
         with open("configs/assets.json", "r") as file:
             data = json.load(file)
@@ -194,7 +195,8 @@ class Skole(commands.Cog):
         await ctx.send(embed=embed)
         return
 
-    def find_subjects(self, assignment_data, parameters):
+    @staticmethod
+    def find_subjects(assignment_data, parameters):
         """Finds assignments of a specific subject."""
         return [
             i
@@ -202,7 +204,8 @@ class Skole(commands.Cog):
             if parameters in assignment_data['subject'][i]
         ]
 
-    def find_dates(self, assignment_data, parameters):
+    @staticmethod
+    def find_dates(assignment_data, parameters):
         """Finds assignments from a specific date."""
         if parameters == "tomorrow":
             tomorrow = datetime.date.today() + datetime.timedelta(days=1)
@@ -237,7 +240,8 @@ class Skole(commands.Cog):
             if str(user_input) in assignment_data['time'][i]
         ]
 
-    def find_teacher(self, assignment_data, parameters):
+    @staticmethod
+    def find_teacher(assignment_data, parameters):
         """Finds assignments from a specific teacher."""
         return [
             i

@@ -2,7 +2,6 @@
 import re
 import configparser
 from requests import Session
-# from bs4 import BeautifulSoup as bs
 
 def get_links(info):
     """Gets all assignment links from viggo's assignments page"""
@@ -25,8 +24,7 @@ def extract_data(link, home_page, assignment_data):
     new_time = re.findall("(?<=<dd>).*?(?= <)", home_page)
     assignment_data["time"].append(new_time[0])
     new_description = re.findall("(?<=<div class=\"content\">).*?(?=</div>)", home_page)
-    print(new_description[0])
-    assignment_data["description"].append(new_description[0])
+    #assignment_data["description"].append(new_description[0])
     new_author = re.findall("(?<=<p><small class=\"muted\">).*?(?=</small></p>)", home_page)
     assignment_data["author"].append(new_author[0])
     new_file = re.findall("(?<=<a class=\"ajaxModal\" href=\").*?(?=\")", home_page)
@@ -47,7 +45,7 @@ def extract_data(link, home_page, assignment_data):
     else:
         file_name_collection = "None"
     assignment_data["file_names"].append(file_name_collection)
-    return assignment_data
+    return assignment_data, new_description[0]
 
 def get_links_in_post(description):
     """Gets non-labelled hyperlinks in a post and doubles them for future formatting"""
@@ -60,7 +58,7 @@ def remove_hex(description, double_link, link_in_post):
     """Filters out hexadecimal symbols from data"""
     pre_hex_removal = description.replace('<p>', '\n').replace('</p>', '').replace('<strong>', '').replace('</strong>', '').replace('<br>', '').replace('<a href=\"', '').replace('\" rel=\"noopener noreferrer\" target=\"_blank\">', '').replace('</a>', '').replace(double_link, link_in_post)
     pre_hex_removal = pre_hex_removal.replace('\\x', '|')
-    hex_to_remove = re.findall("(?<=|).*?(?= |\n)", pre_hex_removal) ##########IMPORTANT!!!! place backslash before the first pipe if the function isnt working
+    hex_to_remove = re.findall("(?<=\|).*?(?= |\n)", pre_hex_removal) ##########IMPORTANT!!!! place backslash before the first pipe if the function isnt working
     for j in enumerate(hex_to_remove):
         j = j[0]
         replacements = hex_to_remove[j]
@@ -78,6 +76,13 @@ def format_links(link_in_post, description):
             if target[j] != href[j]:
                 finished_description = finished_description.replace(target[j], '')
                 finished_description = finished_description.replace(href[j], f"[{target[j]}]({href[j]})")
+def scrape_page(link, login_info):
+    """Scrapes the contents of a viggo assignment page"""
+    with Session() as s: # pylint: disable=invalid-name
+        login_data = {"UserName": login_info["user_name"], "Password": login_info["password"], "fingerprint": login_info["fingerprint"]}
+        s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
+        home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + link + "/#modal")
+    return home_page
 
 def lektiescan():
     """Function that scans assignments then returns each element in a dict"""
@@ -100,14 +105,10 @@ def lektiescan():
     links = get_links(login_info)
     for i in enumerate(links):
         i = i[0]
-        with Session() as s: # pylint: disable=invalid-name
-            login_data = {"UserName": login_info["user_name"], "Password": login_info["password"], "fingerprint": login_info["fingerprint"]}
-            s.post("https://nr-aadal.viggo.dk/Basic/Account/Login", login_data)
-            home_page = s.get("https://nr-aadal.viggo.dk/Basic/HomeworkAndAssignment/Details/" + links[i] + "/#modal")
-        assignment_data = extract_data(links[i], home_page, assignment_data)
-        description = assignment_data["description"][i]
+        home_page = scrape_page(links[i], login_info)
+        assignment_data, description = extract_data(links[i], home_page, assignment_data)
         link_in_post, double_link = get_links_in_post(description)
         description = remove_hex(description, double_link, link_in_post)
-        assignment_data['description'][i] = description
+        assignment_data['description'].append(description)
 
     return assignment_data
