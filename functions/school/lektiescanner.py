@@ -68,6 +68,7 @@ def remove_hex(description, double_link, link_in_post):
 
 def format_links(link_in_post, description):
     """Formats links to labelled hyperlinks if possible."""
+    finished_description = ''
     if link_in_post != '':
         target = re.findall("(?<=\" rel=\"noopener noreferrer\" target=\"_blank\">).*?(?=</a>)", description)
         href = re.findall("(?<=<a href=\").*?(?=\")", description)
@@ -76,7 +77,8 @@ def format_links(link_in_post, description):
             if target[j] != href[j]:
                 finished_description = description.replace(target[j], '')
                 finished_description = finished_description.replace(href[j], f"[{target[j]}]({href[j]})")
-    return finished_description
+        return finished_description
+    return description
 def scrape_page(link, login_info):
     """Scrapes the contents of a viggo assignment page."""
     with Session() as s: # pylint: disable=invalid-name

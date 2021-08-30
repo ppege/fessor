@@ -76,11 +76,9 @@ class Skole(commands.Cog):
         """Formats assignment data to an embed then posts it to the channel in which the scan command was used."""
         with open("configs/assets.json", "r") as file:
             data = json.load(file)
-        print('post() called')
         try:
             print(selection[0])
         except IndexError:
-            print('poop')
             return "fail"
         for i in selection:
             current_class = assignment_data['subject'][i]
@@ -272,7 +270,6 @@ class Skole(commands.Cog):
         try:
             await ctx.defer(hidden=ephemeral)
             assignment_data = lektiescan()
-            print(assignment_data['description'])
             user_input = await self.handle_mode(ctx, assignment_data, kwargs['mode'], kwargs['parameters'])
             if str(user_input) == "[]":
                 await ctx.send(embed=discord.Embed(title='No assignments found :weary:', color=0xFF0000))
