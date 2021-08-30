@@ -8,7 +8,7 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Snipe(commands.Cog):
-    
+
     """The snipe cog."""
     def __init__(self, bot):
         self.bot = bot

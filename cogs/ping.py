@@ -6,7 +6,7 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Ping(commands.Cog):
-    
+
     """The ping cog."""
     def __init__(self, bot):
         self.bot = bot
