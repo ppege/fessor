@@ -7,7 +7,6 @@ from discord_slash.utils.manage_commands import create_option
 import functions.utils # pylint: disable=import-error
 
 class Suggest(commands.Cog):
-
     """The suggest cog."""
     def __init__(self, bot):
         self.bot = bot

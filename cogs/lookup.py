@@ -16,7 +16,6 @@ import functions.utils # pylint: disable=import-error
 
 
 class Lookup(commands.Cog):
-
     """Lookup cog."""
     def __init__(self, bot):
         self.bot = bot

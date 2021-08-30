@@ -1,4 +1,4 @@
-"""This module scans for assignments on viggo using requests and the POST method."""
+"""Scans for assignments on viggo using requests and the POST method."""
 import re
 import configparser
 from requests import Session

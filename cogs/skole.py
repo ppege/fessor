@@ -11,7 +11,6 @@ from configs import options # pylint: disable=import-error
 from functions.school.lektiescanner import lektiescan # pylint: disable=import-error
 
 class Skole(commands.Cog):
-
     """The skole cog."""
     def __init__(self, bot):
         self.bot = bot # pylint: disable=no-member

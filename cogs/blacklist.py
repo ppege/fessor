@@ -8,7 +8,6 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Blacklist(commands.Cog):
-
     """Blacklist cog."""
     def __init__(self, bot):
         """Loads the cog."""

@@ -5,7 +5,6 @@ from discord_slash import cog_ext
 import functions.utils # pylint: disable=import-error
 
 class Bury(commands.Cog):
-
     """Bury cog."""
     def __init__(self, bot):
         self.bot = bot

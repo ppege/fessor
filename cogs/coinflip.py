@@ -9,7 +9,6 @@ from discord_slash.model import ButtonStyle
 import functions.utils # pylint: disable=import-error
 
 class Coinflip(commands.Cog):
-
     """Coinflip cog."""
     def __init__(self, bot):
         self.bot = bot

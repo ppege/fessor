@@ -1,4 +1,4 @@
-"""Ran when ctx.py recieves the shutdown or restart command, it handles user ability to start the bot again"""
+"""Ran when ctx.py recieves the shutdown or restart command, it handles user ability to start the bot again."""
 import os
 import sys
 import subprocess

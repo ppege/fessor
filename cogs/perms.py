@@ -8,7 +8,6 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 import functions.utils # pylint: disable=import-error
 
 class Perms(commands.Cog):
-
     """The perms cog."""
     def __init__(self, bot):
         self.bot = bot
