@@ -213,7 +213,7 @@ class Skole(commands.Cog):
             return [
                 i
                 for i in range(len(assignment_data['time']))
-                if str(assignment_data['user_input']) in assignment_data['time'][i]
+                if str(parameters['user_input']) in assignment_data['time'][i]
             ]
 
         if (
