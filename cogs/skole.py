@@ -1,14 +1,15 @@
 """Adds school related commands to relay assignments and schedules."""
 import json
 import datetime
+import configparser
 import discord
 from discord.ext import commands, tasks
 import discord_slash
 from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option
+from viggoscrape import get_assignments
 import functions.utils # pylint: disable=import-error
 from configs import options # pylint: disable=import-error
-from functions.school.lektiescanner import lektiescan # pylint: disable=import-error
 
 class Skole(commands.Cog):
     """The skole cog."""
@@ -24,7 +25,13 @@ class Skole(commands.Cog):
     @tasks.loop(minutes=5.0)
     async def scan_loop(self):
         """Runs every five minutes and checks if the lektiescanner's output is different from the last."""
-        assignment_data = lektiescan()
+        config = configparser.ConfigParser()
+        config.read('cred.ini')
+        keys = {
+            "USERNAME": config['config']['USERNAME'],
+            "PASSWORD": config['config']['PASSWORD']
+        }
+        assignment_data = json.loads(get_assignments("nr-aadal", keys))
         selection = []
         with open("data/scans.json", "r") as file:
             data = json.load(file)
@@ -67,7 +74,7 @@ class Skole(commands.Cog):
 
         if selection == []:
             return
-        channel = self.bot.get_channel(816693284147691530)
+        channel = self.bot.get_channel(816691188908294205)
         await self.post(channel, assignment_data, selection)
 
     @staticmethod
@@ -209,11 +216,10 @@ class Skole(commands.Cog):
         if parameters == "tomorrow":
             tomorrow = datetime.date.today() + datetime.timedelta(days=1)
             tomorrow = tomorrow.strftime("%d. %b").replace('May', 'Maj').replace('Oct', 'Okt').replace('0', '').lower()
-            user_input = tomorrow
             return [
                 i
                 for i in range(len(assignment_data['time']))
-                if str(parameters['user_input']) in assignment_data['time'][i]
+                if str(tomorrow) in assignment_data['time'][i]
             ]
 
         if (
@@ -268,7 +274,13 @@ class Skole(commands.Cog):
             kwargs['parameters'] = None
         try:
             await ctx.defer(hidden=ephemeral)
-            assignment_data = lektiescan()
+            config = configparser.ConfigParser()
+            config.read('cred.ini')
+            keys = {
+                "USERNAME": config['config']['USERNAME'],
+                "PASSWORD": config['config']['PASSWORD']
+            }
+            assignment_data = json.loads(get_assignments("nr-aadal", keys))
             user_input = await self.handle_mode(ctx, assignment_data, kwargs['mode'], kwargs['parameters'])
             if str(user_input) == "[]":
                 await ctx.send(embed=discord.Embed(title='No assignments found :weary:', color=0xFF0000))
