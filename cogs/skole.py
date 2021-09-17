@@ -92,11 +92,13 @@ class Skole(commands.Cog):
                 embed_color = options.scanColors[current_class]
             except KeyError:
                 embed_color = 0xFF5733
-            current_teacher = assignment_data['author'][i]
+            author = assignment_data['author'][i]
+            current_teacher = author.replace(" ".join(author.split(' ')[:4]), '').lstrip()
+            current_post_date = " ".join(author.split(' ')[:3])
             try:
-                embed_thumbnail = data['teachers'][current_teacher.replace(" ".join(current_teacher.split(' ')[:4]), '').lstrip().lower()]
+                embed_thumbnail = data['teachers'][current_teacher.lower()]
             except:
-                embed_thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Question_mark_%28black%29.svg/200px-Question_mark_%28black%29.svg.png"
+                embed_thumbnail = "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255634-stock-illustration-avatar-icon-male-profile-gray.jpg"
                 raise
             for_loop_files = [
                 assignment_data['files'][i].split(',')[j]
@@ -112,11 +114,11 @@ class Skole(commands.Cog):
             for k in enumerate(for_loop_files):
                 k = k[0]
                 file_output = file_output + "[" + for_loop_file_names[k] + "](" + for_loop_files[k] + ")\n"
-            embed = discord.Embed(title=assignment_data['subject'][i], description=assignment_data['time'][i], color=embed_color, url=assignment_data['url'][i])
-            embed.add_field(name="Description", value=assignment_data['description'][i], inline=True)
-            embed.set_footer(text=f"{assignment_data['author'][i]}")
-            embed.add_field(name="Files", value=file_output, inline=True)
-            embed.set_thumbnail(url=embed_thumbnail)
+            embed = discord.Embed(title=assignment_data['subject'][i], description=assignment_data['description'][i], color=embed_color, url=assignment_data['url'][i])
+            if file_output != "[None](None)\n":
+                embed.add_field(name="Files", value=file_output, inline=True)
+            embed.set_author(name=current_teacher, icon_url=embed_thumbnail, url="https://pypi.org/project/viggoscrape")
+            embed.set_footer(text=f"Posted on {current_post_date}\nDue on {assignment_data['time'][i]}")
             await ctx.send(embed=embed)
         return "success"
 
