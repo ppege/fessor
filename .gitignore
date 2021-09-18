@@ -1,5 +1,3 @@
 __pycache__
 cred.ini
 data/*
-!data/README.txt
-!data/scans.json

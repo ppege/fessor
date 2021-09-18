@@ -15,7 +15,10 @@ class Skole(commands.Cog):
     """The skole cog."""
     def __init__(self, bot):
         self.bot = bot # pylint: disable=no-member
-        self.scan_loop.start() # pylint: disable=no-member
+        config = configparser.ConfigParser()
+        config.read('cred.ini')
+        if config['config']['mode'] == "main":
+            self.scan_loop.start() # pylint: disable=no-member
 
     def cog_unload(self):
         """Unloads the cog."""
