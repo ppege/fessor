@@ -53,6 +53,26 @@ class Devtools(commands.Cog):
         remote.pull()
         await ctx.send(embed=discord.Embed(title='Bot updated.', color=0xFF0000))
 
+    @cog_ext.cog_slash(
+        name="send",
+        description="Send a message as fessor",
+        guild_ids=functions.utils.servers,
+        default_permission=False,
+        options=[
+            create_option(
+                name="message",
+                description="the message to send",
+                option_type=3,
+                required=True
+            )
+        ],
+        permissions=functions.utils.slash_perms("dev")
+    )
+    async def send(self, ctx: discord_slash.SlashContext, **kwargs):
+        """Send a message as the bot"""
+        await ctx.channel.send(kwargs['message'])
+        await ctx.send("message sent", hidden=True)
+
 def setup(bot):
     """Adds the cog."""
     bot.add_cog(Devtools(bot))
