@@ -1,17 +1,22 @@
 """Adds several commands that help users look things up."""
+from typing import Union
+import string
+import json
 import configparser
 import discord
 from discord.ext import commands
 from PyDictionary import PyDictionary
 from translate import Translator
+from langdetect import detect
 import wikipedia
 import wolframalpha
 from googlesearch import search
 import discord_slash
 from discord_slash import cog_ext
+from discord_slash.context import ComponentContext, MenuContext
 from discord_slash.utils.manage_commands import create_option
-from discord_slash.utils.manage_components import wait_for_component, create_button, create_actionrow
-from discord_slash.model import ButtonStyle
+from discord_slash.utils.manage_components import wait_for_component, create_button, create_actionrow, create_select, create_select_option
+from discord_slash.model import ButtonStyle, ContextMenuType
 import functions.utils # pylint: disable=import-error
 
 
@@ -19,6 +24,12 @@ class Lookup(commands.Cog):
     """Lookup cog."""
     def __init__(self, bot):
         self.bot = bot
+        with open("configs/countries.json", "r") as file:
+            langs = json.load(file)
+        self.langs = langs
+        with open("configs/country_names.json", "r") as file:
+            countries = json.load(file)
+        self.countries = countries
 
     @cog_ext.cog_slash(
         name="define",
@@ -76,6 +87,27 @@ class Lookup(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    async def make_translation(self, **kwargs):
+        ctx = kwargs['ctx']
+        from_lang = kwargs['from_lang']
+        sentence = kwargs['sentence']
+        edit = kwargs['edit']
+        translator = Translator(from_lang=from_lang, to_lang='english')
+        output = translator.translate(sentence)
+        if sentence == output:
+            return "fail"
+        if "LANGPAIR=EN|IT" in output:
+            translator = Translator(from_lang=list(self.langs.keys())[list(self.langs.values()).index(from_lang)], to_lang='english')
+            output = translator.translate(sentence)
+        embed=discord.Embed(title='Translation', color=0xFF0000)
+        if edit:
+            embed.add_field(name=f'Original text | {from_lang}', value=sentence)
+        else:
+            embed.add_field(name=f'Original text | {self.langs[from_lang]}', value=sentence)
+        embed.add_field(name='Translation', value=output, inline=False)
+        await ctx.send(embed=embed) if not edit else await ctx.edit_origin(embed=embed, components=[])
+        return "success"
+
     @cog_ext.cog_slash(
         name="translate",
         description="Define a word",
@@ -112,6 +144,58 @@ class Lookup(commands.Cog):
         translator = Translator(from_lang=origin, to_lang=destination)
         output = translator.translate(kwargs['text'])
         await ctx.send(embed=discord.Embed(title='Translation', description=output, color=0xFF0000))
+
+    @cog_ext.cog_context_menu(
+        target=ContextMenuType.MESSAGE,
+        name="Translate to English",
+        guild_ids=functions.utils.servers
+    )
+    async def translate_to_english(self, ctx: Union[ComponentContext, MenuContext]):
+        """Translates the selected message's contents to english."""
+        sentence = ctx.target_message.content
+        sentence_language = detect(sentence)
+        output = await self.make_translation(ctx, sentence_language, sentence, False)
+        if output == "fail":
+            lang_dict = {}
+            for value in self.langs.values():
+                # if "(" in value:
+                #     continue
+                try:
+                    lang_dict[value[0]].append(value)
+                except:
+                    lang_dict[value[0]] = []
+                    lang_dict[value[0]].append(value)
+
+            action_row = create_actionrow(
+                create_select(
+                    [
+                        create_select_option(letter, value=letter) for letter in string.ascii_uppercase[:-1]
+                    ]
+                )
+            )
+            
+            await ctx.send(
+                embed=discord.Embed(
+                    title="Could not detect language.",
+                    description="Please select the first letter of the origin language manually below."
+                ),
+                components=[action_row]
+            )
+            select_ctx: ComponentContext = await wait_for_component(self.bot, components=action_row)
+            action_row = create_actionrow(
+                create_select(
+                    [
+                        create_select_option(lang, value=lang) for lang in lang_dict[select_ctx.selected_options[0]]
+                    ]
+                )
+            )
+            await select_ctx.edit_origin(embed=discord.Embed(
+                    title="Could not detect language.",
+                    description="Please select the origin language manually below."
+                ),
+                components=[action_row])
+            select_ctx: ComponentContext = await wait_for_component(self.bot, components=action_row)
+            output = await make_translation(select_ctx, select_ctx.selected_options[0], sentence, True)
 
     @cog_ext.cog_slash(
         name="wiki",
