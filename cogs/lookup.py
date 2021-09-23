@@ -162,19 +162,15 @@ class Lookup(commands.Cog):
     async def translate_to_english(self, ctx: Union[ComponentContext, MenuContext]):
         """Translates the selected message's contents to english."""
         sentence = ctx.target_message.content
-        sentence_language = detect(sentence)
+        sentence_language = self.langs[detect(sentence)]
         output = await self.make_translation(ctx=ctx, from_lang=sentence_language, sentence=sentence, edit=False)
         if output == "fail":
             lang_dict = {}
             for value in self.langs.values():
-                # if "(" in value:
-                #     continue
                 try:
                     lang_dict[value[0]].append(value)
                 except:
-                    lang_dict[value[0]] = []
-                    lang_dict[value[0]].append(value)
-
+                    lang_dict[value[0]] = [value]
             action_row = create_actionrow(
                 create_select(
                     [
@@ -182,7 +178,7 @@ class Lookup(commands.Cog):
                     ]
                 )
             )
-            
+
             await ctx.send(
                 embed=discord.Embed(
                     title="Could not detect language.",
