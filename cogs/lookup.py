@@ -90,21 +90,25 @@ class Lookup(commands.Cog):
     async def make_translation(self, **kwargs):
         ctx = kwargs['ctx']
         from_lang = kwargs['from_lang']
-        sentence = kwargs['sentence']
+        sentence = kwargs['sentence'].capitalize()
         edit = kwargs['edit']
-        translator = Translator(from_lang=from_lang, to_lang='english')
+        to_lang = kwargs['to_lang'].capitalize() if 'to_lang' in kwargs else 'English'
+        translator = Translator(from_lang=from_lang, to_lang=to_lang)
         output = translator.translate(sentence)
         if sentence == output:
             return "fail"
         if "LANGPAIR=EN|IT" in output:
-            translator = Translator(from_lang=list(self.langs.keys())[list(self.langs.values()).index(from_lang)], to_lang='english')
+            translator = Translator(from_lang=list(self.langs.keys())[list(self.langs.values()).index(from_lang)], to_lang=to_lang)
             output = translator.translate(sentence)
         embed=discord.Embed(title='Translation', color=0xFF0000)
         if edit:
             embed.add_field(name=f'Original text | {from_lang}', value=sentence)
         else:
-            embed.add_field(name=f'Original text | {self.langs[from_lang]}', value=sentence)
-        embed.add_field(name='Translation', value=output, inline=False)
+            try:
+                embed.add_field(name=f'Original text | {self.langs[from_lang]}', value=sentence)
+            except KeyError:
+                embed.add_field(name=f'Original text | {from_lang}', value=sentence)
+        embed.add_field(name=f'Translation | {to_lang}', value=output, inline=False)
         await ctx.send(embed=embed) if not edit else await ctx.edit_origin(embed=embed, components=[])
         return "success"
 
@@ -138,12 +142,17 @@ class Lookup(commands.Cog):
     async def translate(self, ctx: discord_slash.SlashContext, **kwargs):
         """Translate a string from a chosen language to a chosen language and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
-        origin = kwargs['from']
-        destination = kwargs['to']
+        from_lang = kwargs['from']
+        to_lang = kwargs['to']
         await ctx.defer(hidden=ephemeral)
-        translator = Translator(from_lang=origin, to_lang=destination)
-        output = translator.translate(kwargs['text'])
-        await ctx.send(embed=discord.Embed(title='Translation', description=output, color=0xFF0000))
+        output = await self.make_translation(ctx=ctx, from_lang=from_lang.capitalize(), to_lang=to_lang, sentence=kwargs['text'], edit=False)
+        if output == "fail":
+            await ctx.send(
+                embed=discord.Embed(
+                    title="Failure",
+                    description="Translation is the same as the original - maybe the language isn't set correctly."
+                )
+            )
 
     @cog_ext.cog_context_menu(
         target=ContextMenuType.MESSAGE,
@@ -154,7 +163,7 @@ class Lookup(commands.Cog):
         """Translates the selected message's contents to english."""
         sentence = ctx.target_message.content
         sentence_language = detect(sentence)
-        output = await self.make_translation(ctx, sentence_language, sentence, False)
+        output = await self.make_translation(ctx=ctx, from_lang=sentence_language, sentence=sentence, edit=False)
         if output == "fail":
             lang_dict = {}
             for value in self.langs.values():
@@ -195,7 +204,7 @@ class Lookup(commands.Cog):
                 ),
                 components=[action_row])
             select_ctx: ComponentContext = await wait_for_component(self.bot, components=action_row)
-            output = await make_translation(select_ctx, select_ctx.selected_options[0], sentence, True)
+            output = await self.make_translation(ctx=select_ctx, from_lang=select_ctx.selected_options[0], sentence=sentence, edit=True)
 
     @cog_ext.cog_slash(
         name="wiki",
