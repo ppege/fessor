@@ -7,11 +7,11 @@ import time
 import random
 import json
 import subprocess
+from glob import glob
 from discord.ext import commands
 import discord
 from discord.ext.commands import CommandNotFound
 from pygount import ProjectSummary, SourceAnalysis
-from glob import glob
 import discord_slash
 from discord_slash.utils.manage_commands import create_option
 import functions.utils
