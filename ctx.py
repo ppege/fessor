@@ -10,6 +10,8 @@ import subprocess
 from discord.ext import commands
 import discord
 from discord.ext.commands import CommandNotFound
+from pygount import ProjectSummary, SourceAnalysis
+from glob import glob
 import discord_slash
 from discord_slash.utils.manage_commands import create_option
 import functions.utils
@@ -66,7 +68,12 @@ async def on_command(ctx):
 async def on_ready():
     """Executed once the bot is ready."""
     print('fessor is online.')
-    await bot.change_presence(activity=discord.Game(name="2169 lines of code"))
+    project_summary = ProjectSummary()
+    source_paths = glob("**/*.py", recursive=True)
+    for source_path in source_paths:
+        source_analysis = SourceAnalysis.from_file(source_path, "pygount")
+        project_summary.add(source_analysis)
+    await bot.change_presence(activity=discord.Game(name=f"{project_summary.total_line_count} lines of code"))
 
 
 @bot.event
