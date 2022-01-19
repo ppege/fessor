@@ -29,7 +29,7 @@ class Romkugle(commands.Cog):
     async def ping(self, ctx: discord_slash.SlashContext, **kwargs):
         """The romkugle command, returns the amount of romkuglers you can buy."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
-        rom = kwargs["kroner"]/10
+        rom = str(int(kwargs["kroner"])/10)
         await ctx.send(embed=discord.Embed(title="Romkugler", description=f"Du kan købe {rom} romkugler for {kwargs['kroner']}", color=0xFF0000), hidden=ephemeral)
 
 def setup(bot):
