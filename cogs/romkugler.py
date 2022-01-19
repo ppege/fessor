@@ -30,7 +30,7 @@ class Romkugle(commands.Cog):
         """The romkugle command, returns the amount of romkuglers you can buy."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         rom = str(int(kwargs["kroner"])/10)
-        await ctx.send(embed=discord.Embed(title="Romkugler", description=f"Du kan købe {rom} romkugler for {kwargs['kroner']kr}", color=0xFF0000), hidden=ephemeral)
+        await ctx.send(embed=discord.Embed(title="Romkugler", description=f"Du kan købe {rom} romkugler for {kwargs['kroner']}kr", color=0xFF0000), hidden=ephemeral)
 
 def setup(bot):
     """Adds the cog."""
