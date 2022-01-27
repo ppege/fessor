@@ -46,7 +46,8 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    async def define(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def define(ctx: discord_slash.SlashContext, **kwargs):
         """Find definition of a word and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         word = kwargs["word"]
@@ -88,6 +89,7 @@ class Lookup(commands.Cog):
         await ctx.send(embed=embed)
 
     async def make_translation(self, **kwargs):
+        """Make the translation"""
         ctx = kwargs['ctx']
         from_lang = kwargs['from_lang']
         sentence = kwargs['sentence'].capitalize()
@@ -223,7 +225,8 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def wiki(ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wikipedia and relay it in one or multiple embeds."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
@@ -265,7 +268,8 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    async def wolfram(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def wolfram(ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wolframaplha.com and relay it to the user through an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]

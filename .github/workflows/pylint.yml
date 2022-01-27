@@ -19,4 +19,4 @@ jobs:
         pip install pylint discord discord-py-slash-command gitpython pydictionary translate wikipedia wolframalpha google requests pygount
     - name: Analysing the code with pylint
       run: |
-        find . | grep .py$ | grep --invert-match scraps | xargs python3 custom_lint.py
+        find . | grep .py$ | grep --invert-match scraps | xargs python3 -m pylint --fail-under=9.5

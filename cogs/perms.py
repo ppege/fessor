@@ -49,7 +49,8 @@ class Perms(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    async def perms(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def perms(ctx: discord_slash.SlashContext, **kwargs):
         """Command to change a given user's permissions related to the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)

@@ -28,7 +28,8 @@ class Devtools(commands.Cog):
         default_permission=False,
         permissions=functions.utils.slash_perms("dev")
     )
-    async def exec(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def exec(ctx: discord_slash.SlashContext, **kwargs):
         """Execute command line commands on the host device."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
@@ -44,7 +45,8 @@ class Devtools(commands.Cog):
         options=functions.utils.privateOption,
         permissions=functions.utils.slash_perms("dev")
     )
-    async def update(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def update(ctx: discord_slash.SlashContext, **kwargs):
         """Use git pull to update the bot."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         repo = git.Repo()
@@ -68,7 +70,8 @@ class Devtools(commands.Cog):
         ],
         permissions=functions.utils.slash_perms("dev")
     )
-    async def send(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def send(ctx: discord_slash.SlashContext, **kwargs):
         """Send a message as the bot"""
         await ctx.channel.send(kwargs['message'])
         await ctx.send("message sent", hidden=True)
