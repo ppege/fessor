@@ -5,7 +5,7 @@ from pylint import lint
 THRESHOLD = 9.5
 
 if len(sys.argv) < 2:
-    raise "Module to evaluate needs to be the first argument"
+    raise SyntaxError("Module to evaluate needs to be the first argument")
 
 RUN = lint.Run(sys.argv[1:], do_exit=False)
 SCORE = RUN.linter.stats['global_note'] # Yes this is a terrible name for the score

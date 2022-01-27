@@ -44,8 +44,8 @@ class Blacklist(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-
-    async def blacklist(self, ctx: discord_slash.SlashContext, **kwargs):
+    @staticmethod
+    async def blacklist(ctx: discord_slash.SlashContext, **kwargs):
         """The blacklist command."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()
@@ -54,10 +54,10 @@ class Blacklist(commands.Cog):
         output = "Error"
         if kwargs["action"] == "add":
             old_cfg.append(kwargs["string"])
-            output = "Successfully added %s to the blacklist!" % (kwargs["string"])
+            output = f"Successfully added {kwargs['string']} to the blacklist!"
         if kwargs["action"] == "remove":
             old_cfg.remove(kwargs["string"])
-            output = "Successfully removed %s from the blacklist!" % (kwargs["string"])
+            output = f"Successfully removed {kwargs['string']} from the blacklist!"
         new_cfg = ', '.join(old_cfg)
         config['blacklist']['list'] = new_cfg
         with open('configs/config.ini', 'w') as configfile:

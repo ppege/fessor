@@ -31,10 +31,10 @@ class Suggest(commands.Cog):
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         suggestion = kwargs["suggestion"]
         with open("suggestions.md", "a") as file:
-            content = "\n## Suggestion from %s\n#### %s" % (ctx.author, suggestion)
+            content = f"\n## Suggestion from {ctx.author}\n#### {suggestion}"
             file.write(content)
         user = self.bot.get_user(273845229130481665)
-        await user.send(embed=discord.Embed(title='Suggestion from %s' % ctx.author, description=suggestion, color=0xFF0000))
+        await user.send(embed=discord.Embed(title=f'Suggestion from {ctx.author}', description=suggestion, color=0xFF0000))
         await ctx.send(embed=discord.Embed(title='Suggestion sendt', description=suggestion, color=0xFF0000), hidden=ephemeral)
 
 def setup(bot):
