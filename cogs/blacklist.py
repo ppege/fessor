@@ -44,8 +44,7 @@ class Blacklist(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    @staticmethod
-    async def blacklist(ctx: discord_slash.SlashContext, **kwargs):
+    async def blacklist(self, ctx: discord_slash.SlashContext, **kwargs):
         """The blacklist command."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         config = configparser.ConfigParser()

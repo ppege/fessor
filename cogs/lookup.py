@@ -46,8 +46,7 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    @staticmethod
-    async def define(ctx: discord_slash.SlashContext, **kwargs):
+    async def define(self, ctx: discord_slash.SlashContext, **kwargs):
         """Find definition of a word and relay it in an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         word = kwargs["word"]
@@ -225,8 +224,7 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    @staticmethod
-    async def wiki(ctx: discord_slash.SlashContext, **kwargs):
+    async def wiki(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wikipedia and relay it in one or multiple embeds."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
@@ -268,8 +266,7 @@ class Lookup(commands.Cog):
             )
         ] + functions.utils.privateOption
     )
-    @staticmethod
-    async def wolfram(ctx: discord_slash.SlashContext, **kwargs):
+    async def wolfram(self, ctx: discord_slash.SlashContext, **kwargs):
         """Look something up on wolframaplha.com and relay it to the user through an embed."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         query = kwargs["query"]
