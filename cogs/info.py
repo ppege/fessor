@@ -38,25 +38,37 @@ class Info(commands.Cog):
         config = configparser.ConfigParser()
         config.read('cred.ini')
         repo = git.Repo()
-        description = (
-            f"Version: `{repo.git.describe()}`\n"
-            f"Exact ping: `{self.bot.latency * 1000}`\n"
-            f"Uptime: `{self.get_uptime()}`\n"
-            #f"Times used: `{data['useCount']}`\n"
-            f"Servers: `{len(self.bot.guilds)}`\n"
-            f"System: `{platform.uname().node} (running {platform.uname().system})`\n"
-            f"Mode: `{config['config']['mode']}`"
-        )
         embed = discord.Embed(
             title='Information and statistics',
-            description=description,
+            description="Some statistics about fessor",
             color=0x000143
         )
+
         embed.add_field(
-            name='Latest changes',
-            value=f"`{str(repo.head.commit)[:7]}`\n{repo.head.commit.message}"
+            name='Version',
+            value=f"`{repo.git.describe()}`\n"
         )
-        embed.set_footer(text='Created and maintained by Nangu')
+        embed.add_field(
+            name='Exact ping',
+            value=f"`{self.bot.latency * 1000}`\n"
+        )
+        embed.add_field(
+            name='Uptime',
+            value=f"`{self.get_uptime()}`\n"
+        )
+        embed.add_field(
+            name='Servers',
+            value=f"`{len(self.bot.guilds)}`\n"
+        )
+        embed.add_field(
+            name='System',
+            value=f"`{platform.uname().node} (running {platform.uname().system})`\n"
+        )
+        embed.add_field(
+            name='HEAD',
+            value=f"[{str(repo.head.commit)[:7]}](https://github.com/NanguRepo/fessor/commit/{repo.head.commit})"
+        )
+        embed.set_footer(text='Created and maintained by Nangu', icon_url='https://avatars.githubusercontent.com/u/56510257')
         await ctx.send(embed=embed, hidden=ephemeral)
 def setup(bot):
     """Adds the cog."""
