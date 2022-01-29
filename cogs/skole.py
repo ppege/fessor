@@ -69,8 +69,7 @@ class Skole(commands.Cog):
             )
         ]
     )
-    @staticmethod
-    async def schedule(ctx: discord_slash.SlashContext, **kwargs):
+    async def schedule(self, ctx: discord_slash.SlashContext, **kwargs):
         """Relays the schedule of a specific day."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         day = kwargs["day"]
@@ -100,8 +99,7 @@ class Skole(commands.Cog):
             )
         ]
     )
-    @staticmethod
-    async def _schedule_today(ctx: discord_slash.SlashContext, **kwargs):
+    async def _schedule_today(self, ctx: discord_slash.SlashContext, **kwargs):
         """Relays the current day's schedule; defaults to monday if it's a weekend."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         today = datetime.datetime.today().weekday()
@@ -112,8 +110,8 @@ class Skole(commands.Cog):
         output = options.schedules[today]
         await ctx.send(output, hidden=ephemeral)
 
-    @classmethod
-    async def send_all(cls, ctx: discord_slash.SlashContext, assignment_data):
+    @staticmethod
+    async def send_all(ctx: discord_slash.SlashContext, assignment_data):
         """Sends all assignments in one embed; doesn't send descriptions."""
         lektie_list = [
             str(i + 1)
@@ -131,8 +129,8 @@ class Skole(commands.Cog):
         await ctx.send(embed=embed)
         return
 
-    @classmethod
-    def filter_search(cls, data, search):
+    @staticmethod
+    def filter_search(data, search):
         """Use viggoscrape to get assignment data"""
         def match_search(assignment):
             return any(search in value for value in assignment.values())

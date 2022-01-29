@@ -17,8 +17,7 @@ class Bury(commands.Cog):
         permissions=functions.utils.slash_perms("bury"),
         options=functions.utils.privateOption
     )
-    @staticmethod
-    async def bury(ctx: discord_slash.SlashContext, **kwargs):
+    async def bury(self, ctx: discord_slash.SlashContext, **kwargs):
         """The bury command sends newlines to clean chat."""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         bury = '‌\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n‌'

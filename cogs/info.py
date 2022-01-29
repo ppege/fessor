@@ -16,8 +16,8 @@ class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @classmethod
-    def get_uptime(cls):
+    @staticmethod
+    def get_uptime():
         """Reads the start time of the bot from data.json then subtracts it from the current time."""
         with open("data/data.json", "r") as file:
             data = json.load(file)
