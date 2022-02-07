@@ -12,7 +12,7 @@
 
 ## Features
 -   <kbd>/</kbd> Slash commands
--   Viggo assignment scanner
+-   Viggo integration
 -   Chat burying! - A great, new, non-destructive alternative to purging chat
 -   Permission system
 -   Moderation features
