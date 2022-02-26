@@ -4,6 +4,7 @@ import string
 import json
 import configparser
 import discord
+import requests
 from discord.ext import commands
 from PyDictionary import PyDictionary
 from translate import Translator
@@ -112,6 +113,34 @@ class Lookup(commands.Cog):
         embed.add_field(name=f'Translation | {to_lang}', value=output, inline=False)
         await ctx.send(embed=embed) if not edit else await ctx.edit_origin(embed=embed, components=[])
         return "success"
+
+    @cog_ext.cog_slash(
+        name="assassin",
+        description="lookup an item on assassin",
+        guild_ids=functions.utils.servers,
+        default_permission=True,
+        permissions=functions.utils.slash_perms("banned"),
+        options=[
+            create_option(
+                name="knife",
+                description="which knife?",
+                option_type=3,
+                required=True
+            )
+        ] + functions.utils.privateOption
+    )
+    async def assassin(self, ctx: discord_slash.SlashContext, **kwargs):
+        """Use NanguRepo assassin api to get info about items"""
+        ephemeral = functions.utils.ephemeral_check(**kwargs)
+        await ctx.defer(hidden=ephemeral)
+        knife = requests.get("".join(['https://api.nangurepo.com/v2/assassin?name=', kwargs['knife']])).json()[0]
+        embed = discord.Embed(title=knife['NAME'], color=0xFF0000)
+        embed.add_field(name='Value', value=knife['VALUE'])
+        embed.add_field(name='Demand', value=knife['DEMAND'])
+        embed.add_field(name='How to obtain', value=knife['OBTAIN'])
+        embed.add_field(name='Origin', value=knife['ORIGIN'])
+        await ctx.send(embed=embed)
+
 
     @cog_ext.cog_slash(
         name="translate",
