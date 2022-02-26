@@ -122,8 +122,8 @@ class Lookup(commands.Cog):
         permissions=functions.utils.slash_perms("banned"),
         options=[
             create_option(
-                name="knife",
-                description="which knife?",
+                name="item",
+                description="which item?",
                 option_type=3,
                 required=True
             )
@@ -133,12 +133,13 @@ class Lookup(commands.Cog):
         """Use NanguRepo assassin api to get info about items"""
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         await ctx.defer(hidden=ephemeral)
-        knife = requests.get("".join(['https://api.nangurepo.com/v2/assassin?name=', kwargs['knife']])).json()[0]
+        knife = requests.get("".join(['https://api.nangurepo.com/v2/assassin?name=', kwargs['item']])).json()[0]
         embed = discord.Embed(title=knife['NAME'], color=0xFF0000)
         embed.add_field(name='Value', value=knife['VALUE'])
         embed.add_field(name='Demand', value=knife['DEMAND'])
         embed.add_field(name='How to obtain', value=knife['OBTAIN'])
         embed.add_field(name='Origin', value=knife['ORIGIN'])
+        embed.set_thumbnail(url=knife['IMAGE'])
         await ctx.send(embed=embed)
 
 
