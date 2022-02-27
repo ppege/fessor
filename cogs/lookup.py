@@ -142,7 +142,7 @@ class Lookup(commands.Cog):
         embed.add_field(name='Origin', value=knife['ORIGIN'])
         embed.set_thumbnail(url=knife['IMAGE'])
         embed.timestamp = datetime.datetime.now()
-        embed.set_footer(text=$"Powered by NanguRepo API")
+        embed.set_footer(text="Powered by NanguRepo API")
         await ctx.send(embed=embed)
 
 
