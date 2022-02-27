@@ -5,6 +5,7 @@ import json
 import configparser
 import discord
 import requests
+import datetime
 from discord.ext import commands
 from PyDictionary import PyDictionary
 from translate import Translator
@@ -140,6 +141,8 @@ class Lookup(commands.Cog):
         embed.add_field(name='How to obtain', value=knife['OBTAIN'])
         embed.add_field(name='Origin', value=knife['ORIGIN'])
         embed.set_thumbnail(url=knife['IMAGE'])
+        embed.timestamp = datetime.datetime.now()
+        embed.set_footer(text=$"Powered by NanguRepo API")
         await ctx.send(embed=embed)
 
 
