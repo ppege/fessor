@@ -23,7 +23,7 @@ class Ping(commands.Cog):
         ephemeral = functions.utils.ephemeral_check(**kwargs)
         ping = self.bot.latency * 1000
         ping = '{0:.5g}'.format(ping)
-        await ctx.send(embed=discord.Embed(title="Pong!", description=f"Latency: {ping} milliseconds", color=0xFF0000), hidden=ephemeral)
+        await ctx.send(embed=discord.Embed(title="🏓 Pong!", description=f"Latency: {ping} milliseconds", color=0xFF0000), hidden=ephemeral)
 
 def setup(bot):
     """Adds the cog."""
